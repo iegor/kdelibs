@@ -1234,8 +1234,13 @@ void FileProtocol::listDir( const KURL& url)
        directories we keep as active directory. And
        as the slave runs in the background, it's hard
        to see for the user what the problem would be */
+#if !defined(PATH_MAX) && defined(__GLIBC__)
+    char *path_buffer;
+    path_buffer = getcwd(NULL, 0);
+#else
     char path_buffer[PATH_MAX];
     (void) getcwd(path_buffer, PATH_MAX - 1);
+#endif
     if ( chdir( _path.data() ) )  {
         if (errno == EACCES)
             error(ERR_ACCESS_DENIED, _path);
@@ -1261,6 +1266,9 @@ void FileProtocol::listDir( const KURL& url)
     kdDebug(7101) << "============= COMPLETED LIST ============" << endl;
 
     chdir(path_buffer);
+#if !defined(PATH_MAX) && defined(__GLIBC__)
+    free(path_buffer);
+#endif
 
     finished();
 }

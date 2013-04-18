@@ -15,7 +15,7 @@ cupsdconf_la_SOURCES = cupsdconf.cpp cupsddialog.cpp cupsdpage.cpp cupsdcomment.
 			  qdirmultilineedit.cpp sizewidget.cpp main.cpp
 cupsdconf_la_METASOURCES = AUTO
 cupsdconf_la_LDFLAGS = -avoid-version -module $(all_libraries) $(KDE_RPATH)
-cupsdconf_la_LIBADD = $(LIB_KIO) $(LIB_CUPS)
+cupsdconf_la_LIBADD = $(LIB_KIO) $(LIB_CUPS) $(LIB_QT) $(LIB_KDEUI) $(LIB_KDECORE)
 
 noinst_HEADERS = cupsdconf.h cupsdpage.h cupsddialog.h cupsdcomment.h cupsdsplash.h \
 		 cupsdserverpage.h cupsdlogpage.h cupsdjobspage.h cupsdfilterpage.h \

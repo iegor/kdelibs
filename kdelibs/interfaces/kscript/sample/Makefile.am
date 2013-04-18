@@ -4,7 +4,7 @@ kde_module_LTLIBRARIES = libshellscript.la
 
 libshellscript_la_SOURCES = shellscript.cpp
 libshellscript_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined -avoid-version
-libshellscript_la_LIBADD = ../libkscript.la
+libshellscript_la_LIBADD = ../libkscript.la $(LIB_QT) $(LIB_KDECORE) $(top_builddir)/dcop/libDCOP.la
 
 
 METASOURCES = AUTO

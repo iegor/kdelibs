@@ -37,7 +37,7 @@ kimg_xview_la_LIBADD  = $(LIB_QT)
 
 kimg_eps_la_SOURCES = eps.cpp
 kimg_eps_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_eps_la_LIBADD  = $(LIB_KDECORE)
+kimg_eps_la_LIBADD  = $(LIB_KDECORE) $(LIB_QT)
 
 kimg_ico_la_SOURCES = ico.cpp
 kimg_ico_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
@@ -49,35 +49,35 @@ kimg_jp2_la_LIBADD = $(LIB_QT) $(LIB_JASPER) ../kdecore/libkdecore.la
 
 kimg_pcx_la_SOURCES = pcx.cpp
 kimg_pcx_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_pcx_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
+kimg_pcx_la_LIBADD = $(LIB_QT)
 
 kimg_tga_la_SOURCES = tga.cpp
 kimg_tga_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_tga_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
+kimg_tga_la_LIBADD = $(LIB_QT)
 
 kimg_rgb_la_SOURCES = rgb.cpp
 kimg_rgb_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_rgb_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
+kimg_rgb_la_LIBADD = $(LIB_QT)
 
 kimg_xcf_la_SOURCES = xcf.cpp
 kimg_xcf_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_xcf_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
+kimg_xcf_la_LIBADD = $(LIB_QT)
 
 kimg_exr_la_SOURCES = exr.cpp
 kimg_exr_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_exr_la_LIBADD = $(LIB_QT) $(LIB_KDECORE) $(LIB_EXR)
+kimg_exr_la_LIBADD = $(LIB_QT) $(LIB_EXR)
 
 kimg_dds_la_SOURCES = dds.cpp
 kimg_dds_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_dds_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
+kimg_dds_la_LIBADD = $(LIB_QT)
 
 kimg_psd_la_SOURCES = psd.cpp
 kimg_psd_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_psd_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
+kimg_psd_la_LIBADD = $(LIB_QT)
 
 kimg_hdr_la_SOURCES = hdr.cpp
 kimg_hdr_la_LDFLAGS = -module $(KIMGIO_PLUGIN) -no-undefined $(all_libraries)
-kimg_hdr_la_LIBADD = $(LIB_QT) $(LIB_KDECORE)
+kimg_hdr_la_LIBADD = $(LIB_QT)
 
 noinst_HEADERS= xview.h eps.h tiffr.h g3r.h ico.h jp2.h pcx.h tga.h rgb.h xcf.h gimp.h exr.h dds.h psd.h hdr.h
 

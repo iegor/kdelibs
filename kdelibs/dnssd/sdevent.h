@@ -41,24 +41,23 @@ class AddRemoveEvent : public QCustomEvent
 public:
 	enum Operation { Add, Remove };
 	AddRemoveEvent(Operation op,const QString& name,const QString& type,
-		const QString& domain, bool last) : QCustomEvent(QEvent::User+SD_ADDREMOVE),
-	m_op(op), m_name(name), m_type(type), m_domain(domain), m_last(last) 
+		const QString& domain) : QCustomEvent(QEvent::User+SD_ADDREMOVE),
+	m_op(op), m_name(name), m_type(type), m_domain(domain) 
 	{}
 
 	const Operation m_op;
 	const QString m_name;
 	const QString m_type;
 	const QString m_domain;
-	const bool m_last;
 };
 
 class PublishEvent : public QCustomEvent
 {
 public:
-	PublishEvent(const QString& name) : QCustomEvent(QEvent::User+SD_PUBLISH), m_name(name)
+	PublishEvent(bool ok) : QCustomEvent(QEvent::User+SD_PUBLISH), m_ok(ok)
 	{}
 
-	const QString m_name;
+	bool m_ok;
 };
 
 class ResolveEvent : public QCustomEvent

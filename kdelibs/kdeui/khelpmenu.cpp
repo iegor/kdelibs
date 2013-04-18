@@ -160,7 +160,7 @@ KPopupMenu* KHelpMenu::menu()
       mMenu->connectItem( menuSwitchLanguage, this, SLOT(switchApplicationLanguage()) );
       need_separator = true;
     }
-    
+
     if (need_separator)
       mMenu->insertSeparator();
 
@@ -170,7 +170,7 @@ KPopupMenu* KHelpMenu::menu()
         i18n( "&About %1" ).arg(appName), menuAboutApp );
       mMenu->connectItem( menuAboutApp, this, SLOT( aboutApplication() ) );
     }
-    
+
     if (kapp->authorizeKAction("help_about_kde"))
     {
       mMenu->insertItem( SmallIcon("about_kde"), i18n( "About &KDE" ), menuAboutKDE );
@@ -287,7 +287,7 @@ void KHelpMenu::timerExpired()
   {
     delete mAboutApp; mAboutApp = 0;
   }
-  
+
   if (d->mSwitchApplicationLanguage && !d->mSwitchApplicationLanguage->isVisible())
   {
     delete d->mSwitchApplicationLanguage; d->mSwitchApplicationLanguage = 0;

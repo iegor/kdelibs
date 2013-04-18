@@ -55,6 +55,7 @@
 #include <ksimpleconfig.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
+#include <kprocess.h>
 
 #undef m_manager
 #define	m_manager	KMFactory::self()->manager()
@@ -209,6 +210,7 @@ void KMMainView::initActions()
 
 	new KAction(i18n("R&estart Server"),"kdeprint_restartsrv",0,this,SLOT(slotServerRestart()),m_actions,"server_restart");
 	new KAction(i18n("Configure &Server..."),"kdeprint_configsrv",0,this,SLOT(slotServerConfigure()),m_actions,"server_configure");
+	new KAction(i18n("Configure Server Access..."),"kdeprint_configsrv",0,this,SLOT(slotServerAccessConfigure()),m_actions,"server_access_configure");
 
 	KToggleAction	*tact = new KToggleAction(i18n("Show &Toolbar"),0,m_actions,"view_toolbar");
 	tact->setCheckedState(i18n("Hide &Toolbar"));
@@ -689,6 +691,13 @@ void KMMainView::slotServerConfigure()
 	{
 		reset( i18n( "Configuring server..." ), false, false );
 	}
+}
+
+void KMMainView::slotServerConfigureAccess()
+{
+	KProcess *proc = new KProcess;
+	*proc << "/usr/bin/system-config-printer-kde";
+	proc->start(KProcess::DontCare);
 }
 
 void KMMainView::slotToggleToolBar(bool on)

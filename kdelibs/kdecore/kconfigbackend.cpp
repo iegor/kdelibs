@@ -505,6 +505,8 @@ qWarning("SIGBUS while reading %s", rFile.name().latin1());
    bool fileOptionImmutable = false;
    bool groupOptionImmutable = false;
    bool groupSkip = false;
+   bool foundGettextDomain = false;
+   QCString gettextDomain;
 
    int line = 0;
    for(; s < eof; s++)
@@ -595,6 +597,7 @@ qWarning("SIGBUS while reading %s", rFile.name().latin1());
       }
       if (groupSkip && !bDefault)
         goto sktoeol; // Skip entry
+
 
       bool optionImmutable = groupOptionImmutable;
       bool optionDeleted = false;
@@ -695,6 +698,11 @@ qWarning("SIGBUS while reading %s", rFile.name().latin1());
       QCString val = printableToString(st, s - st);
       //qDebug("found key '%s' with value '%s'", key.data(), val.data());
 
+      if (QString(key.data()) == "X-Ubuntu-Gettext-Domain") {
+	gettextDomain = val.data();
+	foundGettextDomain = true;
+      }
+
       KEntryKey aEntryKey(aCurrentGroup, decodeKey(key));
       aEntryKey.bLocal = (locale != 0);
       aEntryKey.bDefault = bDefault;
@@ -718,6 +726,34 @@ qWarning("SIGBUS while reading %s", rFile.name().latin1());
          pConfig->putData(aEntryKey, aEntry, false);
       }
    }
+   // Look up translations using KLocale
+   // https://launchpad.net/distros/ubuntu/+spec/langpacks-desktopfiles-kde
+   // This calls KLocale up to 10 times for each config file (and each KConfig has up to 4 files)
+   // so I'll see how much of a performance hit it is
+   // it also only acts on the last group in a file
+   // Ideas: only translate most important fields, only translate "Desktop Entry" files,
+   //        do translation per KConfig not per single file
+   if (!pWriteBackMap) {
+     QFile file("file.txt");
+     if (foundGettextDomain) {
+
+       KLocale locale(gettextDomain);
+
+       QString language = locale.language();
+       translateKey(locale, aCurrentGroup, QCString("Name"));
+       translateKey(locale, aCurrentGroup, QCString("Comment"));
+       translateKey(locale, aCurrentGroup, QCString("Language"));
+       translateKey(locale, aCurrentGroup, QCString("Keywords"));
+       translateKey(locale, aCurrentGroup, QCString("About"));
+       translateKey(locale, aCurrentGroup, QCString("Description"));
+       translateKey(locale, aCurrentGroup, QCString("GenericName"));
+       translateKey(locale, aCurrentGroup, QCString("Query"));
+       translateKey(locale, aCurrentGroup, QCString("ExtraNames"));
+       translateKey(locale, aCurrentGroup, QCString("X-KDE-Submenu"));
+     }
+   }
+
+
    if (fileOptionImmutable)
       bFileImmutable = true;
 
@@ -732,6 +768,21 @@ qWarning("SIGBUS while reading %s", rFile.name().latin1());
 #endif
 }
 
+void KConfigINIBackEnd::translateKey(KLocale& locale, QCString currentGroup, QCString key) {
+  KEntryKey entryKey = KEntryKey(currentGroup, key);
+  KEntry entry = pConfig->lookupData(entryKey);
+  if (QString(entry.mValue) != "") {
+    QString orig = key + "=" + entry.mValue;
+    QString translate = locale.translate(key + "=" + entry.mValue);
+    if (QString::compare(orig, translate) != 0) {
+      translate = translate.mid(key.length() + 1);
+      entry.mValue = translate.utf8();
+      entryKey.bLocal = true;
+      entry.bNLS = true;
+      pConfig->putData(entryKey, entry, false);
+    }
+  }
+}
 
 void KConfigINIBackEnd::sync(bool bMerge)
 {

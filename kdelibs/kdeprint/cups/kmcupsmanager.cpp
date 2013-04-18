@@ -95,7 +95,7 @@ KMCupsManager::~KMCupsManager()
 
 QString KMCupsManager::driverDbCreationProgram()
 {
-	return QString::fromLatin1("make_driver_db_cups");
+	return QString::fromLatin1("/opt/kde3/bin/make_driver_db_cups");
 }
 
 QString KMCupsManager::driverDirectory()

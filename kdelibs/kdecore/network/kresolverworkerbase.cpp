@@ -127,19 +127,16 @@ bool KResolverWorkerBase::enqueue(KResolverWorkerBase* worker)
 
 bool KResolverWorkerBase::checkResolver()
 {
-  assert(th != 0L);
   return th->checkResolver();
 }
 
 void KResolverWorkerBase::acquireResolver()
 {
-  assert(th != 0L);
   th->acquireResolver();
 }
 
 void KResolverWorkerBase::releaseResolver()
 {
-  assert(th != 0L);
   th->releaseResolver();
 }
 

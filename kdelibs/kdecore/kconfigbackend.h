@@ -25,6 +25,7 @@
 #include "kconfigdata.h"
 #include <kconfigbase.h>
 #include <klockfile.h>
+#include <klocale.h>
 #include "kdelibs_export.h"
 
 class QFile;
@@ -249,6 +250,11 @@ protected:
    */
   void parseSingleConfigFile(QFile& rFile, KEntryMap *pWriteBackMap = 0L,
 			     bool bGlobal = false, bool bDefault = false);
+
+  // Kubuntu patch, 2006-08-03
+  // looks up a key in with KLocale
+  // see https://launchpad.net/distros/ubuntu/+spec/langpacks-desktopfiles-kde
+  void translateKey(KLocale& locale, QCString currentGroup, QCString key);
 
   /**
    * Writes configuration file back.

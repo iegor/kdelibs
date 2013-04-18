@@ -127,7 +127,10 @@ bool KAccelEventHandler::x11Event( XEvent* pEvent )
 	        return false;
 
 	if( pEvent->type == XKeyPress ) {
+		unsigned int tmp = pEvent->xkey.state;
+		pEvent->xkey.state &= ~0x2000;
 		KKeyNative keyNative( pEvent );
+		pEvent->xkey.state = tmp;
 		KKey key( keyNative );
 		key.simplify();
 		int keyCodeQt = key.keyCodeQt();

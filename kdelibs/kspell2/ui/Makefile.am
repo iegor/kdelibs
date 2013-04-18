@@ -18,4 +18,4 @@ dialog.lo: kspell2ui.h
 
 libkspell2_la_SOURCES = dialog.cpp
 libkspell2_la_LDFLAGS = -no-undefined -version-info 1:0:0 $(all_libraries)
-libkspell2_la_LIBADD = libkspell2_noinst.la ../libkspell2base.la
+libkspell2_la_LIBADD = libkspell2_noinst.la ../libkspell2base.la ../../kutils/libkutils.la  $(LIB_QT) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_KFILE)

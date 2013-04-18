@@ -11,7 +11,7 @@ INCLUDES= -I$(top_srcdir)/kdefx -I$(top_srcdir)/kded -I$(top_srcdir) $(all_inclu
 kde_module_LTLIBRARIES = kded_kdeprintd.la
 
 kded_kdeprintd_la_SOURCES = kdeprintd.skel kdeprintd.cpp kprintprocess.cpp
-kded_kdeprintd_la_LIBADD = $(LIB_KIO) $(LIB_KDED)
+kded_kdeprintd_la_LIBADD = $(LIB_KIO) $(LIB_KDED) $(LIB_QT) $(LIB_KDEUI) $(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE) $(top_builddir)/kded/libkdeinit_kded.la
 kded_kdeprintd_la_LDFLAGS = $(all_libraries) -module -avoid-version
 #kded_kdeprintd_la_METASOURCES = AUTO
 
@@ -30,7 +30,7 @@ libkdeprint_la_SOURCES = kmfactory.cpp kmjob.cpp kmjobmanager.cpp kmmanager.cpp 
 			 fooparser.cpp fooscanner.cpp ppdparser.cpp ppdscanner.cpp ppdloader.cpp
 
 libkdeprint_la_LDFLAGS = $(all_libraries) -version-info 6:0:2 -no-undefined
-libkdeprint_la_LIBADD = $(LIB_KPARTS) $(LIBZ)
+libkdeprint_la_LIBADD = $(LIBZ) $(LIB_QT) $(LIB_KDEUI) $(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE) $(LIB_KFILE)
 libkdeprint_la_DEPENDENCIES =  $(LIB_KPARTS) 
 libkdeprint_la_METASOURCES = AUTO
 

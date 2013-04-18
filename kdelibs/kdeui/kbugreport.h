@@ -66,7 +66,7 @@ protected slots:
    */
   virtual void slotSetFrom();
   /**
-   * The URL-Label "http://bugs.kde.org/" was clicked.
+   * The URL-Label "http://bugs.pearsoncomputing.net/" was clicked.
    * @deprecated remove in KDE4.0
    */
   virtual void slotUrlClicked(const QString &);

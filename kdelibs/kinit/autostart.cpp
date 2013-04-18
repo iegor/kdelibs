@@ -20,6 +20,7 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
+#include <stdlib.h>
 #include "autostart.h"
 
 #include <kconfig.h>
@@ -48,6 +49,14 @@ AutoStart::AutoStart( bool new_startup )
   m_startList = new AutoStartList;
   m_startList->setAutoDelete(true);
   KGlobal::dirs()->addResourceType("autostart", "share/autostart");
+  QString xdgdirs = getenv("XDG_CONFIG_DIRS");
+  if (xdgdirs.isEmpty())
+        xdgdirs = "/etc/xdg";
+
+  QStringList xdgdirslist = QStringList::split( ':', xdgdirs );
+  for ( QStringList::Iterator itr = xdgdirslist.begin(); itr != xdgdirslist.end(); ++itr ) {
+	KGlobal::dirs()->addResourceDir("autostart", (*itr) +"/autostart");
+  }
 }
 
 AutoStart::~AutoStart()
@@ -87,9 +96,9 @@ static bool startCondition(const QString &condition)
      return true;
 
   QStringList list = QStringList::split(':', condition, true);
-  if (list.count() < 4) 
+  if (list.count() < 4)
      return true;
-  if (list[0].isEmpty() || list[2].isEmpty()) 
+  if (list[0].isEmpty() || list[2].isEmpty())
      return true;
 
   KConfig config(list[0], true, false);
@@ -105,7 +114,7 @@ void
 AutoStart::loadAutoStartList()
 {
    QStringList files = KGlobal::dirs()->findAllResources("autostart", "*.desktop", false, true);
-   
+
    for(QStringList::ConstIterator it = files.begin();
        it != files.end();
        ++it)
@@ -128,7 +137,7 @@ AutoStart::loadAutoStartList()
            if (config.readListEntry("NotShowIn", ';').contains("KDE"))
                continue;
        }
-       
+
        AutoStartItem *item = new AutoStartItem;
        item->name = extractName(*it);
        item->service = *it;
@@ -147,7 +156,7 @@ AutoStart::loadAutoStartList()
        }
        m_startList->append(item);
    }
-} 
+}
 
 QString
 AutoStart::startService()
@@ -160,7 +169,7 @@ AutoStart::startService()
 
      // Check for items that depend on previously started items
      QString lastItem = m_started[0];
-     for(AutoStartItem *item = m_startList->first(); 
+     for(AutoStartItem *item = m_startList->first();
          item; item = m_startList->next())
      {
         if (item->phase == m_phase
@@ -174,7 +183,7 @@ AutoStart::startService()
      }
      m_started.remove(m_started.begin());
    }
-   
+
    // Check for items that don't depend on anything
    AutoStartItem *item;
    for(item = m_startList->first();

@@ -184,6 +184,7 @@ struct lt_dlhandle_struct {
 #define LT_DLSTRERROR(name)	lt_dlerror_strings[LT_CONC(LT_ERROR_,name)]
 
 static	const char	objdir[]		= LTDL_OBJDIR;
+#define LTDL_SHLIB_EXT ".so"
 #ifdef	LTDL_SHLIB_EXT
 static	const char	shlib_ext[]		= LTDL_SHLIB_EXT;
 #endif

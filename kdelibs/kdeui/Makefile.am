@@ -18,7 +18,8 @@
 #    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 #    Boston, MA 02110-1301, USA.
 
-SUBDIRS = . kdetrayproxy tests about
+SUBDIRS = . tests about
+DIST_SUBDIRS = kdetrayproxy
 
 INCLUDES= -I$(top_srcdir)/kdefx -I$(top_srcdir)/interfaces $(all_includes)
 
@@ -28,10 +29,9 @@ AM_LDFLAGS = $(LDFLAGS_AS_NEEDED) $(LDFLAGS_NEW_DTAGS)
 
 lib_LTLIBRARIES = libkdeui.la libkspell.la
 libkdeui_la_LDFLAGS = $(KDE_MT_LDFLAGS) -no-undefined -version-info 6:0:2
-libkdeui_la_LIBADD = ../kdecore/libkdecore.la
+libkdeui_la_LIBADD = ../kdecore/libkdecore.la $(LIB_QT) $(top_builddir)/dcop/libDCOP.la $(LIB_X11) $(top_builddir)/kdefx/libkdefx.la $(LIB_XEXT)
 
 libkspell_la_LDFLAGS = $(KDE_MT_LDFLAGS) -version-info 6:0:2 -no-undefined
-libkspell_la_LIBADD = libkdeui.la
 libkspell_la_SOURCES = dummy.cpp
 
 picsdir = $(kde_datadir)/kdeui/pics

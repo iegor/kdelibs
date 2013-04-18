@@ -27,33 +27,39 @@
 #include <sys/types.h>
 #endif
 #include <netinet/in.h>
+#include <avahi-client/client.h>
+#include <avahi-common/strlst.h>
+#ifdef AVAHI_API_0_6
+#include <avahi-client/lookup.h>
+#endif
 #include "remoteservice.h"
 #include "responder.h"
 #include "sdevent.h"
-#include <kdebug.h>
 
 namespace DNSSD
 {
-#ifdef HAVE_DNSSD
-void resolve_callback    (    DNSServiceRef,
-				DNSServiceFlags,
-				uint32_t,
-				DNSServiceErrorType                 errorCode,
-				const char*,
-				const char                          *hosttarget,
-				uint16_t                            port,
-				uint16_t                            txtLen,
-				const unsigned char                 *txtRecord,
-				void                                *context
-			 );
-
+#ifdef AVAHI_API_0_6
+void resolve_callback(AvahiServiceResolver*, AvahiIfIndex, AvahiProtocol proto, AvahiResolverEvent e,
+    const char* name, const char* type, const char* domain, const char* hostname, const AvahiAddress* a,
+    uint16_t port, AvahiStringList* txt, AvahiLookupResultFlags, void* context);
+#else
+void resolve_callback(AvahiServiceResolver*, AvahiIfIndex, AvahiProtocol proto, AvahiResolverEvent e,
+    const char* name, const char* type, const char* domain, const char* hostname, const AvahiAddress* a,
+    uint16_t port, AvahiStringList* txt, void* context);
 #endif
+
 class RemoteServicePrivate : public Responder
 {
 public:
-	RemoteServicePrivate() : Responder(), m_resolved(false)
-	{};
+	RemoteServicePrivate() :  m_resolved(false), m_running(false), m_resolver(0) {}
 	bool m_resolved;
+	bool m_running;
+	AvahiServiceResolver* m_resolver;
+	void stop() {
+	    m_running = false;
+	    if (m_resolver) avahi_service_resolver_free(m_resolver);
+	    m_resolver=0;
+	}
 };
 
 RemoteService::RemoteService(const QString& label)
@@ -83,29 +89,33 @@ RemoteService::RemoteService(const KURL& url)
 
 RemoteService::~RemoteService()
 {
+	if (d->m_resolver) avahi_service_resolver_free(d->m_resolver);
 	delete d;
 }
 
 bool RemoteService::resolve()
 {
 	resolveAsync();
-	while (d->isRunning() && !d->m_resolved) d->process();
+	while (d->m_running && !d->m_resolved) Responder::self().process();
 	d->stop();
 	return d->m_resolved;
 }
 
 void RemoteService::resolveAsync()
 {
-	if (d->isRunning()) return;
+	if (d->m_running) return;
 	d->m_resolved = false;
-	kdDebug() << this << ":Starting resolve of : " << m_serviceName << " " << m_type << " " << m_domain << "\n";
-#ifdef HAVE_DNSSD
-	DNSServiceRef ref;
-	if (DNSServiceResolve(&ref,0,0,m_serviceName.utf8(), m_type.ascii(), 
-		domainToDNS(m_domain),(DNSServiceResolveReply)resolve_callback,reinterpret_cast<void*>(this))
-		== kDNSServiceErr_NoError) d->setRef(ref);
+	// FIXME: first protocol should be set?
+#ifdef AVAHI_API_0_6
+	d->m_resolver = avahi_service_resolver_new(Responder::self().client(),AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
+	    m_serviceName.utf8(), m_type.ascii(), domainToDNS(m_domain), AVAHI_PROTO_UNSPEC, AVAHI_LOOKUP_NO_ADDRESS,
+	    resolve_callback, this);
+#else
+	d->m_resolver = avahi_service_resolver_new(Responder::self().client(),AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
+	    m_serviceName.utf8(), m_type.ascii(), m_domain.utf8(), AVAHI_PROTO_UNSPEC, resolve_callback, this);
 #endif
-	if (!d->isRunning()) emit resolved(false);
+	if (d->m_resolver) d->m_running=true;
+	    else  emit resolved(false);
 }
 
 bool RemoteService::isResolved() const
@@ -154,42 +164,33 @@ QDataStream & operator>> (QDataStream & s, RemoteService & a)
 	return s;
 }
 
-
-#ifdef HAVE_DNSSD
-void resolve_callback    (    DNSServiceRef,
-			      DNSServiceFlags,
-			      uint32_t,
-			      DNSServiceErrorType                 errorCode,
-			      const char*,
-			      const char                          *hosttarget,
-			      uint16_t                            port,
-			      uint16_t                            txtLen,
-			      const unsigned char                 *txtRecord,
-			      void                                *context
-			 )
+#ifdef AVAHI_API_0_6
+void resolve_callback(AvahiServiceResolver*, AvahiIfIndex, AvahiProtocol, AvahiResolverEvent e,
+    const char*, const char*, const char*, const char* hostname, const AvahiAddress*,
+    uint16_t port, AvahiStringList* txt, AvahiLookupResultFlags, void* context)
+#else
+void resolve_callback(AvahiServiceResolver*, AvahiIfIndex, AvahiProtocol, AvahiResolverEvent e,
+    const char*, const char*, const char*, const char* hostname, const AvahiAddress*,
+    uint16_t port, AvahiStringList* txt, void* context)
+#endif
 {
 	QObject *obj = reinterpret_cast<QObject*>(context);
-	if (errorCode != kDNSServiceErr_NoError) {
+	if (e != AVAHI_RESOLVER_FOUND) {
 		ErrorEvent err;
 		QApplication::sendEvent(obj, &err);	
 		return;
 	}
-	char key[256];
-	int index=0;
-	unsigned char valueLen;
-	kdDebug() << "Resolve callback\n";
 	QMap<QString,QString> map;
-        const void *voidValue = 0;
-	while (TXTRecordGetItemAtIndex(txtLen,txtRecord,index++,256,key,&valueLen,
-		&voidValue) == kDNSServiceErr_NoError)  
-        {
-		if (voidValue) map[QString::fromUtf8(key)]=QString::fromUtf8((const char*)voidValue,valueLen);
-			else map[QString::fromUtf8(key)]=QString::null;
-        }
-	ResolveEvent rev(DNSToDomain(hosttarget),ntohs(port),map);
+	while (txt) {
+	    char *key, *value;
+	    size_t size;
+	    if (avahi_string_list_get_pair(txt,&key,&value,&size)) break;
+	    map[QString::fromUtf8(key)]=(value) ? QString::fromUtf8(value) : QString::null;
+	    txt = txt->next;
+	}
+	ResolveEvent rev(DNSToDomain(hostname),port,map);
 	QApplication::sendEvent(obj, &rev);
 }
-#endif
 
 
 }

@@ -89,6 +89,9 @@ int create_link(const char *file, const char *tmp_dir)
 }
 
 
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
 int build_link(const char *tmp_prefix, const char *kde_prefix)
 {
   struct passwd *pw_ent;
@@ -116,7 +119,7 @@ int build_link(const char *tmp_prefix, const char *kde_prefix)
 
   if (!kde_home || !kde_home[0])
   {
-     kde_home = "~/.kde/";
+     kde_home = "~/.kde3/";
   }
 
   if (kde_home[0] == '~')

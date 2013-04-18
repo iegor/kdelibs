@@ -162,12 +162,27 @@ void Kded::initModules()
         kde_running = false;
      // Preload kded modules.
      KService::List kdedModules = KServiceType::offers("KDEDModule");
+     QString version = getenv( "KDE_SESSION_VERSION" );
+     QStringList blacklist;
+     if ( version >= "4" )
+     {
+         kdDebug(7020) << "KDE4 is running." << endl;
+         blacklist << "mediamanager" << "medianotifier" << "kmilod" << "kwrited";
+     }
      for(KService::List::ConstIterator it = kdedModules.begin(); it != kdedModules.end(); ++it)
      {
          KService::Ptr service = *it;
          bool autoload = service->property("X-KDE-Kded-autoload", QVariant::Bool).toBool();
          config->setGroup(QString("Module-%1").arg(service->desktopEntryName()));
          autoload = config->readBoolEntry("autoload", autoload);
+         for (QStringList::Iterator module = blacklist.begin(); module != blacklist.end(); ++module)
+         {
+            if (service->desktopEntryName() == *module)
+            {
+               autoload = false;
+               break;
+            }
+         }
          if( m_newStartup )
          {
             // see ksmserver's README for description of the phases

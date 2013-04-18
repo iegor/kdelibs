@@ -834,6 +834,10 @@ QStringList KStandardDirs::resourceDirs(const char *type) const
                     if ((local || testdir.exists()) && !candidates->contains(path))
                         candidates->append(path);
                 }
+		// UGLY HACK - Chris CHeney
+		if (local && (!strcmp("config", type)))
+		  candidates->append("/etc/kde3/");
+		//
                 local = false;
             }
         }
@@ -1021,7 +1025,7 @@ QString KStandardDirs::kde_default(const char *type) {
     if (!strcmp(type, "data"))
 	return "share/apps/";
     if (!strcmp(type, "html"))
-	return "share/doc/HTML/";
+	return "share/doc/kde/HTML/";
     if (!strcmp(type, "icon"))
 	return "share/icons/";
     if (!strcmp(type, "config"))
@@ -1041,7 +1045,7 @@ QString KStandardDirs::kde_default(const char *type) {
     if (!strcmp(type, "mime"))
 	return "share/mimelnk/";
     if (!strcmp(type, "cgi"))
-	return "cgi-bin/";
+	return "lib/cgi-bin/";
     if (!strcmp(type, "wallpaper"))
 	return "share/wallpapers/";
     if (!strcmp(type, "templates"))
@@ -1315,7 +1319,7 @@ void KStandardDirs::addKDEDefaults()
     }
     else
     {
-       localKdeDir =  QDir::homeDirPath() + "/.kde/";
+       localKdeDir =  QDir::homeDirPath() + "/.kde3/";
     }
 
     if (localKdeDir != "-/")
@@ -1425,6 +1429,8 @@ void KStandardDirs::addKDEDefaults()
     }
 
     addResourceDir("home", QDir::homeDirPath());
+
+    addResourceDir("locale", "/usr/share/locale-langpack/", true);
 }
 
 void KStandardDirs::checkConfig() const

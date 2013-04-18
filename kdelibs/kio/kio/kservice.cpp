@@ -491,12 +491,12 @@ public:
 
    void reparseConfiguration() { }
 
-   KEntryMap internalEntryMap( const QString &pGroup) const 
+   KEntryMap internalEntryMap( const QString &pGroup) const
    { Q_UNUSED(pGroup); return KEntryMap(); }
 
    KEntryMap internalEntryMap() const { return KEntryMap(); }
 
-   void putData(const KEntryKey &_key, const KEntry& _data, bool _checkGroup) 
+   void putData(const KEntryKey &_key, const KEntry& _data, bool _checkGroup)
    { Q_UNUSED(_key); Q_UNUSED(_data); Q_UNUSED(_checkGroup); }
 
    KEntry lookupData(const KEntryKey &_key) const
@@ -747,10 +747,10 @@ bool KService::noDisplay() const {
      if (aList.contains("KDE"))
         return true;
   }
-  
+
   if (!kapp->authorizeControlModule(d->menuId))
      return true;
-  
+
   return false;
 }
 

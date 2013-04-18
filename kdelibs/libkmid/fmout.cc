@@ -127,8 +127,8 @@ void FMOut::initDev (void)
 void FMOut::loadFMPatches(void)
 {
 #ifdef HAVE_OSS_SUPPORT
-  char patchesfile[PATH_MAX];
-  char drumsfile[PATH_MAX];
+  char patchesfile[strlen(FMPatchesDirectory)+7+1];
+  char drumsfile[strlen(FMPatchesDirectory)+9+1];
   int size;
   struct sbi_instrument instr;
   char tmp[60];
@@ -141,12 +141,12 @@ void FMOut::loadFMPatches(void)
 
   if (opl==3)
   {
-    snprintf(patchesfile, PATH_MAX, "%s/std.o3",FMPatchesDirectory);
+    snprintf(patchesfile, sizeof(patchesfile), "%s/std.o3",FMPatchesDirectory);
     size=60;
   }
   else
   {
-    snprintf(patchesfile, PATH_MAX, "%s/std.sb",FMPatchesDirectory);
+    snprintf(patchesfile, sizeof(patchesfile), "%s/std.sb",FMPatchesDirectory);
     size=52;
   }
   fh=fopen(patchesfile,"rb");
@@ -171,11 +171,11 @@ void FMOut::loadFMPatches(void)
 
   if (opl==3)
   {
-    snprintf(drumsfile, PATH_MAX, "%s/drums.o3",FMPatchesDirectory);
+    snprintf(drumsfile, sizeof(drumsfile), "%s/drums.o3",FMPatchesDirectory);
   }
   else
   {
-    snprintf(drumsfile, PATH_MAX, "%s/drums.sb",FMPatchesDirectory);
+    snprintf(drumsfile, sizeof(drumsfile), "%s/drums.sb",FMPatchesDirectory);
   }
 
   fh=fopen(drumsfile,"rb");

@@ -154,6 +154,7 @@ struct KStylePrivate
 	bool  menuAltKeyNavigation     : 1;
 	bool  menuDropShadow           : 1;
 	bool  sloppySubMenus           : 1;
+	bool  semiTransparentRubberband : 1;
 	int   popupMenuDelay;
 	float menuOpacity;
 
@@ -187,6 +188,7 @@ KStyle::KStyle( KStyleFlags flags, KStyleScrollBarType sbtype )
 	d->menuAltKeyNavigation = settings.readBoolEntry("/KStyle/Settings/MenuAltKeyNavigation", true);
 	d->scrollablePopupmenus = settings.readBoolEntry("/KStyle/Settings/ScrollablePopupMenus", false);
 	d->menuDropShadow       = settings.readBoolEntry("/KStyle/Settings/MenuDropShadow", false);
+	d->semiTransparentRubberband = settings.readBoolEntry("/KStyle/Settings/SemiTransparentRubberband", false);
 	d->menuHandler = NULL;
 
 	if (useMenuTransparency) {
@@ -553,7 +555,57 @@ void KStyle::drawPrimitive( PrimitiveElement pe,
 		else
 			// General handle, probably a kicker applet handle.
 			drawKStylePrimitive( KPE_GeneralHandle, p, widget, r, cg, flags, opt );
+#if QT_VERSION >= 0x030300
+#ifdef HAVE_XRENDER
+	} else if ( d->semiTransparentRubberband && pe == QStyle::PE_RubberBand ) {
+			QRect rect = r.normalize();
+			QPoint point;
+			point = p->xForm( point );
+	
+			static XRenderColor clr = { 0, 0, 0, 0 };
+			static unsigned long fillColor = 0;
+			if ( fillColor != cg.highlight().rgb() ) {
+				fillColor = cg.highlight().rgb();
+				
+				unsigned long color = fillColor << 8 | 0x40;
 
+				int red = (color >> 24) & 0xff;
+				int green = (color >> 16) & 0xff;
+				int blue = (color >> 8) & 0xff;
+				int alpha = (color >> 0) & 0xff;
+
+				red = red * alpha / 255;
+				green = green * alpha / 255;
+				blue = blue * alpha / 255;
+
+				clr.red = (red << 8) + red;
+				clr.green = (green << 8) + green;
+				clr.blue = (blue << 8) + blue;
+				clr.alpha = (alpha << 8) + alpha;
+			}
+		
+			XRenderFillRectangle(
+					p->device()->x11Display(),
+					PictOpOver,
+					p->device()->x11RenderHandle(),
+					&clr,
+					rect.x() + point.x(),
+					rect.y() + point.y(),
+					rect.width(),
+					rect.height() );
+
+			p->save();
+			p->setRasterOp( Qt::CopyROP );
+			p->setPen( QPen( cg.highlight().dark( 160 ), 1 ) );
+			p->setBrush( NoBrush );
+			p->drawRect(
+					rect.x() + point.x(),
+					rect.y() + point.y(),
+					rect.width(),
+					rect.height() );
+			p->restore();
+#endif
+#endif
 	} else
 		QCommonStyle::drawPrimitive( pe, p, r, cg, flags, opt );
 }

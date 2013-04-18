@@ -169,22 +169,17 @@
  *	the result overflows to +-Infinity or underflows to 0.
  */
 
-// Put this before anything else that may import a definition of CONST. CONST from grammar.cpp conflicts with this.
-#ifdef KDE_USE_FINAL
-#undef CONST
-#endif
-
+#include "dtoa.h"
 #include <config.h>
 
-#include "stdlib.h"
+#include "global.h"
 
-#ifdef WORDS_BIGENDIAN
-#define IEEE_MC68k
-#else
+// #if PLATFORM(BIG_ENDIAN)
+// #define IEEE_MC68k
+// #else
 #define IEEE_8087
-#endif
+// #endif
 #define INFNAN_CHECK
-#include "dtoa.h"
 
 
 
@@ -229,7 +224,7 @@ static double private_mem[PRIVATE_mem], *pmem_next = private_mem;
 #define IEEE_Arith
 #endif
 
-#include "errno.h"
+#include <errno.h>
 
 #ifdef Bad_float_h
 
@@ -487,7 +482,7 @@ Balloc
 #else
 		len = (sizeof(Bigint) + (x-1)*sizeof(ULong) + sizeof(double) - 1)
 			/sizeof(double);
-		if (pmem_next - private_mem + len <= PRIVATE_mem) {
+		if (pmem_next - private_mem + len <= (unsigned)PRIVATE_mem) {
 			rv = (Bigint*)pmem_next;
 			pmem_next += len;
 			}
@@ -541,7 +536,7 @@ multadd
 #ifdef ULLong
 		y = *x * (ULLong)m + carry;
 		carry = y >> 32;
-		*x++ = y & FFFFFFFF;
+		*x++ = (ULong)y & FFFFFFFF;
 #else
 #ifdef Pack_32
 		xi = *x;
@@ -564,7 +559,7 @@ multadd
 			Bfree(b);
 			b = b1;
 			}
-		b->x[wds++] = carry;
+		b->x[wds++] = (ULong)carry;
 		b->wds = wds;
 		}
 	return b;
@@ -735,10 +730,10 @@ mult
 			do {
 				z = *x++ * (ULLong)y + *xc + carry;
 				carry = z >> 32;
-				*xc++ = z & FFFFFFFF;
+				*xc++ = (ULong)z & FFFFFFFF;
 				}
 				while(x < xae);
-			*xc = carry;
+			*xc = (ULong)carry;
 			}
 		}
 #else
@@ -982,13 +977,13 @@ diff
 	do {
 		y = (ULLong)*xa++ - *xb++ - borrow;
 		borrow = y >> 32 & (ULong)1;
-		*xc++ = y & FFFFFFFF;
+		*xc++ = (ULong)y & FFFFFFFF;
 		}
 		while(xb < xbe);
 	while(xa < xae) {
 		y = *xa++ - borrow;
 		borrow = y >> 32 & (ULong)1;
-		*xc++ = y & FFFFFFFF;
+		*xc++ = (ULong)y & FFFFFFFF;
 		}
 #else
 #ifdef Pack_32
@@ -2396,7 +2391,7 @@ quorem
 			carry = ys >> 32;
 			y = *bx - (ys & FFFFFFFF) - borrow;
 			borrow = y >> 32 & (ULong)1;
-			*bx++ = y & FFFFFFFF;
+			*bx++ = (ULong)y & FFFFFFFF;
 #else
 #ifdef Pack_32
 			si = *sx++;
@@ -2845,7 +2840,8 @@ kjs_dtoa
 					if (dval(d) > 0.5 + dval(eps))
 						goto bump_up;
 					else if (dval(d) < 0.5 - dval(eps)) {
-						while(*--s == '0');
+						while(*--s == '0')
+							;
 						s++;
 						goto ret1;
 						}
@@ -3164,7 +3160,8 @@ kjs_dtoa
 #ifdef Honor_FLT_ROUNDS
 trimzeros:
 #endif
-		while(*--s == '0');
+		while(*--s == '0')
+			;
 		s++;
 		}
  ret:

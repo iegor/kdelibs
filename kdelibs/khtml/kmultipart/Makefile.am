@@ -5,7 +5,7 @@ INCLUDES = -I$(top_srcdir)/khtml -I$(top_srcdir)/kio/httpfilter -I$(top_srcdir)/
 kde_module_LTLIBRARIES = libkmultipart.la
 
 libkmultipart_la_SOURCES = kmultipart.cpp
-libkmultipart_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kio/httpfilter/libhttpfilter.la
+libkmultipart_la_LIBADD = $(LIB_KPARTS) $(top_builddir)/kio/httpfilter/libhttpfilter.la $(LIB_QT) $(LIB_KDECORE) $(LIB_KDEUI) $(LIB_KFILE) $(LIBZ)
 libkmultipart_la_DEPENDENCIES = $(LIB_KPARTS)
 libkmultipart_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN)
 

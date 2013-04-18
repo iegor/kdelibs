@@ -9,7 +9,7 @@ endif
 bin_PROGRAMS = $(KSVGTOPNG)
 
 ksvgtopng_SOURCES = ksvgtopng.cpp
-ksvgtopng_LDADD =  $(LIBART_LIBS) $(LIB_KDECORE) $(top_builddir)/kdecore/svgicons/libkdesvgicons.la
+ksvgtopng_LDADD =  $(LIB_KDECORE) $(top_builddir)/kdecore/svgicons/libkdesvgicons.la
 ksvgtopng_LDFLAGS = $(KDE_RPATH) $(all_libraries)
 
 install-data-local:

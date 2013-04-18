@@ -100,9 +100,9 @@ $$
 # The root directory for HTTP documents that are served.
 # By default the compiled-in directory.</p>
 # <p>
-# <i>ex</i>: /usr/share/cups/doc</p>
+# <i>ex</i>: /usr/share/cups/doc-root</p>
 $$
-#DocumentRoot /usr/share/cups/doc
+#DocumentRoot /usr/share/cups/doc-root
 @@
 
 %%errorlog

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=MimeType
 MimeType=application/vnd.ms-excel
+Patterns=*.xls;*.XLS
 Icon=spreadsheet
 Comment=Microsoft Excel Spreadsheet
 Comment[af]=Microsoft Excel Spreiblad

@@ -39,7 +39,6 @@ KAboutKDE::KAboutKDE( QWidget *parent, const char *name, bool modal )
     "code. Everyone is welcome to contribute to KDE.<br><br>"
     "Visit <A HREF=\"http://www.kde.org/\">http://www.kde.org</A> for "
     "more information on the KDE project. ");
-
   const QString text2 = i18n(""
     "Software can always be improved, and the KDE Team is ready to "
     "do so. However, you - the user - must tell us when "
@@ -76,7 +75,7 @@ KAboutKDE::KAboutKDE( QWidget *parent, const char *name, bool modal )
     "contributing to KDE. You are encouraged to support KDE through a financial "
     "donation, using one of the ways described at "
     "<a href=\"http://www.kde.org/support/\">http://www.kde.org/support/</a>."
-    "<br><br>Thank you very much in advance for your support.");
+    "<br><br>Thank you very much in advance for your support!");
   setHelp( QString::fromLatin1("khelpcenter/main.html"), QString::null );
   setTitle(i18n("K Desktop Environment. Release %1").
 	   arg(QString::fromLatin1(KDE_VERSION_STRING)) );

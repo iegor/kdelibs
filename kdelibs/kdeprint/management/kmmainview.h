@@ -78,6 +78,7 @@ public slots:
 	void slotTest();
 	void slotServerRestart();
 	void slotServerConfigure();
+	void slotServerConfigureAccess();
 	void slotManagerConfigure();
 	void slotAddSpecial();
 	void slotRefresh();

@@ -548,7 +548,7 @@ void KIconViewItem::calcRect( const QString& text_ )
     r = m_wordWrap->boundingRect();
 
     int realWidth = QMAX( QMIN( r.width() + 4, tw ), fm->width( "X" ) );
-    itemTextRect.setWidth( realWidth );
+    itemTextRect.setWidth( realWidth + 2);
     itemTextRect.setHeight( r.height() );
 
     int w = 0;    int h = 0;    int y = 0;
@@ -699,11 +699,13 @@ void KIconViewItem::paintPixmap( QPainter *p, const QColorGroup &cg )
 
 void KIconViewItem::paintText( QPainter *p, const QColorGroup &cg )
 {
-    int textX = textRect( false ).x() + 2;
+    int textX = textRect( false ).x() + 4;
     int textY = textRect( false ).y();
 
     if ( isSelected() ) {
-        p->fillRect( textRect( false ), cg.highlight() );
+	p->setBrush(QBrush(cg.highlight()));
+	p->setPen(QPen(cg.highlight()));
+	p->drawRoundRect( textRect( false ) ,1000/textRect(false).width(),1000/textRect(false).height() );		
         p->setPen( QPen( cg.highlightedText() ) );
     } else {
         if ( iconView()->itemTextBackground() != NoBrush )

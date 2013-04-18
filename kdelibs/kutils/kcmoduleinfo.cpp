@@ -53,7 +53,9 @@ KCModuleInfo::KCModuleInfo()
 
 KCModuleInfo::KCModuleInfo(const QString& desktopFile)
 {
-  init( KService::serviceByStorageId(desktopFile) );
+  KService::Ptr service = KService::serviceByStorageId(desktopFile);
+  if(!service) setName(desktopFile);
+  init(service);
 }
 
 KCModuleInfo::KCModuleInfo( KService::Ptr moduleInfo )

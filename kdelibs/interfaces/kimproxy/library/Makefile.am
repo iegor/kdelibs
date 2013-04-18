@@ -16,7 +16,7 @@ kimproxyinclude_HEADERS = kimproxy.h kimproxyiface.h
 
 lib_LTLIBRARIES =  libkimproxy.la
 libkimproxy_la_LDFLAGS = -no-undefined $(all_libraries)
-libkimproxy_la_LIBADD = $(LIB_KIO)
+libkimproxy_la_LIBADD = $(LIB_KIO) $(LIB_QT) $(LIB_KDECORE) $(top_builddir)/dcop/libDCOP.la $(LIB_KDEUI)
 libkimproxy_la_SOURCES = kimproxy.cpp kimiface.stub kimproxyiface.skel
 
 kimiface_DIR = $(top_srcdir)/interfaces/kimproxy/interface

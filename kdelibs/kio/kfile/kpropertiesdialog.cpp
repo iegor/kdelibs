@@ -1881,7 +1881,14 @@ static bool fileSystemSupportsACL( const QCString& pathCString )
     fileSystemSupportsACLs = ( statfs( pathCString.data(), &buf ) == 0 ) && ( buf.f_flags & MNT_ACLS );
 #else
     fileSystemSupportsACLs =
-      getxattr( pathCString.data(), "system.posix_acl_access", NULL, 0 ) >= 0 || errno == ENODATA;
+      getxattr( pathCString.data(), "system.posix_acl_access", NULL, 0 ) >= 0 
+#ifdef ENODATA      
+			|| (errno == ENODATA)
+#endif
+#ifdef ENOATTR      
+			|| (errno == ENOATTR)
+#endif
+			;
 #endif
     return fileSystemSupportsACLs;
 }

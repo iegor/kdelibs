@@ -76,6 +76,7 @@ public:
 #ifdef Q_WS_WIN
   char win32SystemEncoding[3+7]; //"cp " + lang ID
 #endif
+  bool useMainCatalogue;
 };
 
 static KLocale *this_klocale = 0;
@@ -118,8 +119,13 @@ void KLocale::initMainCatalogues(const QString & catalog)
 {
   // Use the first non-null string.
   QString mainCatalogue = catalog;
-  if (maincatalogue)
-    mainCatalogue = QString::fromLatin1(maincatalogue);
+
+  // don't use main catalogue if we're looking up .desktop translations
+  if (mainCatalogue.contains("desktop") == 0 || mainCatalogue.contains("kdesktop") == 1) {
+    if (maincatalogue) {
+      mainCatalogue = QString::fromLatin1(maincatalogue);
+    }
+  }
 
   if (mainCatalogue.isEmpty()) {
     kdDebug(173) << "KLocale instance created called without valid "
@@ -129,8 +135,11 @@ void KLocale::initMainCatalogues(const QString & catalog)
   else {
     // do not use insertCatalogue here, that would already trigger updateCatalogs
     d->catalogNames.append( mainCatalogue );   // application catalog
-    d->catalogNames.append( SYSTEM_MESSAGES ); // always include kdelibs.mo
-    d->catalogNames.append( "kio" );            // always include kio.mo
+    if (mainCatalogue.contains("desktop") == 0 || mainCatalogue.contains("kdesktop") == 1) { //don't bother if we're looking up desktop translations
+      d->catalogNames.append( SYSTEM_MESSAGES ); // always include kdelibs.mo
+      d->catalogNames.append( "kio" );            // always include kio.mo
+      d->catalogNames.append( "xdg-user-dirs" );
+    }
     updateCatalogues(); // evaluate this for all languages
   }
 }

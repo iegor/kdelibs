@@ -6,14 +6,14 @@ noinst_HEADERS   = resourcefileconfig.h
 lib_LTLIBRARIES = libkabc_file.la
 libkabc_file_la_SOURCES = resourcefile.cpp resourcefileconfig.cpp
 libkabc_file_la_LDFLAGS = $(KDE_RPATH) $(all_libraries) -version-info 1:0:0 -no-undefined
-libkabc_file_la_LIBADD = $(LIB_KABC)
+libkabc_file_la_LIBADD = $(LIB_KABC) $(LIB_QT) $(top_builddir)/kresources/libkresources.la $(LIB_KFILE) $(LIB_KDECORE) $(LIB_KDEUI)
 libkabc_file_la_COMPILE_FIRST = $(top_builddir)/kabc/addressee.h
 
 
 kde_module_LTLIBRARIES = kabc_file.la
 kabc_file_la_SOURCES = resourcefileplugin.cpp
 kabc_file_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
-kabc_file_la_LIBADD = libkabc_file.la
+kabc_file_la_LIBADD = libkabc_file.la $(LIB_QT) $(LIB_KDECORE)
 kabc_file_la_COMPILE_FIRST = $(top_builddir)/kabc/addressee.h
 
 METASOURCES = AUTO

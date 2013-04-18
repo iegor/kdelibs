@@ -29,7 +29,7 @@ INCLUDES = $(all_includes)
 bin_PROGRAMS = dcopserver_shutdown
 check_PROGRAMS = testdcop testdcopc dcop_deadlock_test
 
-lib_LTLIBRARIES  = libDCOP.la 
+lib_LTLIBRARIES  = libDCOP.la
 libDCOP_la_LIBADD = KDE-ICE/libkICE.la $(LIB_QT)
 libDCOP_la_LDFLAGS = $(KDE_RPATH) -version-info 6:0:2 -no-undefined $(all_libraries)
 libDCOP_la_NMCHECK = $(srcdir)/libDCOP.nmcheck
@@ -46,7 +46,7 @@ libDCOP_la_SOURCES = dcopstub.cpp dcopref.cpp dcopobject.cpp dcopclient.cpp
 kdeinit_LTLIBRARIES = dcopserver.la
 dcopserver_la_LDFLAGS = -module -avoid-version $(all_libraries)
 dcopserver_la_SOURCES = dcopserver.cpp dcopsignals.cpp
-dcopserver_la_LIBADD  = libDCOP.la
+dcopserver_la_LIBADD  = libDCOP.la $(LIB_QT)
 
 dcopserver_shutdown_SOURCES = dcopserver_shutdown.c
 

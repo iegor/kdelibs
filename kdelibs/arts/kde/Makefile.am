@@ -8,7 +8,8 @@ libartskde_la_SOURCES = artskde.cc kioinputstream_impl.cpp kplayobject.cc \
                         kartsserver.cpp kdatarequest_impl.cpp kaudioconverter.cc \
                         kvideowidget.cpp kplayobjectcreator.cc \
                         kaudiomanagerplay.cpp
-libartskde_la_LIBADD = $(LIB_KIO) -lqtmcop -lsoundserver_idl
+libartskde_la_LIBADD = $(LIB_KIO) -lqtmcop -lsoundserver_idl -lartsflow_idl \
+	-lmcop $(LIB_QT) $(LIB_KDECORE) -lkmedia2_idl -lartsflow $(LIB_KDEUI) $(LIB_X11)
 libartskde_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 3:0:2
 libartskde_la_METASOURCES = AUTO
 libartskde_la_COMPILE_FIRST = artskde.h

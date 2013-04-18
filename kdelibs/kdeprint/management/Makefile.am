@@ -8,7 +8,7 @@ kdeinit_LTLIBRARIES = kaddprinterwizard.la
 bin_PROGRAMS = 
 
 kaddprinterwizard_la_SOURCES = kaddprinterwizard.cpp
-kaddprinterwizard_la_LIBADD = libkdeprint_management.la
+kaddprinterwizard_la_LIBADD = $(LIB_QT) $(LIB_KDECORE) $(LIB_KDEPRINT) $(LIB_KDEUI)
 kaddprinterwizard_la_LDFLAGS = -module -avoid-version $(all_libraries) $(KDE_RPATH)
 
 libkdeprint_management_la_SOURCES = \
@@ -26,12 +26,12 @@ libkdeprint_management_la_SOURCES = \
 	pluginaction.cpp kxmlcommanddlg.cpp kxmlcommandselector.cpp kmconfigcommand.cpp \
 	kmconfigfilter.cpp kmconfigfonts.cpp kmconfigjobs.cpp networkscanner.cpp
 libkdeprint_management_la_LDFLAGS = $(all_libraries) -version-info 6:0:2 -no-undefined
-libkdeprint_management_la_LIBADD = ../libkdeprint.la
+libkdeprint_management_la_LIBADD = ../libkdeprint.la $(LIB_QT) $(LIB_KDECORE) $(LIB_KDEUI) $(LIB_KFILE)
 libkdeprint_management_la_METASOURCES = AUTO
 
 libkdeprint_management_module_la_SOURCES = kdeprint_management_module.cpp
 libkdeprint_management_module_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) -no-undefined
-libkdeprint_management_module_la_LIBADD = libkdeprint_management.la
+libkdeprint_management_module_la_LIBADD = libkdeprint_management.la $(LIB_QT) $(LIB_KDEUI) $(LIB_KDECORE)
 
 kdeprint_HEADERS = kmmainview.h kmjobviewer.h kmprinterpage.h kiconselectaction.h kmtimer.h
 kdeprintdir = $(includedir)/kdeprint

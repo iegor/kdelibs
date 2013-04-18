@@ -50,6 +50,10 @@ static QRgb qt_colorref2qrgb(COLORREF col)
 #include <stdlib.h>
 #include <kprotocolinfo.h>
 
+#include <qtextcodec.h>
+#include <qtextstream.h>
+#include <qfile.h>
+
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
 #endif
@@ -76,6 +80,31 @@ QColor *KGlobalSettings::_visitedLinkColor = 0;
 QColor *KGlobalSettings::alternateColor = 0;
 
 KGlobalSettings::KMouseSettings *KGlobalSettings::s_mouseSettings = 0;
+
+// helper function for reading xdg user dirs: it is required in order to take 
+// care of locale stuff
+void readXdgUserDirs(QString *desktop, QString *documents)
+{
+	QFile f( QDir::homeDirPath() + "/.config/user-dirs.dirs" );
+
+	if (!f.open(IO_ReadOnly))
+		return;
+
+	// set the codec for the current locale
+	QTextStream s(&f);
+	s.setCodec( QTextCodec::codecForLocale() );
+
+	QString line = s.readLine();
+	while (!line.isNull())
+	{
+		if (line.startsWith("XDG_DESKTOP_DIR="))
+			*desktop = line.remove("XDG_DESKTOP_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+		else if (line.startsWith("XDG_DOCUMENTS_DIR="))
+			*documents = line.remove("XDG_DOCUMENTS_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+
+		line = s.readLine();
+	}
+}
 
 int KGlobalSettings::dndEventDelay()
 {
@@ -483,12 +512,16 @@ void KGlobalSettings::initStatic() // should be called initPaths(). Don't put an
 
     KConfigGroup g( KGlobal::config(), "Paths" );
 
-    // Desktop Path
-    *s_desktopPath = QDir::homeDirPath() + "/Desktop/";
-    *s_desktopPath = g.readPathEntry( "Desktop", *s_desktopPath);
+	// Read desktop and documents path using XDG_USER_DIRS
+	readXdgUserDirs(s_desktopPath, s_documentPath);
+	
     *s_desktopPath = QDir::cleanDirPath( *s_desktopPath );
     if ( !s_desktopPath->endsWith("/") )
       s_desktopPath->append('/');
+
+    *s_documentPath = QDir::cleanDirPath( *s_documentPath );
+    if ( !s_documentPath->endsWith("/"))
+      s_documentPath->append('/');
 
     // Trash Path - TODO remove in KDE4 (kio_trash can't use it for interoperability reasons)
     *s_trashPath = *s_desktopPath + i18n("Trash") + "/";
@@ -509,18 +542,6 @@ void KGlobalSettings::initStatic() // should be called initPaths(). Don't put an
     *s_autostartPath = QDir::cleanDirPath( *s_autostartPath );
     if ( !s_autostartPath->endsWith("/") )
       s_autostartPath->append('/');
-
-    // Document Path
-    *s_documentPath = g.readPathEntry( "Documents", 
-#ifdef Q_WS_WIN
-        getWin32ShellFoldersPath("Personal")
-#else
-        QDir::homeDirPath()
-#endif
-    );
-    *s_documentPath = QDir::cleanDirPath( *s_documentPath );
-    if ( !s_documentPath->endsWith("/"))
-      s_documentPath->append('/');
 
     // Make sure this app gets the notifications about those paths
     if (kapp)

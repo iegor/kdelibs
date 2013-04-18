@@ -36,6 +36,7 @@
 #include "misc/htmltags.h"
 #include "khtmlview.h"
 #include "khtml_part.h"
+#include "misc/knsplugininstaller.h"
 
 #include <kapplication.h>
 #include <kmessagebox.h>
@@ -937,17 +938,30 @@ void RenderPartObject::slotPartLoadingErrorNotify()
         if (!mimeName.isEmpty() && part->docImpl() && !part->pluginPageQuestionAsked( serviceType ) )
         {
             part->setPluginPageQuestionAsked( serviceType );
-            // Prepare the URL to show in the question (host only if http, to make it short)
-            KURL pluginPageURL( embed->pluginPage );
-            QString shortURL = pluginPageURL.protocol() == "http" ? pluginPageURL.host() : pluginPageURL.prettyURL();
-            int res = KMessageBox::questionYesNo( m_view,
-                                                  i18n("No plugin found for '%1'.\nDo you want to download one from %2?").arg(mimeName).arg(shortURL),
-                                                  i18n("Missing Plugin"), i18n("Download"), i18n("Do Not Download"), QString("plugin-")+serviceType);
-            if ( res == KMessageBox::Yes )
+            bool pluginAvailable;
+            pluginAvailable = false;
+            // check if a pluginList file is in the config
+            if(KNSPluginInstallEngine::isActive())
             {
-                // Display vendor download page
-                ext->createNewWindow( pluginPageURL );
-                return;
+                KNSPluginWizard pluginWizard(m_view, "pluginInstaller", mime);
+                if(pluginWizard.pluginAvailable()) {
+                    pluginAvailable = true;
+                    pluginWizard.exec();
+                }
+            } 
+            if(!pluginAvailable) {
+                // Prepare the URL to show in the question (host only if http, to make it short)
+                KURL pluginPageURL( embed->pluginPage );
+                QString shortURL = pluginPageURL.protocol() == "http" ? pluginPageURL.host() : pluginPageURL.prettyURL();
+                int res = KMessageBox::questionYesNo( m_view,
+                                                      i18n("No plugin found for '%1'.\nDo you want to download one from %2?").arg(mimeName).arg(shortURL),
+                                                      i18n("Missing Plugin"), i18n("Download"), i18n("Do Not Download"), QString("plugin-")+serviceType);
+                if ( res == KMessageBox::Yes )
+                {
+                    // Display vendor download page
+                    ext->createNewWindow( pluginPageURL );
+                    return;
+                }
             }
         }
     }
@@ -1006,5 +1020,6 @@ void RenderPartObject::slotViewCleared()
         }
   }
 }
+
 
 #include "render_frames.moc"

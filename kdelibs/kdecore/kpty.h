@@ -61,6 +61,13 @@ public:
    */
   bool open();
 
+  /** 
+   * Attach a existing pty master 
+   *
+   * @return true if the pty was successfully added
+   */ 
+  bool setPty(int pty_master);
+
   /**
    * Close the pty master/slave pair.
    */
@@ -137,6 +144,9 @@ public:
    * This function should be called only while the pty is open.
    */
   int slaveFd() const;
+
+protected:
+  bool _attachPty(int pty_master);
 
 private:
   bool chownpty(bool grant);

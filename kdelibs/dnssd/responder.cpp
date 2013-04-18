@@ -20,62 +20,61 @@
 
 #include "responder.h"
 #include <qapplication.h>
+#include <qeventloop.h>
+#include <kstaticdeleter.h>
 #include <kidna.h>
+#include <kdebug.h>
+#include <avahi-qt3/qt-watch.h>
 
-// dns_sd.h API should care about proper encoding of non-latin1 characters
-// but for now it does not
-#define IDN_BROKEN_IN_MDNSRESPONDER
 
 namespace DNSSD
 {
 
-Responder::Responder(DNSServiceRef ref,QObject *parent, const char *name)
-		: QObject(parent, name), m_ref(0), m_socket(0)
+static KStaticDeleter<Responder> responder_sd;
+Responder* Responder::m_self = 0;
+
+void client_callback(AvahiClient *, AvahiClientState s, void* u)
 {
-	setRef(ref);
+    Responder *r = reinterpret_cast<Responder*>(u);
+    emit (r->stateChanged(s));
 }
- 
-void Responder::setRef(DNSServiceRef ref)
+
+
+Responder::Responder()
 {
-	if (m_socket || m_ref) stop();	
-	m_running = false;
-	m_ref = ref;
-	if (m_ref == 0 ) return;
-#ifdef HAVE_DNSSD
-	int fd = DNSServiceRefSockFD(ref);
-	if (fd == -1) return;
-	m_socket = new QSocketNotifier(fd,QSocketNotifier::Read,this);
-	connect(m_socket,SIGNAL(activated(int)),this,SLOT(process()));
-	m_running = true;
+    int error;
+    const AvahiPoll* poll = avahi_qt_poll_get();
+#ifdef AVAHI_API_0_6
+    m_client = avahi_client_new(poll, AVAHI_CLIENT_IGNORE_USER_CONFIG,client_callback, this,  &error);
+#else
+    m_client = avahi_client_new(poll, client_callback, this,  &error);
 #endif
+    if (!m_client) kdWarning() << "Failed to create avahi client" << endl;
 }
+
 Responder::~Responder()
 {
-	stop();
+    if (m_client) avahi_client_free(m_client);
 }
 
-void Responder::stop()
+Responder& Responder::self()
 {
-	if (m_socket) delete m_socket;
-	m_socket = 0;
-#ifdef HAVE_DNSSD
-	if (m_ref) DNSServiceRefDeallocate(m_ref);
-#endif
-	m_ref = 0;
-	m_running = false;
-}	
-
+    if (!m_self) responder_sd.setObject(m_self, new Responder);
+    return *m_self;
+}
 
 void Responder::process()
 {
-#ifdef HAVE_DNSSD
-	if ( DNSServiceProcessResult(m_ref) != kDNSServiceErr_NoError) stop();
-#endif
+    qApp->eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
 }
 
-bool Responder::isRunning() const
+AvahiClientState Responder::state() const
 {
-	return m_running;
+#ifdef AVAHI_API_0_6
+	return (m_client) ? (avahi_client_get_state(m_client)) : AVAHI_CLIENT_FAILURE;
+#else
+	return (m_client) ? (avahi_client_get_state(m_client)) : AVAHI_CLIENT_DISCONNECTED;
+#endif
 }
 
 bool domainIsLocal(const QString& domain)
@@ -85,22 +84,14 @@ bool domainIsLocal(const QString& domain)
 
 QCString domainToDNS(const QString &domain)
 {
-#ifdef IDN_BROKEN_IN_MDNSRESPONDER
 	if (domainIsLocal(domain)) return domain.utf8();
 		else return KIDNA::toAsciiCString(domain);
-#else
-	return domain.utf8();       
-#endif
 }
 
 QString DNSToDomain(const char* domain)
 {
-#ifdef IDN_BROKEN_IN_MDNSRESPONDER
 	if (domainIsLocal(domain)) return QString::fromUtf8(domain);
 		else return KIDNA::toUnicode(domain);
-#else
-	return QString::fromUtf8(domain);
-#endif
 }
 
 

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=MimeType
 MimeType=application/vnd.ms-word
+Patterns=*.doc;*.DOC
 Icon=wordprocessing
 Comment=Microsoft Word Document
 Comment[af]=Microsoft Woord Dokument

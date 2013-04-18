@@ -565,6 +565,13 @@ DocumentFragment HTMLElementImpl::createContextualFragment( const DOMString &htm
 
 void HTMLElementImpl::setInnerHTML( const DOMString &html, int &exceptioncode )
 {
+    // Works line innerText in Gecko
+    // ### test if needed for ID_SCRIPT as well.
+    if ( id() == ID_STYLE ) {
+        setInnerText(html, exceptioncode);
+        return;
+    }
+
     DocumentFragment fragment = createContextualFragment( html );
     if ( fragment.isNull() ) {
         exceptioncode = DOMException::NO_MODIFICATION_ALLOWED_ERR;

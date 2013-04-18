@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=MimeType
 MimeType=application/vnd.ms-powerpoint
+Patterns=*.ppt;*.PPT
 Icon=presentation
 Comment=Microsoft PowerPoint Presentation
 Comment[af]=Microsoft Powerpoint Voorlegging

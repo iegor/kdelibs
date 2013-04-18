@@ -3,7 +3,7 @@ METASOURCES = document.moc view.moc
 lib_LTLIBRARIES = libkatepartinterfaces.la
 
 libkatepartinterfaces_la_SOURCES = interfaces.cpp katecmd.cpp
-libkatepartinterfaces_la_LIBADD   = $(top_builddir)/interfaces/ktexteditor/libktexteditor.la
+libkatepartinterfaces_la_LIBADD   = $(top_builddir)/interfaces/ktexteditor/libktexteditor.la $(LIB_QT) $(LIB_KDEUI) $(LIB_KPARTS) $(LIB_KDECORE)
 libkatepartinterfaces_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -no-undefined
 
 kateinclude_HEADERS = document.h view.h

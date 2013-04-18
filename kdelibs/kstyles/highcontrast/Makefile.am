@@ -35,7 +35,7 @@ noinst_HEADERS = highcontrast.h
 kde_style_LTLIBRARIES = highcontrast.la
 highcontrast_la_SOURCES = highcontrast.cpp
 highcontrast_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
-highcontrast_la_LIBADD = ../../kdefx/libkdefx.la
+highcontrast_la_LIBADD = ../../kdefx/libkdefx.la $(LIB_QT)
 highcontrast_la_METASOURCES = AUTO
 
 DISTCLEANFILES = $(highcontrast_la_METASOURCES)

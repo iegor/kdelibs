@@ -231,6 +231,9 @@ void DirectoryListThread::run()
 		while ( !terminationRequested() &&
 		        (dirEntry = ::readdir( dir)))
 #else
+#if !defined(MAXPATHLEN) && defined(__GNU__)
+#define MAXPATHLEN UCHAR_MAX
+#endif
 		struct dirent *dirPosition = (struct dirent *) malloc( sizeof( struct dirent ) + MAXPATHLEN + 1 );
 		struct dirent *dirEntry = 0;
 		while ( !terminationRequested() &&

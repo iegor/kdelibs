@@ -20,6 +20,9 @@
 #include "config-kfile.h"
 
 #include <qdir.h>
+#include <qfile.h>
+#include <qtextcodec.h>
+#include <qtextstream.h>
 
 #include <kconfig.h>
 #include <kglobal.h>
@@ -50,7 +53,7 @@ KFileSpeedBar::KFileSpeedBar( QWidget *parent, const char *name )
             QDir(KGlobalSettings::documentPath()).exists())
         {
             u.setPath( KGlobalSettings::documentPath() );
-            insertItem( u, i18n("Documents"), false, "document" );
+            insertItem( u, i18n("Documents"), false, "folder_txt" );
         }
 
         u.setPath( QDir::homeDirPath() );
@@ -62,6 +65,51 @@ KFileSpeedBar::KFileSpeedBar( QWidget *parent, const char *name )
             insertItem( u, i18n("Storage Media"), false,
                                    KProtocolInfo::icon( "media" ) );
 
+        if (  QFile::exists(  QDir::homeDirPath()+"/.config/user-dirs.dirs" ) )
+        {
+			QString download, music, pictures, videos, templates, publicShares;
+
+            QFile f(  QDir::homeDirPath()+"/.config/user-dirs.dirs" );
+			if (!f.open(IO_ReadOnly))
+				return;
+
+			QTextStream s( &f );
+			s.setCodec( QTextCodec::codecForLocale() );
+
+			// read the xdg user dirs
+			QString line = s.readLine();
+			while (!line.isNull())
+			{
+				if (line.startsWith("XDG_DOWNLOAD_DIR="))
+					download = line.remove("XDG_DOWNLOAD_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+				else if (line.startsWith("XDG_MUSIC_DIR="))
+					music = line.remove("XDG_MUSIC_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+				else if (line.startsWith("XDG_PICTURES_DIR="))
+					pictures = line.remove("XDG_PICTURES_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+				else if (line.startsWith("XDG_VIDEOS_DIR="))
+					videos = line.remove("XDG_VIDEOS_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+				else if (line.startsWith("XDG_TEMPLATES_DIR="))
+					templates = line.remove("XDG_TEMPLATES_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+				else if (line.startsWith("XDG_PUBLICSHARES_DIR="))
+					publicShares = line.remove("XDG_PUBLICSHARES_DIR=").remove("\"").replace("$HOME", QDir::homeDirPath());
+
+				line = s.readLine();
+			}
+			// now add in the speedbar
+			if (!download.isEmpty())
+                insertItem( download, i18n( "Download" ), false, "folder_html" );
+			if (!music.isEmpty())
+                insertItem( music, i18n( "Music" ), false, "folder_sound" );
+			if (!pictures.isEmpty())
+                insertItem( pictures, i18n( "Pictures" ), false, "folder_image" );
+			if (!videos.isEmpty())
+                insertItem( videos, i18n( "Videos" ), false, "folder_video" );
+			if (!templates.isEmpty())
+                insertItem( templates, i18n( "Templates" ), false, "folder_video" );
+			if (!publicShares.isEmpty())
+                insertItem( publicShares, i18n( "Public" ), false, "folder_video" );
+        }
+        
         u = "remote:/";
         if ( KProtocolInfo::isKnownProtocol( u ) )
             insertItem( u, i18n("Network Folders"), false,

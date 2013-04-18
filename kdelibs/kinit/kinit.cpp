@@ -60,7 +60,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 
-#ifdef Q_OS_LINUX
+#ifdef HAVE_SYS_PRCTL_H
 #include <sys/prctl.h>
 #ifndef PR_SET_NAME
 #define PR_SET_NAME 15
@@ -256,18 +256,18 @@ static void setup_tty( const char* tty )
     int fd = open( tty, O_WRONLY );
     if( fd < 0 )
     {
-        perror( "kdeinit: couldn't open() tty" );
+        fprintf(stderr, "kdeinit: couldn't open() %s: %s\n", tty, strerror (errno) );
         return;
     }
     if( dup2( fd, STDOUT_FILENO ) < 0 )
     {
-        perror( "kdeinit: couldn't dup2() tty" );
+        fprintf(stderr, "kdeinit: couldn't dup2() %s: %s\n", tty, strerror (errno) );
         close( fd );
         return;
     }
     if( dup2( fd, STDERR_FILENO ) < 0 )
     {
-        perror( "kdeinit: couldn't dup2() tty" );
+        fprintf(stderr, "kdeinit: couldn't dup2() %s: %s\n", tty, strerror (errno) );
         close( fd );
         return;
     }
@@ -571,7 +571,7 @@ static pid_t launch(int argc, const char *_name, const char *args,
        d.argv[argc] = 0;
 
        /** Give the process a new name **/
-#ifdef Q_OS_LINUX
+#ifdef HAVE_SYS_PRCTL_H
        /* set the process name, so that killall works like intended */
        r = prctl(PR_SET_NAME, (unsigned long) name.data(), 0, 0, 0);
        if ( r == 0 )

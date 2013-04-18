@@ -49,21 +49,21 @@ namespace KDE
     KDECORE_EXPORT unsigned int version();
     /**
      * Returns the major number of KDE's version, e.g.
-     * 3 for KDE 3.1.2. 
+     * 3 for KDE 3.1.2.
      * @return the major version number
      * @since 3.1
      */
     KDECORE_EXPORT unsigned int versionMajor();
     /**
      * Returns the minor number of KDE's version, e.g.
-     * 1 for KDE 3.1.2. 
+     * 1 for KDE 3.1.2.
      * @return the minor version number
      * @since 3.1
      */
     KDECORE_EXPORT unsigned int versionMinor();
     /**
      * Returns the release of KDE's version, e.g.
-     * 2 for KDE 3.1.2. 
+     * 2 for KDE 3.1.2.
      * @return the release number
      * @since 3.1
      */

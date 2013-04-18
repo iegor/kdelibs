@@ -23,11 +23,11 @@ lib_LTLIBRARIES =
 kdeinit_LTLIBRARIES = kded.la kbuildsycoca.la
 
 kded_la_LDFLAGS = $(all_libraries) -module -avoid-version
-kded_la_LIBADD = $(LIB_KIO)
+kded_la_LIBADD = $(LIB_KIO) $(LIB_QT) $(LIB_KDECORE) $(top_builddir)/dcop/libDCOP.la $(LIB_X11)
 kded_la_SOURCES = kded.cpp kdedmodule.cpp
 
 kbuildsycoca_la_LDFLAGS = $(all_libraries) -module -avoid-version
-kbuildsycoca_la_LIBADD = $(LIB_KIO)
+kbuildsycoca_la_LIBADD = $(LIB_KIO) $(LIB_QT) $(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE)
 kbuildsycoca_la_SOURCES = kbuildsycoca.cpp kbuildservicetypefactory.cpp \
 				kbuildservicefactory.cpp \
 				kbuildservicegroupfactory.cpp \
@@ -43,7 +43,7 @@ kdontchangethehostname_LDADD = $(LIB_KDECORE)
 kdontchangethehostname_SOURCES = khostname.cpp
 
 kde_menu_LDFLAGS = $(all_libraries) $(KDE_RPATH)
-kde_menu_LDADD = $(LIB_KIO) 
+kde_menu_LDADD = $(LIB_KIO)
 kde_menu_SOURCES = kde-menu.cpp
 
 METASOURCES = AUTO

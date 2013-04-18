@@ -128,9 +128,23 @@ KCModule* KCModuleLoader::loadModule(const KCModuleInfo &mod, ErrorReporting rep
 
   if ( !mod.service() )
   {
-    return reportError( report,
-        i18n("The module %1 could not be found.")
-        .arg( mod.moduleName() ), i18n("<qt><p>The diagnostics is:<br>The desktop file %1 could not be found.</qt>").arg(mod.fileName()), parent );
+    if ( mod.moduleName() == "kcmlisa" || mod.moduleName() == "kcmkiolan" )
+    {
+      return reportError( report,
+          i18n("The module %1 could not be found.")
+          .arg( mod.moduleName() ),
+          i18n("<qt><p>The Lisa and lan:/ ioslave modules "
+            "are not installed by default in Kubuntu, because they are obsolete "
+            "and replaced by zeroconf.<br> If you still wish to use them, you "
+            "should install the lisa package from the Universe repository.</p></qt>"),
+          parent );
+    } else { 
+      return reportError( report,
+          i18n("The module %1 could not be found.")
+          .arg( mod.moduleName() ),
+          i18n("<qt><p>The diagnostics is:<br>The desktop file %1 could not be found.</p></qt>").arg(mod.fileName()),
+          parent );
+    }
   }
 
   if (!mod.library().isEmpty())

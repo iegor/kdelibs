@@ -238,7 +238,8 @@ static void kDebugBackend( unsigned short nLevel, unsigned int nArea, const char
       break;
   }
 
-  short nOutput = kDebug_data->config ? kDebug_data->config->readNumEntry(key, 2) : 2;
+  // if no output mode is specified default to no debug output
+  short nOutput = kDebug_data->config ? kDebug_data->config->readNumEntry(key, 4) : 4;
 
   // If the application doesn't have a QApplication object it can't use
   // a messagebox.

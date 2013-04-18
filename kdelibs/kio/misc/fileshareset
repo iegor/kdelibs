@@ -285,7 +285,12 @@ sub update_server {
 	    system('PATH=/bin:/sbin pidof nfsd >/dev/null') != 0) {
 	    # trying to start the server...
 	    system('/etc/init.d/portmap start') if system('/etc/init.d/portmap status') != 0;
-	    system('/etc/init.d/nfs', $_) foreach 'stop', 'start';
+            if ( -f '/etc/init.d/nfs' ) {
+	        system('/etc/init.d/nfs', $_) foreach 'stop', 'start';
+            }
+            elsif ( -f '/etc/init.d/nfs-kernel-server' ) {
+	        system('/etc/init.d/nfs-kernel-server', $_) foreach 'stop', 'start';
+            }
 	}
 	exit 0;
     }

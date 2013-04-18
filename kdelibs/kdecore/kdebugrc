@@ -86,7 +86,7 @@ InfoOutput=4
 
 # KMail
 [5006]
-InfoOutput=2
+InfoOutput=4
 
 # KitchenSync (Syncing Algorithm)
 [5250]

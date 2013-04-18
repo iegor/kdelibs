@@ -56,6 +56,8 @@ KTabWidget::KTabWidget( QWidget *parent, const char *name, WFlags f )
     setTabBar( new KTabBar(this, "tabbar") );
     setAcceptDrops( true );
 
+    setHoverCloseButtonDelayed(false);
+
     connect(tabBar(), SIGNAL(contextMenu( int, const QPoint & )), SLOT(contextMenu( int, const QPoint & )));
     connect(tabBar(), SIGNAL(mouseDoubleClick( int )), SLOT(mouseDoubleClick( int )));
     connect(tabBar(), SIGNAL(mouseMiddleClick( int )), SLOT(mouseMiddleClick( int )));

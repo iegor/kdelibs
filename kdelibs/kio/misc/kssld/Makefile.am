@@ -21,7 +21,7 @@ INCLUDES= -I$(srcdir)/.. -I$(top_srcdir) $(SSL_INCLUDES) -I$(top_srcdir)/kio/kss
 kde_module_LTLIBRARIES = kded_kssld.la
 
 kded_kssld_la_LDFLAGS = $(all_libraries) -module -avoid-version
-kded_kssld_la_LIBADD = $(LIB_KIO) $(LIB_KDED)
+kded_kssld_la_LIBADD = $(LIB_KIO) $(LIB_KDED) $(LIB_QT) $(top_builddir)/dcop/libDCOP.la $(top_builddir)/kded/libkdeinit_kded.la $(LIB_KDECORE)
 kded_kssld_la_SOURCES = kssld.cpp kssld.skel
 
 METASOURCES = AUTO

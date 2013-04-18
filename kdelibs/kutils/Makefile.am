@@ -4,7 +4,7 @@ INCLUDES = -I$(top_srcdir)/interfaces/kregexpeditor $(all_includes)
 lib_LTLIBRARIES   = libkutils.la
 libkutils_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 3:0:2
 # Needs KTrader
-libkutils_la_LIBADD  = ../kio/libkio.la ksettings/libksettings.la
+libkutils_la_LIBADD  = ../kio/libkio.la ksettings/libksettings.la $(LIB_QT) $(top_builddir)/dcop/libDCOP.la $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_X11)
 
 libkutils_la_SOURCES = kfind.cpp kfinddialog.cpp kreplace.cpp \
                        kreplacedialog.cpp kcmoduleinfo.cpp kcmoduleloader.cpp \

@@ -441,7 +441,7 @@ static int openSocket()
 
   if (!kde_home || !kde_home[0])
   {
-     kde_home = "~/.kde/";
+     kde_home = "~/.kde3/";
   }
 
   if (kde_home[0] == '~')

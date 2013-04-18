@@ -13,7 +13,8 @@ kdeprint_lpr_la_SOURCES = printcapreader.cpp lprhandler.cpp \
 			     lprngtoolhandler.cpp \
 			     editentrydialog.cpp
 kdeprint_lpr_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
-kdeprint_lpr_la_LIBADD = $(top_builddir)/kdeprint/management/libkdeprint_management.la $(top_builddir)/kdecore/libkdefakes.la
+kdeprint_lpr_la_LIBADD = $(top_builddir)/kdeprint/management/libkdeprint_management.la \
+    $(LIB_QT) $(LIB_KDEPRINT) $(LIB_KDEUI) $(LIB_KDECORE)
 kdeprint_lpr_la_METASOURCES = AUTO
 
 noinst_HEADERS = printcapreader.h \

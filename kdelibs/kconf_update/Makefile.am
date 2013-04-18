@@ -23,7 +23,7 @@ lib_LTLIBRARIES =
 kdeinit_LTLIBRARIES = kconf_update.la
 
 kconf_update_la_SOURCES = kconf_update.cpp
-kconf_update_la_LIBADD = $(LIB_KDECORE)
+kconf_update_la_LIBADD = $(LIB_KDECORE) $(LIB_QT)
 kconf_update_la_LDFLAGS = $(all_libraries) -module -avoid-version
 
 METASOURCES = AUTO

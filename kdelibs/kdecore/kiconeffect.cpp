@@ -24,6 +24,9 @@
 #include <qwidget.h>
 #include <qpainter.h>
 #include <qpen.h>
+#include <qapplication.h>
+#include <qpoint.h>
+#include <qrect.h>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -768,3 +771,148 @@ KIconEffect::visualActivate(QWidget * widget, QRect rect)
     }
 }
 
+void
+KIconEffect::visualActivate(QWidget * widget, QRect rect, QPixmap *pixmap)
+{
+    if (!KGlobalSettings::visualActivate())
+        return;
+
+    // Image too big to display smoothly
+    if ((rect.width() > 160) || (rect.height() > 160)) {
+	visualActivate(widget, rect); // call old effect
+	return;
+    }
+
+    uint actSpeed = KGlobalSettings::visualActivateSpeed();
+    uint actCount = QMIN(rect.width(), rect.height()) / 4;
+
+
+    // Clip actCount to range 1..10.
+    if (actCount < 1)
+        actCount = 1;
+
+    else if (actCount > 10)
+        actCount = 10;
+
+    // Clip actSpeed to range 1..100.
+    if (actSpeed < 1)
+        actSpeed = 1;
+
+    else if (actSpeed > 100)
+        actSpeed = 100;
+
+    // actSpeed needs to be converted to actDelay.
+    // actDelay is inversely proportional to actSpeed and needs to be
+    // divided up into actCount portions.
+    // We also convert the us value to ms.
+
+    unsigned int actDelay = (1000 * (100 - actSpeed)) / actCount;
+
+    unsigned int deltaX = rect.width() / actCount * 1.5;
+    unsigned int deltaY = rect.height() / actCount * 1.5;
+
+    QPoint c = rect.center();
+    QRect maxRect(c.x() - (actCount * 2) * deltaX /2,
+	          c.y() - (actCount * 2) * deltaY /2,
+		  actCount * 2 * deltaX,
+		  actCount * 2 * deltaY);
+
+    // convert rect to global coordinates if needed
+    if ((widget->rect().width() <= maxRect.width())
+       || (widget->rect().height() <= maxRect.height()))
+    {
+	QPoint topLeft(rect.x(), rect.y());
+	rect.moveLeft(widget->mapToGlobal(topLeft).x());
+	rect.moveTop(widget->mapToGlobal(topLeft).y());
+	c = rect.center();
+	maxRect.setRect(c.x() - (actCount * 2) * deltaX /2,
+	        	c.y() - (actCount * 2) * deltaY /2,
+			actCount * 2 * deltaX,
+			actCount * 2 * deltaY);
+    }
+
+    QPainter *p;
+    QImage img = pixmap->convertToImage();
+    QPixmap pix;
+    QPixmap composite(maxRect.width(), maxRect.height(), -1, QPixmap::BestOptim);
+    QPainter cPainter(&composite);
+    QPoint cComposite = composite.rect().center();
+
+    // enable alpha blending
+    img.setAlphaBuffer(true);
+    
+    // Ugly hack... Get "Screenshot" to blt into and even do that on the
+    // root window if the display area of <widget> is too small
+    if ((widget->rect().width() <= maxRect.width())
+       || (widget->rect().height() <= maxRect.height()))
+    {
+        p = new QPainter(QApplication::desktop()->screen( -1 ), TRUE);
+	pix = QPixmap::grabWindow((QApplication::desktop()->screen( -1 ))->winId(),
+		    		      maxRect.x(),
+				      maxRect.y(),
+				      maxRect.width(),
+				      maxRect.height());
+    } else
+    {
+	// not as ugly as drawing directly to the screen
+	p = new QPainter(widget);
+	pix = QPixmap::grabWidget(widget,
+			              maxRect.x(),
+				      maxRect.y(),
+				      maxRect.width(),
+				      maxRect.height());
+    }
+    uchar deltaAlpha = 255 / (actCount * 1.2);
+    
+    // Activate effect like MacOS X
+    for (unsigned int i = actCount; i < actCount * 2; i++) {
+
+        int w = i * deltaX;
+        int h = i * deltaY;
+
+        rect.setRect(cComposite.x() - w / 2, cComposite.y() - h / 2, w, h);
+
+	// draw offscreen
+	cPainter.drawPixmap(0, 0, pix, 0, 0, pix.width(), pix.height());
+	cPainter.drawImage(rect, img);
+	cPainter.flush();
+
+	// put onscreen
+	p->drawPixmap(maxRect, composite);
+        p->flush();
+
+	// Fade out Icon a bit more
+        int x, y;
+        if ((img.depth() == 32) && qt_use_xrender && qt_has_xft)
+        {
+    	    int width  = img.width();
+	    int height = img.height();
+	
+	    for (y=0; y<height; y++)
+	    {
+#ifdef WORDS_BIGENDIAN
+		uchar *line = (uchar*) img.scanLine(y);
+#else
+		uchar *line = (uchar*) img.scanLine(y) + 3;
+#endif
+		for (x=0; x<width; x++)
+		{
+		    *line = (*line < deltaAlpha) ? 0 : *line - deltaAlpha;
+		    line += 4;
+		}
+	    }
+	}
+        usleep(actDelay*3);
+    }
+
+    // remove traces of the effect
+    if ((widget->rect().width() <= maxRect.width())
+       || (widget->rect().height() <= maxRect.height()))
+	p->drawPixmap(maxRect, pix);
+    else {
+	 p->drawPixmap(maxRect, pix);
+        widget->update(rect);
+    }
+
+    delete p;
+}

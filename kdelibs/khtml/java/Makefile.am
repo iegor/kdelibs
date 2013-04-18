@@ -32,6 +32,6 @@ kjavaappletviewer_la_SOURCES= kjavaapplet.cpp kjavaappletcontext.cpp \
         kjavadownloader.cpp kjavaappletviewer.cpp
 
 kjavaappletviewer_la_LDFLAGS= $(all_libraries) -module $(KDE_PLUGIN)
-kjavaappletviewer_la_LIBADD= $(LIB_KPARTS)
+kjavaappletviewer_la_LIBADD= $(LIB_KPARTS) $(LIB_QT) $(LIB_KDEUI) $(LIB_KDECORE) $(LIB_KFILE) $(top_builddir)/dcop/libDCOP.la
 
 kde_services_DATA= kjavaappletviewer.desktop

@@ -56,7 +56,7 @@ kwrapper_SOURCES = kwrapper.c
 kwrapper_LDADD = $(LIBSOCKET)
 
 klauncher_la_LDFLAGS = $(all_libraries) -module -avoid-version
-klauncher_la_LIBADD = $(LIB_KIO)
+klauncher_la_LIBADD = $(LIB_KIO) $(LIB_QT) $(LIB_KDECORE) $(top_builddir)/dcop/libDCOP.la $(LIB_X11)
 klauncher_la_SOURCES = klauncher.cpp klauncher_main.cpp autostart.cpp
 
 kstartupconfig_SOURCES  = kstartupconfig.cpp

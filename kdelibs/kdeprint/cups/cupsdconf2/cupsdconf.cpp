@@ -66,7 +66,7 @@ CupsdConf::CupsdConf()
 			<< "/usr/local/share/cups"
 			<< "/opt/share/cups"
 			<< "/opt/local/share/cups");
-	documentdir_ = findDir(QStringList(datadir_+"/doc")
+	documentdir_ = findDir(QStringList(datadir_+"/doc-root")
 			<< datadir_.left(datadir_.length()-5)+"/doc/cups");
 	//fontpath_ << (datadir_+"/fonts");
 	requestdir_ = findDir(QStringList("/var/spool/cups")

@@ -51,10 +51,11 @@ if test "$ac_use_cups" = "yes"; then
   ac_LDFLAGS_save="$LDFLAGS"
   LDFLAGS="$LDFLAGS $all_libraries"
   kde_cups_config=
-  kde_cups_libs="-lcups $LIBDL $LIBSOCKET"
+  kde_cups_libs="-lcups"
   AC_PATH_PROG(kde_cups_config,cups-config)
   if test -n "$kde_cups_config"; then
-    kde_cups_libs=`$kde_cups_config --libs`
+#    kde_cups_libs=`$kde_cups_config --libs`
+    kde_cups_libs="$kde_cups_libs"
   else
     AC_MSG_RESULT(cups-config not found, using default libraries: $kde_cups_libs. You should consider upgrading CUPS)
   fi

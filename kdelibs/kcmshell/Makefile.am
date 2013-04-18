@@ -26,7 +26,7 @@ bin_PROGRAMS =
 kdeinit_LTLIBRARIES = kcmshell.la
 
 kcmshell_la_SOURCES = main.cpp main.skel
-kcmshell_la_LIBADD = ../kutils/libkutils.la
+kcmshell_la_LIBADD = ../kutils/libkutils.la $(LIB_QT) $(LIB_KDEUI) $(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE) $(LIB_KFILE)
 kcmshell_la_LDFLAGS = $(all_libraries) -module -avoid-version
 
 noinst_HEADERS = main.h

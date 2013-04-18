@@ -136,9 +136,18 @@ int main(int argc, char **argv) {
     }
 
     if ( args->isSet( "check" ) ) {
+#if !defined(PATH_MAX) && defined(__GLIBC__)
+        char *pwd_buffer;
+#else
         char pwd_buffer[PATH_MAX];
+#endif
         QFileInfo file( QFile::decodeName(args->arg( 0 )) );
-        if ( !getcwd( pwd_buffer, sizeof(pwd_buffer) - 1 ) ) {
+#if !defined(PATH_MAX) && defined(__GLIBC__)
+        if ( !(pwd_buffer = getcwd( NULL, 0 ) ) )
+#else
+        if ( !getcwd( pwd_buffer, sizeof(pwd_buffer) - 1 ) )
+#endif
+	{
 	     kdError() << "getcwd failed." << endl;
              return 2;
 	}
@@ -175,11 +184,18 @@ int main(int argc, char **argv) {
             }
             pclose( xmllint );
             chdir( pwd_buffer );
-            if ( !noout )
+            if ( !noout ) {
+#if !defined(PATH_MAX) && defined(__GLIBC__)
+                free( pwd_buffer );
+#endif
                 return 1;
+            }
         } else {
             kdWarning() << "couldn't find xmllint" << endl;
         }
+#if !defined(PATH_MAX) && defined(__GLIBC__)
+        free( pwd_buffer );
+#endif
     }
 
     xmlSubstituteEntitiesDefault(1);

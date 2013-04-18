@@ -23,14 +23,11 @@
 #include <qstringlist.h>
 #include <qfile.h>
 #include "domainbrowser.h"
+#include "responder.h"
 #include "query.h"
 #include "servicebrowser.h"
+#include <avahi-client/client.h>
 #include <config.h>
-#ifdef HAVE_DNSSD
-#include <dns_sd.h>
-#endif
-
-#define MDNSD_PID "/var/run/mdnsd.pid"
 
 namespace DNSSD
 {
@@ -85,20 +82,12 @@ ServiceBrowser::ServiceBrowser(const QString& type,const QString& domain,int fla
 
 const ServiceBrowser::State ServiceBrowser::isAvailable()
 {
-#ifdef HAVE_DNSSD
-	QFile f(MDNSD_PID);
-	if (!f.open(IO_ReadOnly)) return Stopped; // no pidfile
-	QString line;
-	if (f.readLine(line,16)<1) return Stopped;
-	unsigned int pid = line.toUInt();
-	if (pid==0) return Stopped;           // not a pid
-	return (kill(pid,0)==0 || errno==EPERM) ? Working : Stopped; 
-	// signal 0 only checks if process is running, mdnsd is probably owned by 'nobody' so we will
-	// get EPERM, if mdnsd is not running error will be ESRCH
-	
+	AvahiClientState s = Responder::self().state();
+#ifdef AVAHI_API_0_6
+	return (s==AVAHI_CLIENT_FAILURE) ? Stopped : Working;
 #else
-	return Unsupported;
-#endif
+	return (s==AVAHI_CLIENT_S_INVALID || s==AVAHI_CLIENT_DISCONNECTED) ? Stopped : Working;
+#endif 
 }
 ServiceBrowser::~ ServiceBrowser()
 {

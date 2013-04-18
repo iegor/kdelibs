@@ -9,7 +9,7 @@ INCLUDES = $(all_includes)
 kde_module_LTLIBRARIES = kio_file.la
 
 kio_file_la_SOURCES = file.cc
-kio_file_la_LIBADD = $(LIB_KIO)
+kio_file_la_LIBADD = $(LIB_KIO) $(LIB_QT) $(LIB_KDECORE) $(ACL_LIBS)
 kio_file_la_LDFLAGS = $(all_libraries) -module $(KDE_PLUGIN) 
 noinst_HEADERS = file.h
 

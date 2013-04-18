@@ -403,7 +403,7 @@ bool KPrinter::printFiles(const QStringList& l, bool flag, bool startviewer)
 			}
 			else
 			{
-				if (/* !outputToFile() && */ startviewer)
+				if (/* !outputToFile() && */ startviewer && !QFile::exists("/etc/xdg/autostart/system-config-printer-applet-kde.desktop") )
 				{
 					QStringList args;
 					args << "-d";

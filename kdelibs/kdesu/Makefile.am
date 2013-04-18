@@ -5,7 +5,7 @@ INCLUDES = -I$(top_srcdir)/kio/ $(all_includes)
 lib_LTLIBRARIES = libkdesu.la
 libkdesu_la_SOURCES = client.cpp process.cpp kcookie.cpp su.cpp ssh.cpp stub.cpp kdesu_pty.cpp
 libkdesu_la_LDFLAGS = -version-info 6:0:2 -no-undefined $(all_libraries) 
-libkdesu_la_LIBADD = $(LIB_KDECORE) $(LIBUTIL)
+libkdesu_la_LIBADD = $(LIB_KDECORE) $(LIB_QT) $(top_builddir)/dcop/libDCOP.la
 libkdesu_la_NMCHECK = $(srcdir)/libkdesu.nmcheck
 libkdesu_la_NMCHECKWEAK = $(srcdir)/libkdesu_weak.nmcheck $(top_srcdir)/kdecore/libkdecore_weak.nmcheck \
 	$(top_srcdir)/dcop/libDCOP_weak.nmcheck $(top_srcdir)/kdecore/libqt-mt_weak.nmcheck
@@ -24,7 +24,7 @@ uninstall-local:
 bin_PROGRAMS = kdesu_stub
 kdesu_stub_SOURCES = kdesu_stub.c
 kdesu_stub_LDFLAGS = $(all_libraries)
-kdesu_stub_LDADD = ../kdecore/libkdefakes.la
+kdesu_stub_LDADD =
 
 include $(top_srcdir)/admin/Doxyfile.am
 

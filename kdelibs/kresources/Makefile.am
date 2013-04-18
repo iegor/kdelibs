@@ -15,7 +15,7 @@ libkresources_la_SOURCES = resource.cpp \
   configpage.cpp
 
 libkresources_la_LDFLAGS = $(all_libraries) -no-undefined -version-info 3:0:2
-libkresources_la_LIBADD = $(LIB_KDEUI) $(LIB_KIO)
+libkresources_la_LIBADD = $(LIB_KDEUI) $(LIB_KIO) $(LIB_QT) $(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE)
 
 kresincludedir = $(includedir)/kresources
 kresinclude_HEADERS = resource.h \
@@ -32,7 +32,7 @@ kde_module_LTLIBRARIES = kcm_kresources.la
 
 kcm_kresources_la_SOURCES = kcmkresources.cpp
 kcm_kresources_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
-kcm_kresources_la_LIBADD = libkresources.la
+kcm_kresources_la_LIBADD = libkresources.la $(LIB_QT) $(LIB_KDEUI) $(LIB_KDECORE)
 
 
 check_PROGRAMS = testresources

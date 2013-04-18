@@ -163,6 +163,8 @@ public:
      start another program instead or close it yourself.
   */
   virtual void setAutoDestroy(bool enabled) = 0;
+
+  virtual bool setPtyFd(int master_pty) = 0;
 };
 
 #endif

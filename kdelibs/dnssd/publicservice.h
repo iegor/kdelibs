@@ -23,6 +23,7 @@
 
 #include <qobject.h>
 #include <dnssd/servicebase.h>
+#include <avahi-client/client.h>
 
 class KURL;
 namespace DNSSD
@@ -137,6 +138,10 @@ signals:
 	void published(bool);
 private:
 	PublicServicePrivate *d;
+	bool fillEntryGroup();
+	void tryApply();
+private slots:
+	void clientState(AvahiClientState);
 
 protected:
 	virtual void customEvent(QCustomEvent* event);

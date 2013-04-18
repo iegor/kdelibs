@@ -95,24 +95,24 @@ extern "C" {
 # endif
 #endif
 
-#if defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) || defined (__bsdi__) || defined(__APPLE__) || defined (__DragonFly__)
+#if defined(HAVE_TCGETATTR)
+# define _tcgetattr(fd, ttmode) tcgetattr(fd, ttmode)
+#elif defined(TIOCGETA)
 # define _tcgetattr(fd, ttmode) ioctl(fd, TIOCGETA, (char *)ttmode)
+#elif defined(TCGETS)
+# define _tcgetattr(fd, ttmode) ioctl(fd, TCGETS, (char *)ttmode)
 #else
-# if defined(_HPUX_SOURCE) || defined(__Lynx__) || defined (__CYGWIN__)
-#  define _tcgetattr(fd, ttmode) tcgetattr(fd, ttmode)
-# else
-#  define _tcgetattr(fd, ttmode) ioctl(fd, TCGETS, (char *)ttmode)
-# endif
+# error
 #endif
 
-#if defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) || defined (__bsdi__) || defined(__APPLE__) || defined (__DragonFly__)
+#if defined(HAVE_TCSETATTR) && defined(TCSANOW)
+# define _tcsetattr(fd, ttmode) tcsetattr(fd, TCSANOW, ttmode)
+#elif defined(TIOCSETA)
 # define _tcsetattr(fd, ttmode) ioctl(fd, TIOCSETA, (char *)ttmode)
+#elif defined(TCSETS)
+# define _tcsetattr(fd, ttmode) ioctl(fd, TCSETS, (char *)ttmode)
 #else
-# if defined(_HPUX_SOURCE) || defined(__CYGWIN__)
-#  define _tcsetattr(fd, ttmode) tcsetattr(fd, TCSANOW, ttmode) 
-# else
-#  define _tcsetattr(fd, ttmode) ioctl(fd, TCSETS, (char *)ttmode)
-# endif
+# error
 #endif
 
 #if defined (_HPUX_SOURCE)
@@ -201,6 +201,109 @@ KPty::~KPty()
   delete d;
 }
 
+bool KPty::setPty(int pty_master)
+{
+   kdWarning(175)
+      << "setPty()" << endl;
+   // a pty is already open
+   if(d->masterFd >= 0) {
+      kdWarning(175)
+	 << "d->masterFd >= 0" << endl;
+      return false;
+   }
+   d->masterFd = pty_master;
+   return _attachPty(pty_master);
+}
+
+bool KPty::_attachPty(int pty_master)
+{
+  QCString ptyName;
+
+    kdWarning(175)
+       << "_attachPty() " << pty_master << endl;
+#if defined(HAVE_PTSNAME) && defined(HAVE_GRANTPT)
+    char *ptsn = ptsname(d->masterFd);
+    if (ptsn) {
+        grantpt(d->masterFd);
+        d->ttyName = ptsn;
+    } else {
+       ::close(d->masterFd);
+       d->masterFd = -1;
+    }
+#endif
+
+  struct stat st;
+  if (stat(d->ttyName.data(), &st))
+    return false; // this just cannot happen ... *cough*  Yeah right, I just
+                  // had it happen when pty #349 was allocated.  I guess
+                  // there was some sort of leak?  I only had a few open.
+  if (((st.st_uid != getuid()) ||
+       (st.st_mode & (S_IRGRP|S_IXGRP|S_IROTH|S_IWOTH|S_IXOTH))) &&
+      !chownpty(true))
+  {
+    kdWarning(175)
+      << "chownpty failed for device " << ptyName << "::" << d->ttyName
+      << "\nThis means the communication can be eavesdropped." << endl;
+  }
+
+#ifdef BSD
+  revoke(d->ttyName.data());
+#endif
+
+#ifdef HAVE_UNLOCKPT
+  unlockpt(d->masterFd);
+#endif
+
+  d->slaveFd = ::open(d->ttyName.data(), O_RDWR | O_NOCTTY);
+  if (d->slaveFd < 0)
+  {
+    kdWarning(175) << "Can't open slave pseudo teletype" << endl;
+    ::close(d->masterFd);
+    d->masterFd = -1;
+    return false;
+  }
+
+#if (defined(__svr4__) || defined(__sgi__))
+  // Solaris
+  ioctl(d->slaveFd, I_PUSH, "ptem");
+  ioctl(d->slaveFd, I_PUSH, "ldterm");
+#endif
+
+    // set xon/xoff & control keystrokes
+  // without the '::' some version of HP-UX thinks, this declares
+  // the struct in this class, in this method, and fails to find
+  // the correct tc[gs]etattr
+  struct ::termios ttmode;
+
+  _tcgetattr(d->slaveFd, &ttmode);
+
+  if (!d->xonXoff)
+    ttmode.c_iflag &= ~(IXOFF | IXON);
+  else
+    ttmode.c_iflag |= (IXOFF | IXON);
+
+#ifdef IUTF8
+  if (!d->utf8)
+    ttmode.c_iflag &= ~IUTF8;
+  else
+    ttmode.c_iflag |= IUTF8;
+#endif
+
+  ttmode.c_cc[VINTR] = CINTR;
+  ttmode.c_cc[VQUIT] = CQUIT;
+  ttmode.c_cc[VERASE] = CERASE;
+
+  _tcsetattr(d->slaveFd, &ttmode);
+
+  // set screen size
+  ioctl(d->slaveFd, TIOCSWINSZ, (char *)&d->winSize);
+
+  fcntl(d->masterFd, F_SETFD, FD_CLOEXEC);
+  fcntl(d->slaveFd, F_SETFD, FD_CLOEXEC);
+
+  return true;
+}
+
 bool KPty::open()
 {
   if (d->masterFd >= 0)
@@ -282,74 +385,7 @@ bool KPty::open()
   return false;
 
  gotpty:
-  struct stat st;
-  if (stat(d->ttyName.data(), &st))
-    return false; // this just cannot happen ... *cough*  Yeah right, I just
-                  // had it happen when pty #349 was allocated.  I guess
-                  // there was some sort of leak?  I only had a few open.
-  if (((st.st_uid != getuid()) ||
-       (st.st_mode & (S_IRGRP|S_IXGRP|S_IROTH|S_IWOTH|S_IXOTH))) &&
-      !chownpty(true))
-  {
-    kdWarning(175)
-      << "chownpty failed for device " << ptyName << "::" << d->ttyName
-      << "\nThis means the communication can be eavesdropped." << endl;
-  }
-
-#ifdef BSD
-  revoke(d->ttyName.data());
-#endif
-
-#ifdef HAVE_UNLOCKPT
-  unlockpt(d->masterFd);
-#endif
-
-  d->slaveFd = ::open(d->ttyName.data(), O_RDWR | O_NOCTTY);
-  if (d->slaveFd < 0)
-  {
-    kdWarning(175) << "Can't open slave pseudo teletype" << endl;
-    ::close(d->masterFd);
-    d->masterFd = -1;
-    return false;
-  }
-
-#if (defined(__svr4__) || defined(__sgi__))
-  // Solaris
-  ioctl(d->slaveFd, I_PUSH, "ptem");
-  ioctl(d->slaveFd, I_PUSH, "ldterm");
-#endif
-
-    // set xon/xoff & control keystrokes
-  // without the '::' some version of HP-UX thinks, this declares
-  // the struct in this class, in this method, and fails to find
-  // the correct tc[gs]etattr
-  struct ::termios ttmode;
-
-  _tcgetattr(d->slaveFd, &ttmode);
-
-  if (!d->xonXoff)
-    ttmode.c_iflag &= ~(IXOFF | IXON);
-  else
-    ttmode.c_iflag |= (IXOFF | IXON);
-
-#ifdef IUTF8
-  if (!d->utf8)
-    ttmode.c_iflag &= ~IUTF8;
-  else
-    ttmode.c_iflag |= IUTF8;
-#endif
-
-  ttmode.c_cc[VINTR] = CINTR;
-  ttmode.c_cc[VQUIT] = CQUIT;
-  ttmode.c_cc[VERASE] = CERASE;
-
-  _tcsetattr(d->slaveFd, &ttmode);
-
-  // set screen size
-  ioctl(d->slaveFd, TIOCSWINSZ, (char *)&d->winSize);
-
-  fcntl(d->masterFd, F_SETFD, FD_CLOEXEC);
-  fcntl(d->slaveFd, F_SETFD, FD_CLOEXEC);
+  return  _attachPty(d->masterFd);
 
   return true;
 }

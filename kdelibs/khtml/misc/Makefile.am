@@ -22,14 +22,14 @@ KDE_CXXFLAGS = $(WOVERLOADED_VIRTUAL)
 noinst_LTLIBRARIES = libkhtmlmisc.la
 libkhtmlmisc_la_SOURCES = \
 	decoder.cpp    loader.cpp loader_jpeg.cpp guess_ja.cpp\
-	htmlhashes.cpp helper.cpp arena.cpp stringit.cpp
+	htmlhashes.cpp helper.cpp arena.cpp stringit.cpp knsplugininstaller.cpp
 libkhtmlmisc_la_LIBADD = $(LIBJPEG)
 libkhtmlmisc_la_LDFLAGS = $(USER_LDFLAGS)
 libkhtmlmisc_la_METASOURCES = AUTO
 
 noinst_HEADERS = \
 	decoder.h khtmllayout.h loader_jpeg.h loader.h guess_ja.h\
-	stringit.h htmlhashes.h helper.h shared.h arena.h 
+	stringit.h htmlhashes.h helper.h shared.h arena.h knsplugininstaller.h
 
 INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/dcop -I$(top_srcdir)/kio -I$(top_srcdir)/libltdl \
            -I$(top_srcdir)/khtml -I$(top_srcdir)/kutils $(all_includes)

@@ -5,7 +5,7 @@ METASOURCES = AUTO
 kde_module_LTLIBRARIES = ktexteditor_kdatatool.la
 
 ktexteditor_kdatatool_la_SOURCES = kate_kdatatool.cpp
-ktexteditor_kdatatool_la_LIBADD = $(top_builddir)/interfaces/ktexteditor/libktexteditor.la
+ktexteditor_kdatatool_la_LIBADD = $(top_builddir)/interfaces/ktexteditor/libktexteditor.la $(LIB_QT) $(LIB_KDECORE) $(LIB_KFILE) $(LIB_KDEUI)
 ktexteditor_kdatatool_la_LDFLAGS = -module $(KDE_PLUGIN) $(all_libraries)
 
 kdatatooldatadir = $(kde_datadir)/ktexteditor_kdatatool

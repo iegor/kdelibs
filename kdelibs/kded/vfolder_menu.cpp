@@ -774,7 +774,9 @@ VFolderMenu::locateMenuFile(const QString &fileName)
 
    QString result;
 
-   QString xdgMenuPrefix = QString::fromLocal8Bit(getenv("XDG_MENU_PREFIX"));
+   //QString xdgMenuPrefix = QString::fromLocal8Bit(getenv("XDG_MENU_PREFIX"));
+   // hardcode xdgMenuPrefix to "kde-" string until proper upstream fix
+   QString xdgMenuPrefix = "kde-";
    if (!xdgMenuPrefix.isEmpty())
    {
       QFileInfo fileInfo(fileName);

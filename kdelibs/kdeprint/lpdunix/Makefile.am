@@ -6,7 +6,7 @@ kde_module_LTLIBRARIES = kdeprint_lpdunix.la
 
 kdeprint_lpdunix_la_SOURCES = kmlpdunixfactory.cpp kmlpdunixmanager.cpp klpdunixprinterimpl.cpp kmlpdunixuimanager.cpp
 kdeprint_lpdunix_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
-kdeprint_lpdunix_la_LIBADD = $(top_builddir)/kdeprint/management/libkdeprint_management.la
+kdeprint_lpdunix_la_LIBADD =  $(LIB_QT) $(LIB_KDECORE) $(LIB_KDEPRINT)
 kdeprint_lpdunix_la_METASOURCES = AUTO
 
 noinst_HEADERS = kmlpdunixmanager.h klpdunixprinterimpl.h kmlpdunixuimanager.h

@@ -152,6 +152,7 @@ public:
      * @param rect This rectangle defines the effect's borders
      */
     static void visualActivate(QWidget *widget, QRect rect);
+    static void visualActivate(QWidget *widget, QRect rect, QPixmap *pixmap);
 
     /**
      * Tints an image gray.

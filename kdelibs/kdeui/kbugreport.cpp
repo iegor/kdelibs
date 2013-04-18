@@ -88,12 +88,12 @@ KBugReport::KBugReport( QWidget * parentw, bool modal, const KAboutData *aboutDa
   QWidget * parent = plainPage();
   d->submitBugButton = 0;
 
-  if ( m_aboutData->bugAddress() == QString::fromLatin1("submit@bugs.kde.org") )
-  {
+//   if ( m_aboutData->bugAddress() == QString::fromLatin1("submit@bugs.kde.org") )
+//   {
     // This is a core KDE application -> redirect to the web form
     d->submitBugButton = new QPushButton( parent );
     setButtonCancel( KStdGuiItem::close() );
-  }
+//   }
 
   QLabel * tmpLabel;
   QVBoxLayout * lay = new QVBoxLayout( parent, 0, spacingHint() );

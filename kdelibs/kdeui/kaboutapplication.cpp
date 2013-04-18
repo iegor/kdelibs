@@ -113,8 +113,8 @@ void KAboutApplication::buildDialog( const KAboutData *aboutData )
       KActiveLabel* activeLabel = new KActiveLabel( authorPage );
       if (!aboutData->customAuthorTextEnabled())
       {
-        if ( aboutData->bugAddress().isEmpty() || aboutData->bugAddress() == "submit@bugs.kde.org")
-          text = i18n( "Please use <a href=\"http://bugs.kde.org\">http://bugs.kde.org</a> to report bugs.\n" );
+        if ( aboutData->bugAddress().isEmpty() || aboutData->bugAddress() == "submit@bugs.pearsoncomputing.net")
+          text = i18n( "Please use <a href=\"http://bugs.pearsoncomputing.net\">http://bugs.pearsoncomputing.net</a> to report bugs.\n" );
         else {
           if( aboutData->authors().count() == 1 && ( aboutData->authors().first().emailAddress() == aboutData->bugAddress() ) )
           {

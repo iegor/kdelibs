@@ -19,6 +19,8 @@ AC_ARG_PROGRAM
 dnl Automake doc recommends to do this only here. (Janos)
 AM_INIT_AUTOMAKE(@MODULENAME@, @VERSION@) dnl searches for some needed programs
 
+AM_MAINTAINER_MODE
+
 AC_PROG_INSTALL
 
 dnl generate the config header
@@ -46,7 +48,7 @@ dnl Checks for header files.
 KDE_CHECK_STL
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS(sys/param.h sys/mman.h sys/time.h sysent.h strings.h sys/stat.h sys/select.h paths.h malloc.h limits.h sys/soundcard.h dlfcn.h termios.h)
+AC_CHECK_HEADERS(sys/param.h sys/mman.h sys/time.h sysent.h strings.h sys/stat.h sys/select.h paths.h malloc.h limits.h sys/soundcard.h dlfcn.h termios.h sys/prctl.h)
 
 AC_ARG_WITH(acl,
   [AC_HELP_STRING(--with-acl,
@@ -135,7 +137,7 @@ KDE_CHECK_HEADERS(X11/extensions/shape.h,,,
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 ])
-KDE_CHECK_HEADERS(X11/extensions/XShm.h, 
+KDE_CHECK_HEADERS(X11/extensions/XShm.h,
   [have_mitshm=yes], [have_mitshm=no], [#include <X11/Xlib.h>])
 KDE_CHECK_HEADERS(X11/ICE/ICElib.h)
 KDE_CHECK_HEADER(sys/sendfile.h, [have_sendfile=yes], )
@@ -162,7 +164,7 @@ AC_CHECK_RANDOM
 AC_CHECK_MKSTEMPS
 AC_CHECK_MKSTEMP
 AC_CHECK_MKDTEMP
-AC_CHECK_FUNCS(strtoll socket seteuid setegid strfmon stpcpy gettimeofday readdir_r setpriority)
+AC_CHECK_FUNCS(strtoll socket seteuid setegid strfmon stpcpy gettimeofday readdir_r setpriority tcgetattr tcsetattr)
 
 AH_BOTTOM([
 /* provide a definition for a 32 bit entity, usable as a typedef, possibly
@@ -259,7 +261,7 @@ AC_SUBST(LIB_KPARTS, '$(top_builddir)/kparts/libkparts.la')
 AC_SUBST(LIB_KIMGIO, '$(top_builddir)/kimgio/libkimgio.la')
 AC_SUBST(LIB_KNEWSTUFF, '$(top_builddir)/knewstuff/libknewstuff.la')
 AC_SUBST(LIB_KUNITTEST, '$(top_builddir)/kunittest/libkunittest.la')
-case $host in 
+case $host in
 	*cygwin*) lib_kded='$(top_builddir)/kded/libkdeinit_kded.la' ;;
 	*) lib_kded='' ;;
 esac
