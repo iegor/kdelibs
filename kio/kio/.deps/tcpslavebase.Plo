@@ -1,0 +1,577 @@
+tcpslavebase.lo: tcpslavebase.cpp ../../config.h /usr/include/sys/types.h \
+ /usr/include/features.h /usr/include/sys/cdefs.h \
+ /usr/include/bits/wordsize.h /usr/include/gnu/stubs.h \
+ /usr/include/gnu/stubs-32.h /usr/include/bits/types.h \
+ /usr/include/bits/typesizes.h /usr/include/time.h \
+ /usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include/stddef.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/bits/byteswap.h /usr/include/sys/select.h \
+ /usr/include/bits/select.h /usr/include/bits/sigset.h \
+ /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+ /usr/include/bits/pthreadtypes.h /usr/include/sys/uio.h \
+ /usr/include/bits/uio.h /usr/include/sys/time.h \
+ /usr/include/sys/socket.h /usr/include/bits/socket.h \
+ /usr/include/bits/sockaddr.h /usr/include/asm/socket.h \
+ /usr/include/asm-generic/socket.h /usr/include/asm/sockios.h \
+ /usr/include/asm-generic/sockios.h /usr/include/netinet/in.h \
+ /usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include/stdint.h \
+ /usr/include/stdint.h /usr/include/bits/wchar.h /usr/include/bits/in.h \
+ /usr/include/bits/timex.h /usr/include/xlocale.h /usr/include/netdb.h \
+ /usr/include/rpc/netdb.h /usr/include/bits/siginfo.h \
+ /usr/include/bits/netdb.h /usr/include/unistd.h \
+ /usr/include/bits/posix_opt.h /usr/include/bits/environments.h \
+ /usr/include/bits/confname.h /usr/include/getopt.h /usr/include/errno.h \
+ /usr/include/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
+ /usr/include/asm-generic/errno-base.h ../../kdecore/ksocks.h \
+ /usr/qt/3/include/qstringlist.h /usr/qt/3/include/qvaluelist.h \
+ /usr/qt/3/include/qtl.h /usr/qt/3/include/qglobal.h \
+ /usr/qt/3/include/qconfig.h /usr/qt/3/include/qmodules.h \
+ /usr/qt/3/include/qfeatures.h /usr/qt/3/include/qtextstream.h \
+ /usr/qt/3/include/qiodevice.h /usr/qt/3/include/qcstring.h \
+ /usr/qt/3/include/qmemarray.h /usr/qt/3/include/qgarray.h \
+ /usr/qt/3/include/qshared.h /usr/qt/3/include/qwinexport.h \
+ /usr/include/string.h /usr/qt/3/include/qstring.h \
+ /usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include-fixed/limits.h \
+ /usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/bits/posix1_lim.h \
+ /usr/include/bits/local_lim.h /usr/include/linux/limits.h \
+ /usr/include/bits/posix2_lim.h /usr/include/bits/xopen_lim.h \
+ /usr/include/bits/stdio_lim.h /usr/include/stdio.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include/stdarg.h \
+ /usr/include/bits/sys_errlist.h /usr/qt/3/include/qdatastream.h \
+ /usr/qt/3/include/qstrlist.h /usr/qt/3/include/qptrlist.h \
+ /usr/qt/3/include/qglist.h /usr/qt/3/include/qptrcollection.h \
+ ../../kdecore/kstaticdeleter.h ../../kdecore/kglobal.h \
+ ../../kdecore/kdelibs_export.h ../../kdecore/kdemacros.h \
+ /usr/qt/3/include/qglobal.h ../../kdecore/kinstance.h \
+ /usr/qt/3/include/qstring.h ../../kdecore/kdelibs_export.h \
+ ../../kdecore/kdebug.h ../../kio/kssl/ksslall.h \
+ ../../kio/kssl/ksslcertificatefactory.h ../../kio/kssl/ksslinfodlg.h \
+ ../../kdeui/kdialog.h /usr/qt/3/include/qdialog.h \
+ /usr/qt/3/include/qwidget.h /usr/qt/3/include/qwindowdefs.h \
+ /usr/qt/3/include/qobjectdefs.h /usr/qt/3/include/qnamespace.h \
+ /usr/qt/3/include/qobject.h /usr/qt/3/include/qevent.h \
+ /usr/qt/3/include/qregion.h /usr/qt/3/include/qrect.h \
+ /usr/qt/3/include/qsize.h /usr/qt/3/include/qpoint.h \
+ /usr/qt/3/include/qmime.h /usr/qt/3/include/qmap.h \
+ /usr/qt/3/include/qpair.h /usr/qt/3/include/qpaintdevice.h \
+ /usr/qt/3/include/qpalette.h /usr/qt/3/include/qcolor.h \
+ /usr/qt/3/include/qstringlist.h /usr/qt/3/include/qbrush.h \
+ /usr/qt/3/include/qfont.h /usr/qt/3/include/qfontmetrics.h \
+ /usr/qt/3/include/qfontinfo.h /usr/qt/3/include/qsizepolicy.h \
+ ../../kio/kssl/ksslx509map.h /usr/qt/3/include/qmap.h \
+ ../../kio/kssl/ksslcertificate.h /usr/qt/3/include/qcstring.h \
+ /usr/qt/3/include/qvaluelist.h ../../kio/kssl/ksslconfig.h \
+ ../../kio/kssl/kssl.h ../../kio/kssl/ksslsettings.h \
+ ../../kdecore/kconfig.h ../../kdecore/kconfigbase.h \
+ /usr/qt/3/include/qobject.h /usr/qt/3/include/qcolor.h \
+ /usr/qt/3/include/qfont.h /usr/qt/3/include/qdatetime.h \
+ /usr/qt/3/include/qstrlist.h /usr/qt/3/include/qvariant.h \
+ ../../kdecore/kconfigdata.h ../../kdecore/klockfile.h \
+ ../../kdecore/ksharedptr.h ../../kio/kssl/ksslpeerinfo.h \
+ ../../kio/kssl/ksslcertificate.h ../../kio/kssl/ksslconnectioninfo.h \
+ /usr/qt/3/include/qscrollview.h /usr/qt/3/include/qframe.h \
+ /usr/qt/3/include/qscrollbar.h /usr/qt/3/include/qrangecontrol.h \
+ ../../kio/kssl/ksslx509map.h ../../kio/kssl/kssl.h \
+ ../../kio/kssl/ksslcertificatehome.h \
+ ../../kio/kssl/ksslcertificatecache.h ../../kio/kssl/ksslutils.h \
+ /usr/include/openssl/x509.h /usr/include/openssl/e_os2.h \
+ /usr/include/openssl/opensslconf.h /usr/include/openssl/symhacks.h \
+ /usr/include/openssl/buffer.h /usr/include/openssl/ossl_typ.h \
+ /usr/include/openssl/evp.h /usr/include/openssl/bio.h \
+ /usr/include/openssl/crypto.h /usr/include/stdlib.h \
+ /usr/include/bits/waitflags.h /usr/include/bits/waitstatus.h \
+ /usr/include/alloca.h /usr/include/openssl/stack.h \
+ /usr/include/openssl/safestack.h /usr/include/openssl/opensslv.h \
+ /usr/include/openssl/objects.h /usr/include/openssl/obj_mac.h \
+ /usr/include/openssl/asn1.h /usr/include/openssl/bn.h \
+ /usr/include/openssl/ec.h /usr/include/openssl/ecdsa.h \
+ /usr/include/openssl/ecdh.h /usr/include/openssl/rsa.h \
+ /usr/include/openssl/dsa.h /usr/include/openssl/dh.h \
+ /usr/include/openssl/sha.h /usr/include/openssl/x509_vfy.h \
+ /usr/include/openssl/lhash.h /usr/include/openssl/pkcs7.h \
+ ../../kio/kssl/ksslpkcs7.h ../../kio/kssl/ksslcertchain.h \
+ /usr/qt/3/include/qptrlist.h ../../kio/kssl/ksslpkcs12.h \
+ /usr/include/openssl/pkcs12.h ../../kio/kssl/ksslx509v3.h \
+ ../../kio/kssl/ksslsigners.h ../../kio/kssl/ksslsession.h \
+ ../../kio/kssl/ksslcertdlg.h ../../kdeui/kmessagebox.h \
+ /usr/qt/3/include/qmessagebox.h /usr/qt/3/include/qdialog.h \
+ ../../kdeui/kguiitem.h /usr/qt/3/include/qiconset.h \
+ /usr/qt/3/include/qpixmap.h /usr/qt/3/include/qpixmap.h \
+ ../../kdecore/kicontheme.h ../../kdeui/kstdguiitem.h \
+ /usr/qt/3/include/qpair.h ../../kdecore/network/kresolver.h \
+ ../../kdecore/network/ksocketaddress.h ../../kdecore/klocale.h \
+ ../../dcop/dcopclient.h ../../dcop/kdatastream.h \
+ /usr/qt/3/include/qdatastream.h ../../kdecore/kapplication.h \
+ ../../kdecore/kdeversion.h /usr/qt/3/include/qapplication.h \
+ /usr/qt/3/include/qdesktopwidget.h /usr/qt/3/include/qasciidict.h \
+ /usr/qt/3/include/qgdict.h /usr/qt/3/include/qtranslator.h \
+ kprotocolmanager.h ../kio/global.h ../../kdecore/kurl.h \
+ ../../kdecore/kde_file.h ../kio/tcpslavebase.h ../../kdecore/kextsock.h \
+ /usr/qt/3/include/qiodevice.h ../../kdecore/kbufferedio.h \
+ ../../kdecore/kasyncio.h ../../kdecore/ksockaddr.h ../kio/slavebase.h \
+ ../../kdecore/kconfigbase.h ../kio/authinfo.h
+
+../../config.h:
+
+/usr/include/sys/types.h:
+
+/usr/include/features.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/bits/wordsize.h:
+
+/usr/include/gnu/stubs.h:
+
+/usr/include/gnu/stubs-32.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/time.h:
+
+/usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include/stddef.h:
+
+/usr/include/endian.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/sys/select.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/sigset.h:
+
+/usr/include/bits/time.h:
+
+/usr/include/sys/sysmacros.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/sys/uio.h:
+
+/usr/include/bits/uio.h:
+
+/usr/include/sys/time.h:
+
+/usr/include/sys/socket.h:
+
+/usr/include/bits/socket.h:
+
+/usr/include/bits/sockaddr.h:
+
+/usr/include/asm/socket.h:
+
+/usr/include/asm-generic/socket.h:
+
+/usr/include/asm/sockios.h:
+
+/usr/include/asm-generic/sockios.h:
+
+/usr/include/netinet/in.h:
+
+/usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/bits/in.h:
+
+/usr/include/bits/timex.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/netdb.h:
+
+/usr/include/rpc/netdb.h:
+
+/usr/include/bits/siginfo.h:
+
+/usr/include/bits/netdb.h:
+
+/usr/include/unistd.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/environments.h:
+
+/usr/include/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/usr/include/errno.h:
+
+/usr/include/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+../../kdecore/ksocks.h:
+
+/usr/qt/3/include/qstringlist.h:
+
+/usr/qt/3/include/qvaluelist.h:
+
+/usr/qt/3/include/qtl.h:
+
+/usr/qt/3/include/qglobal.h:
+
+/usr/qt/3/include/qconfig.h:
+
+/usr/qt/3/include/qmodules.h:
+
+/usr/qt/3/include/qfeatures.h:
+
+/usr/qt/3/include/qtextstream.h:
+
+/usr/qt/3/include/qiodevice.h:
+
+/usr/qt/3/include/qcstring.h:
+
+/usr/qt/3/include/qmemarray.h:
+
+/usr/qt/3/include/qgarray.h:
+
+/usr/qt/3/include/qshared.h:
+
+/usr/qt/3/include/qwinexport.h:
+
+/usr/include/string.h:
+
+/usr/qt/3/include/qstring.h:
+
+/usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include-fixed/limits.h:
+
+/usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include-fixed/syslimits.h:
+
+/usr/include/limits.h:
+
+/usr/include/bits/posix1_lim.h:
+
+/usr/include/bits/local_lim.h:
+
+/usr/include/linux/limits.h:
+
+/usr/include/bits/posix2_lim.h:
+
+/usr/include/bits/xopen_lim.h:
+
+/usr/include/bits/stdio_lim.h:
+
+/usr/include/stdio.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/lib/gcc/i686-pc-linux-gnu/4.5.4/include/stdarg.h:
+
+/usr/include/bits/sys_errlist.h:
+
+/usr/qt/3/include/qdatastream.h:
+
+/usr/qt/3/include/qstrlist.h:
+
+/usr/qt/3/include/qptrlist.h:
+
+/usr/qt/3/include/qglist.h:
+
+/usr/qt/3/include/qptrcollection.h:
+
+../../kdecore/kstaticdeleter.h:
+
+../../kdecore/kglobal.h:
+
+../../kdecore/kdelibs_export.h:
+
+../../kdecore/kdemacros.h:
+
+/usr/qt/3/include/qglobal.h:
+
+../../kdecore/kinstance.h:
+
+/usr/qt/3/include/qstring.h:
+
+../../kdecore/kdelibs_export.h:
+
+../../kdecore/kdebug.h:
+
+../../kio/kssl/ksslall.h:
+
+../../kio/kssl/ksslcertificatefactory.h:
+
+../../kio/kssl/ksslinfodlg.h:
+
+../../kdeui/kdialog.h:
+
+/usr/qt/3/include/qdialog.h:
+
+/usr/qt/3/include/qwidget.h:
+
+/usr/qt/3/include/qwindowdefs.h:
+
+/usr/qt/3/include/qobjectdefs.h:
+
+/usr/qt/3/include/qnamespace.h:
+
+/usr/qt/3/include/qobject.h:
+
+/usr/qt/3/include/qevent.h:
+
+/usr/qt/3/include/qregion.h:
+
+/usr/qt/3/include/qrect.h:
+
+/usr/qt/3/include/qsize.h:
+
+/usr/qt/3/include/qpoint.h:
+
+/usr/qt/3/include/qmime.h:
+
+/usr/qt/3/include/qmap.h:
+
+/usr/qt/3/include/qpair.h:
+
+/usr/qt/3/include/qpaintdevice.h:
+
+/usr/qt/3/include/qpalette.h:
+
+/usr/qt/3/include/qcolor.h:
+
+/usr/qt/3/include/qstringlist.h:
+
+/usr/qt/3/include/qbrush.h:
+
+/usr/qt/3/include/qfont.h:
+
+/usr/qt/3/include/qfontmetrics.h:
+
+/usr/qt/3/include/qfontinfo.h:
+
+/usr/qt/3/include/qsizepolicy.h:
+
+../../kio/kssl/ksslx509map.h:
+
+/usr/qt/3/include/qmap.h:
+
+../../kio/kssl/ksslcertificate.h:
+
+/usr/qt/3/include/qcstring.h:
+
+/usr/qt/3/include/qvaluelist.h:
+
+../../kio/kssl/ksslconfig.h:
+
+../../kio/kssl/kssl.h:
+
+../../kio/kssl/ksslsettings.h:
+
+../../kdecore/kconfig.h:
+
+../../kdecore/kconfigbase.h:
+
+/usr/qt/3/include/qobject.h:
+
+/usr/qt/3/include/qcolor.h:
+
+/usr/qt/3/include/qfont.h:
+
+/usr/qt/3/include/qdatetime.h:
+
+/usr/qt/3/include/qstrlist.h:
+
+/usr/qt/3/include/qvariant.h:
+
+../../kdecore/kconfigdata.h:
+
+../../kdecore/klockfile.h:
+
+../../kdecore/ksharedptr.h:
+
+../../kio/kssl/ksslpeerinfo.h:
+
+../../kio/kssl/ksslcertificate.h:
+
+../../kio/kssl/ksslconnectioninfo.h:
+
+/usr/qt/3/include/qscrollview.h:
+
+/usr/qt/3/include/qframe.h:
+
+/usr/qt/3/include/qscrollbar.h:
+
+/usr/qt/3/include/qrangecontrol.h:
+
+../../kio/kssl/ksslx509map.h:
+
+../../kio/kssl/kssl.h:
+
+../../kio/kssl/ksslcertificatehome.h:
+
+../../kio/kssl/ksslcertificatecache.h:
+
+../../kio/kssl/ksslutils.h:
+
+/usr/include/openssl/x509.h:
+
+/usr/include/openssl/e_os2.h:
+
+/usr/include/openssl/opensslconf.h:
+
+/usr/include/openssl/symhacks.h:
+
+/usr/include/openssl/buffer.h:
+
+/usr/include/openssl/ossl_typ.h:
+
+/usr/include/openssl/evp.h:
+
+/usr/include/openssl/bio.h:
+
+/usr/include/openssl/crypto.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/bits/waitflags.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/alloca.h:
+
+/usr/include/openssl/stack.h:
+
+/usr/include/openssl/safestack.h:
+
+/usr/include/openssl/opensslv.h:
+
+/usr/include/openssl/objects.h:
+
+/usr/include/openssl/obj_mac.h:
+
+/usr/include/openssl/asn1.h:
+
+/usr/include/openssl/bn.h:
+
+/usr/include/openssl/ec.h:
+
+/usr/include/openssl/ecdsa.h:
+
+/usr/include/openssl/ecdh.h:
+
+/usr/include/openssl/rsa.h:
+
+/usr/include/openssl/dsa.h:
+
+/usr/include/openssl/dh.h:
+
+/usr/include/openssl/sha.h:
+
+/usr/include/openssl/x509_vfy.h:
+
+/usr/include/openssl/lhash.h:
+
+/usr/include/openssl/pkcs7.h:
+
+../../kio/kssl/ksslpkcs7.h:
+
+../../kio/kssl/ksslcertchain.h:
+
+/usr/qt/3/include/qptrlist.h:
+
+../../kio/kssl/ksslpkcs12.h:
+
+/usr/include/openssl/pkcs12.h:
+
+../../kio/kssl/ksslx509v3.h:
+
+../../kio/kssl/ksslsigners.h:
+
+../../kio/kssl/ksslsession.h:
+
+../../kio/kssl/ksslcertdlg.h:
+
+../../kdeui/kmessagebox.h:
+
+/usr/qt/3/include/qmessagebox.h:
+
+/usr/qt/3/include/qdialog.h:
+
+../../kdeui/kguiitem.h:
+
+/usr/qt/3/include/qiconset.h:
+
+/usr/qt/3/include/qpixmap.h:
+
+/usr/qt/3/include/qpixmap.h:
+
+../../kdecore/kicontheme.h:
+
+../../kdeui/kstdguiitem.h:
+
+/usr/qt/3/include/qpair.h:
+
+../../kdecore/network/kresolver.h:
+
+../../kdecore/network/ksocketaddress.h:
+
+../../kdecore/klocale.h:
+
+../../dcop/dcopclient.h:
+
+../../dcop/kdatastream.h:
+
+/usr/qt/3/include/qdatastream.h:
+
+../../kdecore/kapplication.h:
+
+../../kdecore/kdeversion.h:
+
+/usr/qt/3/include/qapplication.h:
+
+/usr/qt/3/include/qdesktopwidget.h:
+
+/usr/qt/3/include/qasciidict.h:
+
+/usr/qt/3/include/qgdict.h:
+
+/usr/qt/3/include/qtranslator.h:
+
+kprotocolmanager.h:
+
+../kio/global.h:
+
+../../kdecore/kurl.h:
+
+../../kdecore/kde_file.h:
+
+../kio/tcpslavebase.h:
+
+../../kdecore/kextsock.h:
+
+/usr/qt/3/include/qiodevice.h:
+
+../../kdecore/kbufferedio.h:
+
+../../kdecore/kasyncio.h:
+
+../../kdecore/ksockaddr.h:
+
+../kio/slavebase.h:
+
+../../kdecore/kconfigbase.h:
+
+../kio/authinfo.h:

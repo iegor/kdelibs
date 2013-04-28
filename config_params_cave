@@ -1,0 +1,15 @@
+--host=i686-pc-linux-gnu
+--localstatedir=/var/lib
+--with-qt-dir=/usr/qt/3
+--enable-mt
+--with-qt-libraries=/usr/qt/3/lib
+--disable-dependency-tracking
+--disable-debug
+--without-debug
+--without-arts
+--prefix=/usr/kde/git
+--mandir=/usr/kde/git/share/man
+--infodir=/usr/kde/git/share/info
+--datadir=/usr/kde/git/share
+--sysconfdir=/usr/kde/git/etc
+--build=i686-pc-linux-gnu
