@@ -760,10 +760,6 @@
 /* Define to the system default library search path. */
 #undef LTDL_SYSSEARCHPATH
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
-#undef LT_OBJDIR
-
 /* Define the file for mount entries */
 #undef MTAB_FILE
 
