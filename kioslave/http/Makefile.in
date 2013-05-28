@@ -1324,7 +1324,7 @@ clean-metasources:
 	-rm -f  http.moc
 
 #>+ 2
-KDE_DIST=webdav.protocol http_cache_cleaner.desktop Makefile.in THOUGHTS rfc2818.txt rfc2616.txt https.protocol configure.in.in rfc3253.txt rfc3229.txt shoutcast-icecast.txt kio_http_cache_cleaner.la.cc README.webdav rfc2817.txt README.http_cache_cleaner webdavs.protocol configure.in.bot rfc2617.txt http.protocol kio_http_cache_cleaner_dummy.cc rfc2518.txt Makefile.am 
+KDE_DIST=rfc2818.txt webdavs.protocol configure.in.bot Makefile.in rfc2616.txt rfc3253.txt rfc2617.txt rfc2518.txt kio_http_cache_cleaner.la.cc http_cache_cleaner.desktop THOUGHTS rfc3229.txt https.protocol README.webdav shoutcast-icecast.txt kio_http_cache_cleaner_dummy.cc rfc2817.txt configure.in.in Makefile.am http.protocol README.http_cache_cleaner webdav.protocol 
 
 #>+ 2
 docs-am:

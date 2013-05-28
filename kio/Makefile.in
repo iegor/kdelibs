@@ -197,6 +197,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
 	distdir
 ETAGS = etags
 CTAGS = ctags
+DIST_SUBDIRS = $(SUBDIRS)
 #>- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 #>+ 1
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST) $(KDE_DIST)
@@ -536,8 +537,7 @@ xdg_directorydir = @xdg_directorydir@
 xdg_menudir = @xdg_menudir@
 AM_CPPFLAGS = -D_LARGEFILE64_SOURCE
 INCLUDES = $(SSL_INCLUDES) $(all_includes) -I$(srcdir)/.. .
-SUBDIRS = kssl kio bookmarks kfile . httpfilter kioexec pics tests $(AC_SUBST)
-DIST_SUBDIRS = kpasswdserver misc
+SUBDIRS = kssl kio bookmarks kfile . kpasswdserver misc httpfilter kioexec pics tests $(AC_SUBST)
 lib_LTLIBRARIES = libkio.la
 libkio_la_SOURCES = dummy.cpp
 libkio_la_LDFLAGS = -version-info 6:0:2 -no-undefined $(all_libraries) \
@@ -1290,7 +1290,7 @@ install-apidox-recurse: install-apidox
 .NOEXPORT:
 
 #>+ 2
-KDE_DIST=DESIGN Mainpage.dox kcmodule.desktop Makefile.in proxytype.pl DESIGN.metadata kpasswdserver.desktop kcomprfilter.desktop renamedlgplugin.desktop DESKTOP_ENTRY_STANDARD DESIGN.mimetypes DESIGN.krun kfileplugin.desktop kscan.desktop kurifilterplugin.desktop kdatatool.desktop magic data.protocol kioslave.upd application.desktop useragent.pl Makefile.am 
+KDE_DIST=data.protocol Mainpage.dox useragent.pl kcmodule.desktop kpasswdserver.desktop Makefile.in kurifilterplugin.desktop proxytype.pl kdatatool.desktop DESKTOP_ENTRY_STANDARD DESIGN.mimetypes DESIGN.krun magic kcomprfilter.desktop DESIGN.metadata kioslave.upd kscan.desktop application.desktop Makefile.am kfileplugin.desktop DESIGN renamedlgplugin.desktop 
 
 #>+ 2
 docs-am:

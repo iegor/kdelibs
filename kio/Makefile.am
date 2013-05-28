@@ -20,8 +20,7 @@ AM_CPPFLAGS = -D_LARGEFILE64_SOURCE
 
 INCLUDES = $(SSL_INCLUDES) $(all_includes) -I$(srcdir)/.. .
 
-SUBDIRS = kssl kio bookmarks kfile . httpfilter kioexec pics tests $(AC_SUBST)
-DIST_SUBDIRS = kpasswdserver misc
+SUBDIRS = kssl kio bookmarks kfile . kpasswdserver misc httpfilter kioexec pics tests $(AC_SUBST)
 
 lib_LTLIBRARIES = libkio.la
 
