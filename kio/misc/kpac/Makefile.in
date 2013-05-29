@@ -107,8 +107,7 @@ am__DEPENDENCIES_1 =
 kded_proxyscout_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(top_builddir)/kjs/libkjs.la $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(top_builddir)/dcop/libDCOP.la \
-	$(top_builddir)/kded/libkdeinit_kded.la $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 am_kded_proxyscout_la_OBJECTS = proxyscout.lo script.lo downloader.lo \
 	discovery.lo
 #>- kded_proxyscout_la_OBJECTS = $(am_kded_proxyscout_la_OBJECTS)
@@ -506,8 +505,7 @@ kded_proxyscout_la_SOURCES= proxyscout.cpp script.cpp \
 
 kded_proxyscout_la_LDFLAGS = $(all_libraries) -module -avoid-version
 kded_proxyscout_la_LIBADD = $(LIB_KIO) $(top_builddir)/kjs/libkjs.la $(LIB_KDED) $(LIB_QT) \
-	$(top_builddir)/dcop/libDCOP.la $(top_builddir)/kded/libkdeinit_kded.la \
-	$(LIB_KDECORE) $(LIBRESOLV)
+	$(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE) $(LIBRESOLV)
 
 kpac_dhcp_helper_SOURCES = kpac_dhcp_helper.c
 kpac_dhcp_helper_CFLAGS = $(KDE_USE_FPIE)
@@ -1029,7 +1027,7 @@ clean-metasources:
 	-rm -f  downloader.moc proxyscout.moc discovery.moc
 
 #>+ 2
-KDE_DIST=eventsrc dhcp.h Makefile.in configure.in.in proxyscout.desktop kpactest.pac Makefile.am README.wpad 
+KDE_DIST=Makefile.in proxyscout.kidl eventsrc kpactest.pac configure.in.in proxyscout.desktop Makefile.am dhcp.h README.wpad 
 
 #>+ 4
 clean-idl:
@@ -1078,7 +1076,7 @@ bcheck-am:
 
 
 #>+ 11
-kded_proxyscout_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/proxyscout.cpp $(srcdir)/script.cpp $(srcdir)/downloader.cpp $(srcdir)/discovery.cpp proxyscout_skel.cpp  downloader.moc discovery.moc proxyscout.moc
+kded_proxyscout_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/proxyscout.cpp $(srcdir)/script.cpp $(srcdir)/downloader.cpp $(srcdir)/discovery.cpp $(srcdir)/proxyscout_skel.cpp  downloader.moc discovery.moc proxyscout.moc
 	@echo 'creating kded_proxyscout_la.all_cpp.cpp ...'; \
 	rm -f kded_proxyscout_la.all_cpp.files kded_proxyscout_la.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> kded_proxyscout_la.all_cpp.final; \

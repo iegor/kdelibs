@@ -1290,7 +1290,7 @@ install-apidox-recurse: install-apidox
 .NOEXPORT:
 
 #>+ 2
-KDE_DIST=data.protocol Mainpage.dox useragent.pl kcmodule.desktop kpasswdserver.desktop Makefile.in kurifilterplugin.desktop proxytype.pl kdatatool.desktop DESKTOP_ENTRY_STANDARD DESIGN.mimetypes DESIGN.krun magic kcomprfilter.desktop DESIGN.metadata kioslave.upd kscan.desktop application.desktop Makefile.am kfileplugin.desktop DESIGN renamedlgplugin.desktop 
+KDE_DIST=DESIGN Mainpage.dox kcmodule.desktop Makefile.in proxytype.pl DESIGN.metadata kpasswdserver.desktop kcomprfilter.desktop renamedlgplugin.desktop DESKTOP_ENTRY_STANDARD DESIGN.mimetypes DESIGN.krun kfileplugin.desktop kscan.desktop kurifilterplugin.desktop kdatatool.desktop magic data.protocol kioslave.upd application.desktop useragent.pl Makefile.am 
 
 #>+ 2
 docs-am:

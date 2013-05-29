@@ -125,7 +125,7 @@ kded_kwalletd_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	../../../kwallet/client/libkwalletclient.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(top_builddir)/dcop/libDCOP.la $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(top_builddir)/kded/libkdeinit_kded.la
+	$(am__DEPENDENCIES_1)
 am_kded_kwalletd_la_OBJECTS = kwalletd.lo ktimeout.lo
 #>- kded_kwalletd_la_OBJECTS = $(am_kded_kwalletd_la_OBJECTS)
 #>+ 4
@@ -490,7 +490,7 @@ xdg_menudir = @xdg_menudir@
 INCLUDES = -I$(srcdir)/.. -I$(top_srcdir) -I$(top_srcdir)/kwallet/backend -I$(top_builddir)/kwallet/backend -I$(top_srcdir)/kwallet/client -I$(top_builddir)/kwallet/client $(all_includes)
 kde_module_LTLIBRARIES = kded_kwalletd.la
 kded_kwalletd_la_LDFLAGS = $(all_libraries) -module -avoid-version
-kded_kwalletd_la_LIBADD = $(LIB_KIO) ../../../kwallet/backend/libkwalletbackend.la ../../../kwallet/client/libkwalletclient.la $(LIB_KDED) $(LIB_QT) $(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE) $(LIB_KDEUI) $(top_builddir)/kded/libkdeinit_kded.la
+kded_kwalletd_la_LIBADD = $(LIB_KIO) ../../../kwallet/backend/libkwalletbackend.la ../../../kwallet/client/libkwalletclient.la $(LIB_KDED) $(LIB_QT) $(top_builddir)/dcop/libDCOP.la $(LIB_KDECORE) $(LIB_KDEUI)
 #>- kded_kwalletd_la_SOURCES = kwalletd.cpp kwalletd.skel ktimeout.cpp kwalletwizard.ui kbetterthankdialogbase.ui
 #>+ 1
 kded_kwalletd_la_SOURCES=kwalletd.cpp  ktimeout.cpp   kwalletd_skel.cpp kwalletwizard.cpp kbetterthankdialogbase.cpp
@@ -888,7 +888,7 @@ clean-metasources:
 	-rm -f  ktimeout.moc kwalletd.moc
 
 #>+ 2
-KDE_DIST=kwalletwizard.ui Makefile.in kbetterthankdialogbase.ui kwalletd.desktop kbetterthankdialogbase.ui.h Makefile.am 
+KDE_DIST=kwalletd.desktop kbetterthankdialogbase.ui.h kwalletwizard.h Makefile.in kwalletd.kidl kwalletwizard.ui kbetterthankdialogbase.h Makefile.am kbetterthankdialogbase.ui 
 
 #>+ 4
 clean-idl:
@@ -943,7 +943,7 @@ bcheck-am:
 
 
 #>+ 11
-kded_kwalletd_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/kwalletd.cpp $(srcdir)/ktimeout.cpp kwalletd_skel.cpp kwalletwizard.cpp  kwalletwizard.ui kwalletwizard.ui.h kbetterthankdialogbase.cpp  kbetterthankdialogbase.ui kbetterthankdialogbase.ui.h  ktimeout.moc kwalletwizard.moc kbetterthankdialogbase.moc kwalletd.moc
+kded_kwalletd_la.all_cpp.cpp: $(srcdir)/Makefile.in $(srcdir)/kwalletd.cpp $(srcdir)/ktimeout.cpp $(srcdir)/kwalletd_skel.cpp $(srcdir)/kwalletwizard.cpp  kwalletwizard.ui kwalletwizard.ui.h $(srcdir)/kbetterthankdialogbase.cpp  kbetterthankdialogbase.ui kbetterthankdialogbase.ui.h  ktimeout.moc kwalletwizard.moc kbetterthankdialogbase.moc kwalletd.moc
 	@echo 'creating kded_kwalletd_la.all_cpp.cpp ...'; \
 	rm -f kded_kwalletd_la.all_cpp.files kded_kwalletd_la.all_cpp.final; \
 	echo "#define KDE_USE_FINAL 1" >> kded_kwalletd_la.all_cpp.final; \

@@ -1147,7 +1147,7 @@ clean-metasources:
 	-rm -f  ksslkeygen.moc ksslinfodlg.moc ksslcertdlg.moc
 
 #>+ 2
-KDE_DIST=keygenwizard.ui ksslconfig_win.h kssldefs.h Makefile.in SECURITY-HOLES ksslconfig.h.in configure.in.in ksslcallback.c stamp-h4 KPMG-CA-16389.0.DC80502.pdf keygenwizard2.ui Makefile.am 
+KDE_DIST=keygenwizard.ui ksslconfig_win.h kssldefs.h Makefile.in SECURITY-HOLES ksslconfig.h.in configure.in.in ksslcallback.c KPMG-CA-16389.0.DC80502.pdf keygenwizard2.ui Makefile.am 
 
 #>+ 5
 clean-ui:
