@@ -31,7 +31,12 @@
 
 class QSocketNotifier;
 class KProcessPrivate;
+
+#ifdef Q_OS_UNIX
+#include <kpty.h>
+#else
 class KPty;
+#endif
 
 /**
  * Child process invocation, monitoring and control.
@@ -454,7 +459,7 @@ public:
 
   /**
    * @brief Close stdin, stdout, stderr and the pty
-   * 
+   *
    * This is the same that calling all close* functions in a row:
    * @see closeStdin, @see closeStdout, @see closeStderr and @see closePty
    */
