@@ -30,6 +30,8 @@
 #include <kiconloader.h>
 #include <kurl.h>
 
+#include "config.h"
+
 KMWFax::KMWFax(QWidget *parent, const char *name)
 : KMWizardPage(parent,name)
 {
@@ -55,11 +57,19 @@ KMWFax::KMWFax(QWidget *parent, const char *name)
 		ipp_attribute_t	*attr = req.first();
 		while (attr)
 		{
+#ifdef HAVE_CUPS_1_6
+			if (ippGetName(attr) && strcmp(ippGetName(attr),"device-uri") == 0 && strncmp(ippGetString(attr, 0, NULL),"fax",3) == 0)
+			{
+				m_list->insertItem(SmallIcon("blockdevice"),QString::fromLatin1(ippGetString(attr, 0, NULL)));
+			}
+			attr = ippNextAttribute(req.request());
+#else // HAVE_CUPS_1_6
 			if (attr->name && strcmp(attr->name,"device-uri") == 0 && strncmp(attr->values[0].string.text,"fax",3) == 0)
 			{
 				m_list->insertItem(SmallIcon("blockdevice"),QString::fromLatin1(attr->values[0].string.text));
 			}
 			attr = attr->next;
+#endif // HAVE_CUPS_1_6
 		}
 	}
 }

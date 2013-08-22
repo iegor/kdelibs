@@ -80,6 +80,9 @@
 /* Defines if you have CUPS (Common UNIX Printing System) */
 #undef HAVE_CUPS
 
+/* CUPS is at least version 1.6 */
+#undef HAVE_CUPS_1_6
+
 /* CUPS doesn't have password caching */
 #undef HAVE_CUPS_NO_PWD_CACHE
 

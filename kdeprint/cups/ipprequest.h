@@ -72,7 +72,7 @@ public:
 	bool keyword(const QString& name, QStringList& value);
 	bool mime(const QString& name, QString& value);
 	ipp_attribute_t* first();
-	ipp_attribute_t* last();
+	ipp_t* request();
 	QMap<QString,QString> toMap(int group = -1);
 	void setMap(const QMap<QString,QString>& opts);
 
@@ -178,12 +178,6 @@ inline bool IppRequest::mime(const QString& name, QString& value)
 inline bool IppRequest::doRequest(const QString& res)
 { return doFileRequest(res); }
 
-inline ipp_attribute_t* IppRequest::first()
-{ return (request_ ? request_->attrs : NULL); }
-
-inline ipp_attribute_t* IppRequest::last()
-{ return (request_ ? request_->last : NULL); }
-
 inline void IppRequest::setHost(const QString& host)
 { host_ = host; }
 
@@ -192,5 +186,8 @@ inline void IppRequest::setPort(int p)
 
 inline void IppRequest::dump(int state)
 { dump_ = state; }
+
+inline ipp_t* IppRequest::request()
+{ return request_; }
 
 #endif

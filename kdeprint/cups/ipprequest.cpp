@@ -51,6 +51,58 @@ void dumpRequest(ipp_t *req, bool answer = false, const QString& s = QString::nu
 		kdDebug(500) << "Null request" << endl;
 		return;
 	}
+#ifdef HAVE_CUPS_1_6
+	kdDebug(500) << "State = 0x" << QString::number(ippGetState(req), 16) << endl;
+	kdDebug(500) << "ID = 0x" << QString::number(ippGetRequestId(req), 16) << endl;
+	if (answer)
+	{
+		kdDebug(500) << "Status = 0x" << QString::number(ippGetStatusCode(req), 16) << endl;
+		kdDebug(500) << "Status message = " << ippErrorString(ippGetStatusCode(req)) << endl;
+	}
+	else
+		kdDebug(500) << "Operation = 0x" << QString::number(ippGetOperation(req), 16) << endl;
+	int minorVersion;
+	int majorVersion = ippGetVersion(req, &minorVersion);
+	kdDebug(500) << "Version = " << (int)(majorVersion) << "." << (int)(minorVersion) << endl;
+	kdDebug(500) << endl;
+
+	ipp_attribute_t *attr = ippFirstAttribute(req);
+	while (attr)
+	{
+		QString s = QString::fromLatin1("%1 (0x%2) = ").arg(ippGetName(attr)).arg(ippGetValueTag(attr), 0, 16);
+		for (int i=0;i<ippGetCount(attr);i++)
+		{
+			switch (ippGetValueTag(attr))
+			{
+				case IPP_TAG_INTEGER:
+				case IPP_TAG_ENUM:
+					s += ("0x"+QString::number(ippGetInteger(attr, i), 16));
+					break;
+				case IPP_TAG_BOOLEAN:
+					s += (ippGetBoolean(attr, i) ? "true" : "false");
+					break;
+				case IPP_TAG_STRING:
+				case IPP_TAG_TEXT:
+				case IPP_TAG_NAME:
+				case IPP_TAG_KEYWORD:
+				case IPP_TAG_URI:
+				case IPP_TAG_MIMETYPE:
+				case IPP_TAG_NAMELANG:
+				case IPP_TAG_TEXTLANG:
+				case IPP_TAG_CHARSET:
+				case IPP_TAG_LANGUAGE:
+					s += ippGetString(attr, i, NULL);
+					break;
+				default:
+					break;
+			}
+			if (i != (ippGetCount(attr)-1))
+				s += ", ";
+		}
+		kdDebug(500) << s << endl;
+		attr = ippNextAttribute(req);
+	}
+#else // HAVE_CUPS_1_6
 	kdDebug(500) << "State = 0x" << QString::number(req->state, 16) << endl;
 	kdDebug(500) << "ID = 0x" << QString::number(req->request.status.request_id, 16) << endl;
 	if (answer)
@@ -99,6 +151,7 @@ void dumpRequest(ipp_t *req, bool answer = false, const QString& s = QString::nu
 		kdDebug(500) << s << endl;
 		attr = attr->next;
 	}
+#endif // HAVE_CUPS_1_6
 }
 
 QString errorString(int status)
@@ -177,7 +230,11 @@ void IppRequest::addStringList_p(int group, int type, const QString& name, const
 		ipp_attribute_t	*attr = ippAddStrings(request_,(ipp_tag_t)group,(ipp_tag_t)type,name.latin1(),(int)(values.count()),NULL,NULL);
 		int	i(0);
 		for (QStringList::ConstIterator it=values.begin(); it != values.end(); ++it, i++)
+#ifdef HAVE_CUPS_1_6
+			ippSetString(request_, &attr, i, strdup((*it).local8Bit()));
+#else // HAVE_CUPS_1_6
 			attr->values[i].string.text = strdup((*it).local8Bit());
+#endif // HAVE_CUPS_1_6
 	}
 }
 
@@ -193,7 +250,11 @@ void IppRequest::addIntegerList_p(int group, int type, const QString& name, cons
 		ipp_attribute_t	*attr = ippAddIntegers(request_,(ipp_tag_t)group,(ipp_tag_t)type,name.latin1(),(int)(values.count()),NULL);
 		int	i(0);
 		for (QValueList<int>::ConstIterator it=values.begin(); it != values.end(); ++it, i++)
+#ifdef HAVE_CUPS_1_6
+			ippSetInteger(request_, &attr, i, *it);
+#else // HAVE_CUPS_1_6
 			attr->values[i].integer = *it;
+#endif // HAVE_CUPS_1_6
 	}
 }
 
@@ -209,19 +270,32 @@ void IppRequest::addBoolean(int group, const QString& name, const QValueList<boo
 		ipp_attribute_t	*attr = ippAddBooleans(request_,(ipp_tag_t)group,name.latin1(),(int)(values.count()),NULL);
 		int	i(0);
 		for (QValueList<bool>::ConstIterator it=values.begin(); it != values.end(); ++it, i++)
+#ifdef HAVE_CUPS_1_6
+			ippSetBoolean(request_, &attr, i, (char)(*it));
+#else // HAVE_CUPS_1_6
 			attr->values[i].boolean = (char)(*it);
+#endif // HAVE_CUPS_1_6
 	}
 }
 
 void IppRequest::setOperation(int op)
 {
+#ifdef HAVE_CUPS_1_6
+	ippSetOperation(request_, (ipp_op_t)op);
+	ippSetRequestId(request_, 1);		// 0 is not RFC-compliant, should be at least 1
+#else // HAVE_CUPS_1_6
 	request_->request.op.operation_id = (ipp_op_t)op;
 	request_->request.op.request_id = 1;	// 0 is not RFC-compliant, should be at least 1
+#endif // HAVE_CUPS_1_6
 }
 
 int IppRequest::status()
 {
+#ifdef HAVE_CUPS_1_6
+	return (request_ ? ippGetStatusCode(request_) : (connect_ ? cupsLastError() : -2));
+#else // HAVE_CUPS_1_6
 	return (request_ ? request_->request.status.status_code : (connect_ ? cupsLastError() : -2));
+#endif // HAVE_CUPS_1_6
 }
 
 QString IppRequest::statusMessage()
@@ -248,7 +322,11 @@ bool IppRequest::integerValue_p(const QString& name, int& value, int type)
 	ipp_attribute_t	*attr = ippFindAttribute(request_, name.latin1(), (ipp_tag_t)type);
 	if (attr)
 	{
+#ifdef HAVE_CUPS_1_6
+		value = ippGetInteger(attr, 0);
+#else // HAVE_CUPS_1_6
 		value = attr->values[0].integer;
+#endif // HAVE_CUPS_1_6
 		return true;
 	}
 	else return false;
@@ -260,7 +338,11 @@ bool IppRequest::stringValue_p(const QString& name, QString& value, int type)
 	ipp_attribute_t	*attr = ippFindAttribute(request_, name.latin1(), (ipp_tag_t)type);
 	if (attr)
 	{
+#ifdef HAVE_CUPS_1_6
+		value = QString::fromLocal8Bit(ippGetString(attr, 0, NULL));
+#else // HAVE_CUPS_1_6
 		value = QString::fromLocal8Bit(attr->values[0].string.text);
+#endif // HAVE_CUPS_1_6
 		return true;
 	}
 	else return false;
@@ -273,8 +355,13 @@ bool IppRequest::stringListValue_p(const QString& name, QStringList& values, int
 	values.clear();
 	if (attr)
 	{
+#ifdef HAVE_CUPS_1_6
+		for (int i=0;i<ippGetCount(attr);i++)
+			values.append(QString::fromLocal8Bit(ippGetString(attr, i, NULL)));
+#else // HAVE_CUPS_1_6
 		for (int i=0;i<attr->num_values;i++)
 			values.append(QString::fromLocal8Bit(attr->values[i].string.text));
+#endif // HAVE_CUPS_1_6
 		return true;
 	}
 	else return false;
@@ -286,7 +373,11 @@ bool IppRequest::boolean(const QString& name, bool& value)
 	ipp_attribute_t	*attr = ippFindAttribute(request_, name.latin1(), IPP_TAG_BOOLEAN);
 	if (attr)
 	{
+#ifdef HAVE_CUPS_1_6
+		value = (bool)ippGetBoolean(attr, 0);
+#else // HAVE_CUPS_1_6
 		value = (bool)attr->values[0].boolean;
+#endif // HAVE_CUPS_1_6
 		return true;
 	}
 	else return false;
@@ -338,12 +429,19 @@ bool IppRequest::doFileRequest(const QString& res, const QString& filename)
 	}
 
 	/* No printers found */
+#ifdef HAVE_CUPS_1_6
+	if ( request_ && ippGetStatusCode(request_) == 0x406 )
+#else // HAVE_CUPS_1_6
 	if ( request_ && request_->request.status.status_code == 0x406 )
+#endif // HAVE_CUPS_1_6
 		return true;
 
+#ifdef HAVE_CUPS_1_6
+	if (!request_ || ippGetState(request_) == IPP_ERROR || (ippGetStatusCode(request_) & 0x0F00))
+#else // HAVE_CUPS_1_6
 	if (!request_ || request_->state == IPP_ERROR || (request_->request.status.status_code & 0x0F00))
+#endif // HAVE_CUPS_1_6
 		return false;
-
 
 	return true;
 }
@@ -356,14 +454,88 @@ bool IppRequest::htmlReport(int group, QTextStream& output)
 	output << "<tr><th bgcolor=\"dark blue\"><font color=\"white\">" << i18n("Attribute") << "</font></th>" << endl;
 	output << "<th bgcolor=\"dark blue\"><font color=\"white\">" << i18n("Values") << "</font></th></tr>" << endl;
 	// go to the first attribute of the specified group
+#ifdef HAVE_CUPS_1_6
+	ipp_attribute_t	*attr = ippFirstAttribute(request_);
+	while (attr && ippGetGroupTag(attr) != group)
+		attr = ippNextAttribute(request_);
+#else // HAVE_CUPS_1_6
 	ipp_attribute_t	*attr = request_->attrs;
 	while (attr && attr->group_tag != group)
 		attr = attr->next;
+#endif // HAVE_CUPS_1_6
 	// print each attribute
-	ipp_uchar_t	*d;
-	QCString	dateStr;
-	QDateTime	dt;
-	bool	bg(false);
+	const ipp_uchar_t	*d;
+	QCString		dateStr;
+	QDateTime		dt;
+	bool			bg(false);
+#ifdef HAVE_CUPS_1_6
+	while (attr && ippGetGroupTag(attr) == group)
+	{
+		output << "  <tr bgcolor=\"" << (bg ? "#ffffd9" : "#ffffff") << "\">\n    <td><b>" << ippGetName(attr) << "</b></td>\n    <td>" << endl;
+		bg = !bg;
+		for (int i=0; i<ippGetCount(attr); i++)
+		{
+			switch (ippGetValueTag(attr))
+			{
+				case IPP_TAG_INTEGER:
+					if (ippGetName(attr) && strstr(ippGetName(attr), "time"))
+					{
+						dt.setTime_t((unsigned int)(ippGetInteger(attr, i)));
+						output << dt.toString();
+					}
+					else
+						output << ippGetInteger(attr, i);
+					break;
+				case IPP_TAG_ENUM:
+					output << "0x" << hex << ippGetInteger(attr, i) << dec;
+					break;
+				case IPP_TAG_BOOLEAN:
+					output << (ippGetBoolean(attr, i) ? i18n("True") : i18n("False"));
+					break;
+				case IPP_TAG_STRING:
+				case IPP_TAG_TEXTLANG:
+				case IPP_TAG_NAMELANG:
+				case IPP_TAG_TEXT:
+				case IPP_TAG_NAME:
+				case IPP_TAG_KEYWORD:
+				case IPP_TAG_URI:
+				case IPP_TAG_CHARSET:
+				case IPP_TAG_LANGUAGE:
+				case IPP_TAG_MIMETYPE:
+					output << ippGetString(attr, i, NULL);
+					break;
+				case IPP_TAG_RESOLUTION:
+					int xres;
+					int yres;
+					ipp_res_t units;
+					xres = ippGetResolution(attr, i, &yres, &units);
+					output << "( " << xres
+					       << ", " << yres << " )";
+					break;
+				case IPP_TAG_RANGE:
+					int lowervalue;
+					int uppervalue;
+					lowervalue = ippGetRange(attr, i, &uppervalue);
+					output << "[ " << (lowervalue > 0 ? lowervalue : 1)
+					       << ", " << (uppervalue > 0 ? uppervalue : 65535) << " ]";
+					break;
+				case IPP_TAG_DATE:
+					d = ippGetDate(attr, i);
+					dateStr.sprintf("%.4d-%.2d-%.2d, %.2d:%.2d:%.2d %c%.2d%.2d",
+							d[0]*256+d[1], d[2], d[3],
+							d[4], d[5], d[6],
+							d[8], d[9], d[10]);
+					output << dateStr;
+					break;
+				default:
+					continue;
+			}
+			if (i < ippGetCount(attr)-1)
+				output << "<br>";
+		}
+		output << "</td>\n  </tr>" << endl;
+		attr = ippNextAttribute(request_);
+#else // HAVE_CUPS_1_6
 	while (attr && attr->group_tag == group)
 	{
 		output << "  <tr bgcolor=\"" << (bg ? "#ffffd9" : "#ffffff") << "\">\n    <td><b>" << attr->name << "</b></td>\n    <td>" << endl;
@@ -423,6 +595,7 @@ bool IppRequest::htmlReport(int group, QTextStream& output)
 		}
 		output << "</td>\n  </tr>" << endl;
 		attr = attr->next;
+#endif // HAVE_CUPS_1_6
 	}
 	// end table
 	output << "</table>" << endl;
@@ -438,6 +611,59 @@ QMap<QString,QString> IppRequest::toMap(int group)
 		ipp_attribute_t	*attr = first();
 		while (attr)
 		{
+#ifdef HAVE_CUPS_1_6
+			if (group != -1 && ippGetGroupTag(attr) != group)
+			{
+				attr = ippNextAttribute(request_);
+				continue;
+			}
+			QString	value;
+			for (int i=0; i<ippGetCount(attr); i++)
+			{
+				switch (ippGetValueTag(attr))
+				{
+					case IPP_TAG_INTEGER:
+					case IPP_TAG_ENUM:
+						value.append(QString::number(ippGetInteger(attr, i))).append(",");
+						break;
+					case IPP_TAG_BOOLEAN:
+						value.append((ippGetBoolean(attr, i) ? "true" : "false")).append(",");
+						break;
+					case IPP_TAG_RANGE:
+						int lowervalue;
+						int uppervalue;
+						lowervalue = ippGetRange(attr, i, &uppervalue);
+						if (lowervalue > 0)
+							value.append(QString::number(lowervalue));
+						if (lowervalue != uppervalue)
+						{
+							value.append("-");
+							if (uppervalue > 0)
+								value.append(QString::number(uppervalue));
+						}
+						value.append(",");
+						break;
+					case IPP_TAG_STRING:
+					case IPP_TAG_TEXT:
+					case IPP_TAG_NAME:
+					case IPP_TAG_KEYWORD:
+					case IPP_TAG_URI:
+					case IPP_TAG_MIMETYPE:
+					case IPP_TAG_NAMELANG:
+					case IPP_TAG_TEXTLANG:
+					case IPP_TAG_CHARSET:
+					case IPP_TAG_LANGUAGE:
+						value.append(QString::fromLocal8Bit(ippGetString(attr, i, NULL))).append(",");
+						break;
+					default:
+						break;
+				}
+			}
+			if (!value.isEmpty())
+				value.truncate(value.length()-1);
+			opts[QString::fromLocal8Bit(ippGetName(attr))] = value;
+			attr = ippNextAttribute(request_);
+#else // HAVE_CUPS_1_6
 			if (group != -1 && attr->group_tag != group)
 			{
 				attr = attr->next;
@@ -486,6 +712,7 @@ QMap<QString,QString> IppRequest::toMap(int group)
 				value.truncate(value.length()-1);
 			opts[QString::fromLocal8Bit(attr->name)] = value;
 			attr = attr->next;
+#endif // HAVE_CUPS_1_6
 		}
 	}
 	return opts;
@@ -542,3 +769,11 @@ void IppRequest::setMap(const QMap<QString,QString>& opts)
 	}
 #endif
 }
+
+#ifdef HAVE_CUPS_1_6
+ipp_attribute_t* IppRequest::first()
+{ return (request_ ? ippFirstAttribute(request_) : NULL); }
+#else // HAVE_CUPS_1_6
+ipp_attribute_t* IppRequest::first()
+{ return (request_ ? request_->attrs : NULL); }
+#endif // HAVE_CUPS_1_6

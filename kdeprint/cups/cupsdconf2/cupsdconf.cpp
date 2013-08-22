@@ -446,7 +446,7 @@ bool CupsdConf::saveToFile(const QString& filename)
 
 		t << endl << comments_["browseshortnames"] << endl;
 		if (browsing_) t << "BrowseShortNames " << (useshortnames_ ? "Yes" : "No") << endl;
-		
+
 		t << endl << "# Unknown" << endl;
 		for (QValueList< QPair<QString,QString> >::ConstIterator it=unknown_.begin(); it!=unknown_.end(); ++it)
 			t << (*it).first << " " << (*it).second << endl;
@@ -629,26 +629,44 @@ bool CupsdConf::loadAvailableResources()
 	cups_lang_t*	lang = cupsLangDefault();
 	ippAddString(request_, IPP_TAG_OPERATION, IPP_TAG_CHARSET, "attributes-charset", NULL, cupsLangEncoding(lang));
 	ippAddString(request_, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE, "attributes-natural-language", NULL, lang->language);
-	request_->request.op.operation_id = CUPS_GET_PRINTERS;
+#ifdef HAVE_CUPS_1_6
+	ippSetOperation(request_, CUPS_GET_PRINTERS);
+#else // HAVE_CUPS_1_6
+ 	request_->request.op.operation_id = CUPS_GET_PRINTERS;
+#endif // HAVE_CUPS_1_6
 	request_ = cupsDoRequest(http_, request_, "/printers/");
 	if (request_)
 	{
 		QString	name;
 		int	type(0);
+#ifdef HAVE_CUPS_1_6
+		ipp_attribute_t	*attr = ippFirstAttribute(request_);
+#else // HAVE_CUPS_1_6
 		ipp_attribute_t	*attr = request_->attrs;
+#endif // HAVE_CUPS_1_6
 		while (attr)
 		{
 			// check new printer (keep only local non-implicit printers)
+#ifdef HAVE_CUPS_1_6
+			if (!ippGetName(attr))
+#else // HAVE_CUPS_1_6
 			if (!attr->name)
+#endif // HAVE_CUPS_1_6
 			{
 				if (!(type & CUPS_PRINTER_REMOTE) && !(type & CUPS_PRINTER_IMPLICIT) && !name.isEmpty())
 					resources_.append(new CupsResource("/printers/"+name));
 				name = "";
 				type = 0;
 			}
+#ifdef HAVE_CUPS_1_6
+			else if (strcmp(ippGetName(attr), "printer-name") == 0) name = ippGetString(attr, 0, NULL);
+			else if (strcmp(ippGetName(attr), "printer-type") == 0) type = ippGetInteger(attr, 0);
+			attr = ippNextAttribute(request_);
+#else // HAVE_CUPS_1_6
 			else if (strcmp(attr->name, "printer-name") == 0) name = attr->values[0].string.text;
 			else if (strcmp(attr->name, "printer-type") == 0) type = attr->values[0].integer;
 			attr = attr->next;
+#endif // HAVE_CUPS_1_6
 		}
 		if (!(type & CUPS_PRINTER_REMOTE) && !(type & CUPS_PRINTER_IMPLICIT) && !name.isEmpty())
 			resources_.append(new CupsResource("/printers/"+name));
@@ -658,26 +676,44 @@ bool CupsdConf::loadAvailableResources()
 	request_ = ippNew();
 	ippAddString(request_, IPP_TAG_OPERATION, IPP_TAG_CHARSET, "attributes-charset", NULL, cupsLangEncoding(lang));
 	ippAddString(request_, IPP_TAG_OPERATION, IPP_TAG_LANGUAGE, "attributes-natural-language", NULL, lang->language);
+#ifdef HAVE_CUPS_1_6
+	ippSetOperation(request_, CUPS_GET_CLASSES);
+#else // HAVE_CUPS_1_6
 	request_->request.op.operation_id = CUPS_GET_CLASSES;
+#endif // HAVE_CUPS_1_6
 	request_ = cupsDoRequest(http_, request_, "/classes/");
 	if (request_)
 	{
 		QString	name;
 		int	type(0);
+#ifdef HAVE_CUPS_1_6
+		ipp_attribute_t	*attr = ippFirstAttribute(request_);
+#else // HAVE_CUPS_1_6
 		ipp_attribute_t	*attr = request_->attrs;
+#endif // HAVE_CUPS_1_6
 		while (attr)
 		{
 			// check new class (keep only local classes)
+#ifdef HAVE_CUPS_1_6
+			if (!ippGetName(attr))
+#else // HAVE_CUPS_1_6
 			if (!attr->name)
+#endif // HAVE_CUPS_1_6
 			{
 				if (!(type & CUPS_PRINTER_REMOTE) && !name.isEmpty())
 					resources_.append(new CupsResource("/classes/"+name));
 				name = "";
 				type = 0;
 			}
+#ifdef HAVE_CUPS_1_6
+			else if (strcmp(ippGetName(attr), "printer-name") == 0) name = ippGetString(attr, 0, NULL);
+			else if (strcmp(ippGetName(attr), "printer-type") == 0) type = ippGetInteger(attr, 0);
+			attr = ippNextAttribute(request_);
+#else // HAVE_CUPS_1_6
 			else if (strcmp(attr->name, "printer-name") == 0) name = attr->values[0].string.text;
 			else if (strcmp(attr->name, "printer-type") == 0) type = attr->values[0].integer;
 			attr = attr->next;
+#endif // HAVE_CUPS_1_6
 		}
 		if (!(type & CUPS_PRINTER_REMOTE) && !name.isEmpty())
 			resources_.append(new CupsResource("/classes/"+name));

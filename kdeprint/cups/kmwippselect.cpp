@@ -29,6 +29,8 @@
 #include <kdebug.h>
 #include <kiconloader.h>
 
+#include "config.h"
+
 KMWIppSelect::KMWIppSelect(QWidget *parent, const char *name)
 : KMWizardPage(parent,name)
 {
@@ -83,9 +85,15 @@ void KMWIppSelect::initPrinter(KMPrinter *p)
 		ipp_attribute_t	*attr = req.first();
 		while (attr)
 		{
+#ifdef HAVE_CUPS_1_6
+			if (ippGetName(attr) && strcmp(ippGetName(attr),"printer-name") == 0)
+				m_list->insertItem(SmallIcon("tdeprint_printer"),QString::fromLatin1(ippGetString(attr, 0, NULL)));
+			attr = ippNextAttribute(req.request());
+#else // HAVE_CUPS_1_6
 			if (attr->name && strcmp(attr->name,"printer-name") == 0)
 				m_list->insertItem(SmallIcon("kdeprint_printer"),QString::fromLatin1(attr->values[0].string.text));
 			attr = attr->next;
+#endif // HAVE_CUPS_1_6
 		}
 		m_list->sort();
 	}
