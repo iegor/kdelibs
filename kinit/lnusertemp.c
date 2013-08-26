@@ -74,7 +74,7 @@ int create_link(const char *file, const char *tmp_dir)
 {
   int result;
   result = check_tmp_dir(tmp_dir);
-  if (result) 
+  if (result)
   {
      return result;
   }
@@ -119,7 +119,7 @@ int build_link(const char *tmp_prefix, const char *kde_prefix)
 
   if (!kde_home || !kde_home[0])
   {
-     kde_home = "~/.kde3/";
+     kde_home = "~/.kde/";
   }
 
   if (kde_home[0] == '~')
@@ -157,7 +157,7 @@ int build_link(const char *tmp_prefix, const char *kde_prefix)
   {
      perror("mkdir failed: ");
      return 1;
-  }  
+  }
 
   strncat(kde_tmp_dir, kde_prefix, PATH_MAX - strlen(kde_tmp_dir));
   if (gethostname(kde_tmp_dir+strlen(kde_tmp_dir), PATH_MAX - strlen(kde_tmp_dir) - 1) != 0)
@@ -196,7 +196,7 @@ int build_link(const char *tmp_prefix, const char *kde_prefix)
      fprintf(stderr, "Error: \"%s\" could not be read.\n", kde_tmp_dir);
      return 1;
   }
-  tmp_buf[result] = '\0';  
+  tmp_buf[result] = '\0';
   /*printf("Link points to \"%s\"\n", tmp_buf);*/
   if (strncmp(tmp_buf, user_tmp_dir, strlen(user_tmp_dir)) != 0)
   {
@@ -225,9 +225,9 @@ int main(int argc, char **argv)
   const char *kde_prefix = 0;
   int res = 0;
 
-  if ((argc != 2) || 
-      ((strcmp(argv[1], "tmp")!=0) && 
-       (strcmp(argv[1], "socket")!=0) && 
+  if ((argc != 2) ||
+      ((strcmp(argv[1], "tmp")!=0) &&
+       (strcmp(argv[1], "socket")!=0) &&
        (strcmp(argv[1], "cache")!=0)))
   {
      fprintf(stderr, "Usage: lnusertemp tmp|socket|cache\n");
@@ -237,16 +237,16 @@ int main(int argc, char **argv)
   tmp = getenv("KDETMP");
   if (!tmp || !tmp[0])
     tmp = getenv("TMPDIR");
-  if (!tmp || !tmp[0]) 
+  if (!tmp || !tmp[0])
     tmp = "/tmp";
 
   if (strcmp(argv[1], "tmp") == 0)
   {
     tmp_prefix = (char *)malloc(strlen(tmp)+strlen("/kde-")+1);
     strcpy(tmp_prefix, tmp);
-    strcat(tmp_prefix, "/kde-"); 
-    
-    kde_prefix = "/tmp-"; 
+    strcat(tmp_prefix, "/kde-");
+
+    kde_prefix = "/tmp-";
   }
   else if (strcmp(argv[1], "socket") == 0)
   {
@@ -254,23 +254,23 @@ int main(int argc, char **argv)
     strcpy(tmp_prefix, tmp );
     strcat(tmp_prefix, "/ksocket-" );
 
-    kde_prefix = "/socket-"; 
+    kde_prefix = "/socket-";
   }
   else if (strcmp(argv[1], "cache") == 0)
   {
     tmp = getenv("KDEVARTMP");
-    if (!tmp || !tmp[0]) 
+    if (!tmp || !tmp[0])
       tmp = "/var/tmp";
 
     tmp_prefix = (char *)malloc(strlen(tmp)+strlen("/kdecache-")+1);
     strcpy(tmp_prefix, tmp );
     strcat(tmp_prefix, "/kdecache-" );
 
-    kde_prefix = "/cache-"; 
+    kde_prefix = "/cache-";
   }
 
-  res = build_link(tmp_prefix, kde_prefix); 
-    
+  res = build_link(tmp_prefix, kde_prefix);
+
   free(tmp_prefix);
 
   return res;

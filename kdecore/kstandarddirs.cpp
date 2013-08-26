@@ -1319,7 +1319,7 @@ void KStandardDirs::addKDEDefaults()
     }
     else
     {
-       localKdeDir =  QDir::homeDirPath() + "/.kde3/";
+       localKdeDir =  QDir::homeDirPath() + "/.kde/";
     }
 
     if (localKdeDir != "-/")

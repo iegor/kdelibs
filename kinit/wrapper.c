@@ -139,7 +139,7 @@ static int openSocket()
 
   if (!kde_home || !kde_home[0])
   {
-     kde_home = "~/.kde3/";
+     kde_home = "~/.kde/";
   }
 
   if (kde_home[0] == '~')
@@ -162,7 +162,7 @@ static int openSocket()
   /** Strip trailing '/' **/
   if ( sock_file[strlen(sock_file)-1] == '/')
      sock_file[strlen(sock_file)-1] = 0;
-  
+
   strncat(sock_file, "/socket-", MAX_SOCK_FILE - strlen(sock_file));
   if (gethostname(sock_file+strlen(sock_file), MAX_SOCK_FILE - strlen(sock_file) - 1) != 0)
   {
@@ -199,7 +199,7 @@ static int openSocket()
    * create the socket stream
    */
   s = socket(PF_UNIX, SOCK_STREAM, 0);
-  if (s < 0) 
+  if (s < 0)
   {
      perror("Warning: socket() failed: ");
      return -1;
@@ -208,7 +208,7 @@ static int openSocket()
   server.sun_family = AF_UNIX;
   strcpy(server.sun_path, sock_file);
   socklen = sizeof(server);
-  if(connect(s, (struct sockaddr *)&server, socklen) == -1) 
+  if(connect(s, (struct sockaddr *)&server, socklen) == -1)
   {
      perror("Warning: connect() failed: ");
      close(s);
@@ -225,7 +225,7 @@ static void sig_pass_handler( int signo );
 static void setup_signals( void );
 
 static void setup_signal_handler( int signo, int clean )
-{    
+{
     struct sigaction sa;
     if( clean )
         sa.sa_handler = SIG_DFL;
@@ -374,7 +374,7 @@ int main(int argc, char **argv)
       fprintf( stderr, "Error: Can't run %s !\n", argv[ 0 ] );
       exit( 255 );
    }
-   
+
    if( !wrapper && !ext_wrapper && !kwrapper )
        { /* was called as a symlink */
        avoid_loops = 1;
@@ -424,9 +424,9 @@ int main(int argc, char **argv)
           size += strlen(tty)+1;
       }
    }
-   
+
    size += sizeof( avoid_loops );
-   
+
    if( !wrapper )
    {
        startup_id = getenv( "DESKTOP_STARTUP_ID" );
@@ -451,7 +451,7 @@ int main(int argc, char **argv)
         exit(255);
    }
    p = buffer;
-      
+
    memcpy(p, &arg_count, sizeof(arg_count));
    p += sizeof(arg_count);
 
@@ -491,7 +491,7 @@ int main(int argc, char **argv)
           p+=strlen(tty)+1;
       }
    }
-   
+
    memcpy( p, &avoid_loops, sizeof( avoid_loops ));
    p += sizeof( avoid_loops );
 
@@ -500,7 +500,7 @@ int main(int argc, char **argv)
        memcpy(p, startup_id, strlen(startup_id)+1);
        p+= strlen(startup_id)+1;
    }
-   
+
    if( p - buffer != size ) /* should fail only if you change this source and do */
                                  /* a stupid mistake, it should be assert() actually */
    {
@@ -538,7 +538,7 @@ int main(int argc, char **argv)
       fprintf(stderr, "KInit could not launch '%s'.\n", start);
       exit(255);
    }
-   else 
+   else
    {
       fprintf(stderr, "Unexpected response from KInit (response = %ld).\n", header.cmd);
       exit(255);

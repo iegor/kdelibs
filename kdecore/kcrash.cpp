@@ -441,7 +441,7 @@ static int openSocket()
 
   if (!kde_home || !kde_home[0])
   {
-     kde_home = "~/.kde3/";
+     kde_home = "~/.kde/";
   }
 
   if (kde_home[0] == '~')
@@ -464,7 +464,7 @@ static int openSocket()
   /** Strip trailing '/' **/
   if ( sock_file[strlen(sock_file)-1] == '/')
      sock_file[strlen(sock_file)-1] = 0;
-  
+
   strncat(sock_file, "/socket-", MAX_SOCK_FILE - strlen(sock_file));
   if (gethostname(sock_file+strlen(sock_file), MAX_SOCK_FILE - strlen(sock_file) - 1) != 0)
   {
@@ -501,7 +501,7 @@ static int openSocket()
    * create the socket stream
    */
   s = socket(PF_UNIX, SOCK_STREAM, 0);
-  if (s < 0) 
+  if (s < 0)
   {
      perror("Warning: socket() failed: ");
      return -1;
@@ -510,7 +510,7 @@ static int openSocket()
   server.sun_family = AF_UNIX;
   strcpy(server.sun_path, sock_file);
   socklen = sizeof(server);
-  if(connect(s, (struct sockaddr *)&server, socklen) == -1) 
+  if(connect(s, (struct sockaddr *)&server, socklen) == -1)
   {
      perror("Warning: connect() failed: ");
      close(s);
