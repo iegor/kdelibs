@@ -52,7 +52,7 @@ static int set_protection( pid_t pid, int enable )
        if( lstat( buf, &st ) < 0 || st.st_uid != getuid())
            return 0;
    }
-   sprintf( buf, "/proc/%d/oom_adj", pid );
+   sprintf( buf, "/proc/%d/oom_score_adj", pid );
    procfile = open( buf, O_WRONLY );
    if( procfile >= 0 ) {
       if( enable )
