@@ -162,14 +162,14 @@
       <prio>0</prio>
     </make>
     <general>
-      <useconfiguration>default</useconfiguration>
+      <useconfiguration>dbg-x86_64-pc-linux-gnu-clang</useconfiguration>
       <activetarget>kdecore/kde-config</activetarget>
     </general>
     <configurations>
-      <default>
+      <dbg-i686-pc-linux-gnu>
         <envvars/>
         <configargs>--host=i686-pc-linux-gnu --build=i686-pc-linux-gnu --prefix=/usr/kde/git --mandir=/usr/kde/git/share/man --infodir=/usr/kde/git/share/info --datadir=/usr/kde/git/share --sysconfdir=/usr/kde/git/etc --localstatedir=/var/lib --with-qt-dir=/usr/qt/3 --with-qt-libraries=/usr/qt/3/lib --enable-mt --enable-debug=full --libdir=/usr/kde/git/lib --with-distribution=Gentoo --enable-libsuffix=32 --disable-fast-malloc --with-libart --with-libidn --with-ssl --without-hspell --enable-libfam --enable-dnotify --with-acl --with-alsa --enable-cups --without-gssapi --with-tiff --with-jasper --without-openexr --without-utempter --without-lua --enable-sendfile --enable-mitshm --with-aspell --disable-dnssd --with-rgbfile=/usr/share/X11/rgb.txt --without-arts</configargs>
-        <builddir/>
+        <builddir>dbg-i686-pc-linux-gnu</builddir>
         <topsourcedir/>
         <cppflags/>
         <ldflags/>
@@ -179,31 +179,14 @@
         <ccompilerbinary/>
         <cxxcompilerbinary/>
         <f77compilerbinary/>
-        <cflags>-O0 -ggdb3 -Wall</cflags>
-        <cxxflags>-O0 -ggdb3 -Wall</cxxflags>
+        <cflags>-Wall -O0 -ggdb3 -fno-omit-frame-pointer</cflags>
+        <cxxflags>-Wall -O0 -ggdb3 -fno-omit-frame-pointer</cxxflags>
         <f77flags/>
-      </default>
-      <debug-i686-pc-linux-gnu>
-        <envvars/>
-        <configargs>--host=i686-pc-linux-gnu --build=i686-pc-linux-gnu --prefix=/usr/kde/git --mandir=/usr/kde/git/share/man --infodir=/usr/kde/git/share/info --datadir=/usr/kde/git/share --sysconfdir=/usr/kde/git/etc --localstatedir=/var/lib --with-qt-dir=/usr/qt/3 --with-qt-libraries=/usr/qt/3/lib --enable-mt --disable-debug --without-debug --without-arts</configargs>
-        <builddir>debug-i686-pc-linux-gnu</builddir>
-        <topsourcedir/>
-        <cppflags/>
-        <ldflags/>
-        <ccompiler>kdevgccoptions</ccompiler>
-        <cxxcompiler>kdevgppoptions</cxxcompiler>
-        <f77compiler>kdevpgf77options</f77compiler>
-        <ccompilerbinary/>
-        <cxxcompilerbinary/>
-        <f77compilerbinary/>
-        <cflags>-Wall -O0 -ggdb3</cflags>
-        <cxxflags>-Wall -O0 -ggdb3</cxxflags>
-        <f77flags/>
-      </debug-i686-pc-linux-gnu>
-      <debug-x86_64-pc-linux-gnu>
+      </dbg-i686-pc-linux-gnu>
+      <dbg-x86_64-pc-linux-gnu>
         <envvars/>
         <configargs>--host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr/kde/git --mandir=/usr/kde/git/share/man --infodir=/usr/kde/git/share/info --datadir=/usr/kde/git/share --sysconfdir=/usr/kde/git/etc --localstatedir=/var/lib --with-qt-dir=/usr/qt/3 --with-qt-libraries=/usr/qt/3/lib --enable-mt --enable-debug=full --libdir=/usr/kde/git/lib --with-distribution=Gentoo --enable-libsuffix=64 --disable-fast-malloc --with-libart --with-libidn --with-ssl --without-hspell --enable-libfam --enable-dnotify --with-acl --with-alsa --enable-cups --without-gssapi --with-tiff --with-jasper --without-openexr --without-utempter --without-lua --enable-sendfile --enable-mitshm --with-aspell --disable-dnssd --with-rgbfile=/usr/share/X11/rgb.txt --without-arts</configargs>
-        <builddir>debug-x86_64-pc-linux-gnu</builddir>
+        <builddir>dbg-x86_64-pc-linux-gnu</builddir>
         <topsourcedir/>
         <cppflags/>
         <ldflags/>
@@ -213,10 +196,27 @@
         <ccompilerbinary/>
         <cxxcompilerbinary/>
         <f77compilerbinary/>
-        <cflags>-O0 -Wall -ggdb3</cflags>
-        <cxxflags>-O0 -Wall -ggdb3</cxxflags>
+        <cflags>-O0 -Wall -ggdb3 -fno-omit-frame-pointer</cflags>
+        <cxxflags>-O0 -Wall -ggdb3 -fno-omit-frame-pointer</cxxflags>
         <f77flags/>
-      </debug-x86_64-pc-linux-gnu>
+      </dbg-x86_64-pc-linux-gnu>
+      <dbg-x86_64-pc-linux-gnu-clang>
+        <envvars/>
+        <configargs>--host=x86_64-pc-linux-gnu --build=x86_64-pc-linux-gnu --prefix=/usr/kde/git --mandir=/usr/kde/git/share/man --infodir=/usr/kde/git/share/info --datadir=/usr/kde/git/share --sysconfdir=/usr/kde/git/etc --localstatedir=/var/lib --with-qt-dir=/usr/qt/3 --with-qt-libraries=/usr/qt/3/lib --enable-mt --enable-debug=full --libdir=/usr/kde/git/lib --with-distribution=Gentoo --enable-libsuffix=64 --disable-fast-malloc --with-libart --with-libidn --with-ssl --without-hspell --enable-libfam --enable-dnotify --with-acl --with-alsa --enable-cups --without-gssapi --with-tiff --with-jasper --without-openexr --without-utempter --without-lua --enable-sendfile --enable-mitshm --with-aspell --disable-dnssd --with-rgbfile=/usr/share/X11/rgb.txt --without-arts</configargs>
+        <builddir>dbg-x86_64-pc-linux-gnu</builddir>
+        <topsourcedir/>
+        <cppflags/>
+        <ldflags/>
+        <ccompiler>kdevgccoptions</ccompiler>
+        <cxxcompiler>kdevgppoptions</cxxcompiler>
+        <f77compiler>kdevpgf77options</f77compiler>
+        <ccompilerbinary>clang</ccompilerbinary>
+        <cxxcompilerbinary>clang++</cxxcompilerbinary>
+        <f77compilerbinary/>
+        <cflags>-O0 -Wall -ggdb3 -fno-omit-frame-pointer</cflags>
+        <cxxflags>-O0 -Wall -ggdb3 -fno-omit-frame-pointer</cxxflags>
+        <f77flags/>
+      </dbg-x86_64-pc-linux-gnu-clang>
     </configurations>
     <run>
       <mainprogram>/home/rainman/projects/kde/kdelibs</mainprogram>
