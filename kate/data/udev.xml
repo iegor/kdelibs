@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE language SYSTEM "/opt/kde3/share/apps/katepart/syntax/language.dtd">
+<language name="UDEV" version="0.03" 
+  kateversion="2.3" section="Scripts" extensions="*.rules" mimetype=""
+  author="Juergen Heinemann (Undefined)" license="LGPL"
+>
+
+<highlighting>
+
+  <list name="keywords">
+    <item> ACTION </item>
+    <item> BUS </item>
+    <item> DEVPATH </item>
+    <item> KERNEL </item>
+    <item> NAME </item>
+    <item> SUBSYSTEM </item>
+    <item> DRIVER </item>
+    <item> ATTR </item>
+    <item> KERNELS </item>
+    <item> SUBSYSTEMS </item>
+    <item> DRIVERS </item>
+    <item> ATTRS </item>
+    <item> ENV </item>
+    <item> TEST </item>
+    <item> PROGRAM </item>
+    <item> RESULT </item>
+    <item> NAME </item>
+    <item> SYMLINK </item>
+    <item> OWNER </item>
+    <item> GROUP </item>
+    <item> MODE </item>
+    <item> RUN </item>
+    <item> LABEL </item>
+    <item> GOTO </item>
+    <item> IMPORT </item>
+    <item> WAIT_FOR </item>
+    <item> WAIT_FOR_SYSFS </item>
+    <item> OPTIONS </item>
+    <item> SYSFS </item>
+  </list>
+
+  <list name="importtype">
+    <item> program </item>
+    <item> file </item>
+    <item> parent </item>
+    <item> type </item>
+    <item> media </item>
+    <item> model </item>
+    <item> removable </item>
+    <item> idProduct </item>
+    <item> idVendor </item>
+  </list>
+
+  <list name="options">
+    <item> last_rule </item>
+    <item> ignore_device </item>
+    <item> ignore_remove </item>
+    <item> link_priority </item>
+    <item> all_partitions </item>
+    <item> event_timeout </item>
+    <item> string_escape </item>
+    <item> watch </item>
+  </list>
+
+  <contexts>
+    <context name="robots" attribute="Normal Text" lineEndContext="#stay">
+      <keyword attribute="Options" context="#stay" String="keywords"/>
+      <keyword attribute="Type" context="#stay" String="importtype"/>
+      <keyword attribute="Options" context="#stay" String="options"/>
+      <DetectIdentifier />
+      <DetectChar attribute="Symbol" context="#stay" char="{" beginRegion="Brace1" />
+      <DetectChar attribute="Symbol" context="#stay" char="}" endRegion="Brace1" />
+      <DetectChar attribute="String" context="String" char="&quot;"/>
+      <RegExpr attribute="Types" context="#stay" String="(&lt;[a-zA-Z0-9]+&gt;)" />
+      <DetectChar attribute="Comment" context="Comment" char="#" firstNonSpace="true" />
+      <AnyChar attribute="Symbol" context="#stay" String=":!%&amp;()+,-/.*&lt;=&gt;?|~^&#59;"/>
+    </context>
+
+    <!--	Parameter - separated after String-->
+    <context name="Options" attribute="Options" lineEndContext="#pop">
+      <AnyChar attribute="Options" context="#pop" String=":"/>
+      <RegExpr attribute="String" context="#stay" String="[^\/\/]*" />
+      <IncludeRules context="Comment Alert" />
+    </context>
+
+    <!-- Strings -->
+    <context attribute="String" lineEndContext="#pop" name="String">
+      <LineContinue attribute="String" context="#stay"/>
+      <HlCStringChar attribute="String Char" context="#stay"/>
+      <!-- Zahlen Nummern etc. -->
+      <RegExpr attribute="Decimal" context="#stay" String="([0-9]{4})" />
+      <RegExpr attribute="Types" context="#stay" String="%{1,2}[a-zA-Z]" />
+      <RegExpr attribute="Symbol" context="#stay" String="\$[a-zA-Z]+" />
+      <DetectChar attribute="String" context="#pop" char="&quot;"/>
+    </context>
+
+    <!--	Kommentare -->
+    <context name="Comment" attribute="Comment" lineEndContext="#pop">
+      <DetectSpaces />
+      <IncludeRules context="##Alerts" />
+      <DetectIdentifier />
+    </context>
+
+    <!--	Alerts -->
+    <context name="Comment Alert" attribute="Normal Text" lineEndContext="#pop">
+      <DetectChar attribute="Alert" context="Alert" char="#" />
+    </context>
+
+    <context name="Alert" attribute="Alert" lineEndContext="#pop" />
+  </contexts>
+
+  <itemDatas>
+    <itemData name="Normal Text" defStyleNum="dsNormal" />
+    <itemData name="Comment"     defStyleNum="dsComment" />
+    <itemData name="Options"     defStyleNum="dsKeyword" />
+    <itemData name="Type"        defStyleNum="dsFunction" />
+    <itemData name="String"      defStyleNum="dsString" />
+    <itemData name="String Char" defStyleNum="dsChar"/>
+    <itemData name="Decimal"     defStyleNum="dsDecVal"/>
+    <itemData name="Symbol"      defStyleNum="dsNormal" color="#0000FF" bold="true"/>
+    <itemData name="Types"       defStyleNum="dsDataType"/>
+    <itemData name="Alert"       defStyleNum="dsError" />
+    <itemData name="Other"       defStyleNum="dsOthers"/>
+  </itemDatas>
+
+</highlighting>
+
+<general>
+ <comments>
+  <comment name="singleLine" start="#" />
+ </comments>
+ <keywords casesensitive="0" />
+</general>
+
+</language>
