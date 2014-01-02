@@ -824,7 +824,7 @@ void LightStyleV3::drawControl(ControlElement control,
               p->drawLine(br.left(),  br.bottom(), br.right(), br.bottom());
               p->setPen(cg.light());
               p->drawLine(br.left(),  br.bottom() - 1, br.right(), br.bottom() - 1);
-              br.addCoords(0, 4, -1, -4);
+//               br.addCoords(0, 1, -1, -1);
               if (br.left() == 0)
                   p->drawPoint(br.left(), br.bottom() + 2);
           } else {
@@ -846,10 +846,11 @@ void LightStyleV3::drawControl(ControlElement control,
           if (flags & Style_Selected)
           {
               p->fillRect(br.right() - 3, br.top() + 1, 3, br.height() - 1, cg.brush(QColorGroup::Highlight));
-              br.addCoords(1, 1, -4, 0);
+              br.addCoords(1, 1, -3, 0);
           }
           else
               br.addCoords(1, 1, -1, 0);
+
           p->fillRect(br, cg.background());
       } else if (tb->shape() == QTabBar::RoundedBelow) {
         if (!(flags & Style_Selected)) {
@@ -857,7 +858,7 @@ void LightStyleV3::drawControl(ControlElement control,
           p->drawLine(br.left(),  br.top(), br.right(), br.top());
           p->setPen(cg.dark());
           p->drawLine(br.left(),  br.top() + 1, br.right(), br.top() + 1);
-          br.addCoords(0, 2, -1, -2);
+//           br.addCoords(0, 2, -1, -2);
           if (br.left() == 0) {
             p->setPen(cg.light());
             p->drawPoint(br.left(), br.top() - 2);
@@ -1597,7 +1598,7 @@ int LightStyleV3::pixelMetric(PixelMetric metric,
 
     switch (metric) {
         case PM_ButtonMargin:
-            ret = 6;
+            ret = 4;
             break;
 
         case PM_ButtonShiftHorizontal:
@@ -1617,7 +1618,7 @@ int LightStyleV3::pixelMetric(PixelMetric metric,
         case PM_IndicatorHeight:
         case PM_ExclusiveIndicatorWidth:
         case PM_ExclusiveIndicatorHeight:
-            ret = 13;
+            ret = 10;
             break;
 
         case PM_TabBarTabOverlap:
@@ -1627,7 +1628,7 @@ int LightStyleV3::pixelMetric(PixelMetric metric,
 
         case PM_ScrollBarExtent:
         case PM_ScrollBarSliderMin:
-            ret = 15;
+            ret = 12;
             break;
 
         case PM_MenuBarFrameWidth:
@@ -1643,19 +1644,19 @@ int LightStyleV3::pixelMetric(PixelMetric metric,
             break;
 
         case PM_DockWindowSeparatorExtent:
-            ret = 8;
+            ret = 5;
             break;
 
         case PM_SplitterWidth:
-            ret = 8;
+            ret = 4;
             break;
 
         case PM_SliderLength:
-            ret = 25;
+            ret = 20;
             break;
 
         case PM_SliderThickness:
-            ret = 11;
+            ret = 8;
             break;
 
         case PM_SliderControlThickness:
