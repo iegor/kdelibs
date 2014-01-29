@@ -13,3 +13,5 @@ autom4te.cache/*
 dbg-x86_64-pc-linux-gnu/
 *~
 tags
+*.moc.cpp
+*.moc.cc
