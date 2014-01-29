@@ -299,15 +299,15 @@ void KCrash::startDrKonqi( const char* argv[], int argc )
     startDirectly( argv, argc );
     return;
   }
-  long pid;
+  long *pid;
   read_socket(socket, buffer, header.arg_length);
-  pid = *((long *) buffer);
+  pid = (long*)buffer;
 
   alarm(0); // Seems we made it....
 
   for(;;)
   {
-    if( kill( pid, 0 ) < 0 )
+    if( kill( *pid, 0 ) < 0 )
       _exit(253);
     sleep(1);
     // the debugger should stop this process anyway
