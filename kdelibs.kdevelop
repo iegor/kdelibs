@@ -151,7 +151,6 @@
     <make>
       <envvars>
         <envvar value="1" name="WANT_AUTOCONF_2_5" />
-        <envvar value="1.11" name="WANT_AUTOMAKE" />
         <envvar value="1" name="WANT_AUTOMAKE_1_11" />
       </envvars>
       <abortonerror>true</abortonerror>
@@ -162,7 +161,7 @@
       <prio>0</prio>
     </make>
     <general>
-      <useconfiguration>dbg-x86_64-pc-linux-gnu-clang</useconfiguration>
+      <useconfiguration>dbg-x86_64-pc-linux-gnu</useconfiguration>
       <activetarget>kstyles/aurora/aurora.la</activetarget>
     </general>
     <configurations>
