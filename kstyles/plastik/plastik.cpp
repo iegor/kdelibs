@@ -15,7 +15,7 @@
              (c) 2002,2003 Maksim Orlovich <mo002j@mail.rochester.edu>
    based on the KDE3 HighColor Style
    Copyright (C) 2001-2002 Karol Szwed      <gallium@kde.org>
-             (C) 2001-2002 Fredrik Höglund  <fredrik@kde.org>
+             (C) 2001-2002 Fredrik Hï¿½glund  <fredrik@kde.org>
    Drawing routines adapted from the KDE2 HCStyle,
    Copyright (C) 2000 Daniel M. Duley       <mosfet@kde.org>
              (C) 2000 Dirk Mueller          <mueller@kde.org>
@@ -200,12 +200,12 @@ void PlastikStyle::updateProgressPos()
     QMap<QWidget*, int>::iterator iter;
     bool visible = false;
     for (iter = progAnimWidgets.begin(); iter != progAnimWidgets.end(); ++iter)
-    {   
+    {
         if ( !::qt_cast<QProgressBar*>(iter.key()) )
             continue;
-        
+
         pb = dynamic_cast<QProgressBar*>(iter.key());
-        if ( iter.key() -> isEnabled() && 
+        if ( iter.key() -> isEnabled() &&
              pb -> progress() != pb->totalSteps() )
         {
             // update animation Offset of the current Widget
@@ -652,7 +652,7 @@ void PlastikStyle::renderPixel(QPainter *p,
             const QColor &color,
             const QColor &background,
             bool fullAlphaBlend) const
-{    
+{
     if(fullAlphaBlend)
     // full alpha blend: paint into an image with alpha buffer and convert to a pixmap ...
     {
@@ -701,7 +701,7 @@ void PlastikStyle::renderPixel(QPainter *p,
                               qBlue(rgb_b)*a_inv/255 + qBlue(rgb_a)*a/255) );
         p->setPen(res);
         p->drawPoint(pos);
-    } 
+    }
 }
 
 void PlastikStyle::renderButton(QPainter *p,
@@ -1210,12 +1210,12 @@ void PlastikStyle::drawKStylePrimitive(KStylePrimitive kpe,
 
             if (horizontal) {
                 int center = r.y()+r.height()/2;
-                renderContour(p, QRect(r.left(), center-2, r.width(), 4),
+                renderContour(p, QRect(r.left(), center-4, r.width(), 8),
                               cg.background(), cg.background().dark(enabled?150:130),
                               Draw_Left|Draw_Right|Draw_Top|Draw_Bottom);
             } else {
                 int center = r.x()+r.width()/2;
-                renderContour(p, QRect(center-2, r.top(), 4, r.height()),
+                renderContour(p, QRect(center-4, r.top(), 8, r.height()),
                               cg.background(), cg.background().dark(enabled?150:130),
                               Draw_Left|Draw_Right|Draw_Top|Draw_Bottom);
             }
@@ -1224,120 +1224,19 @@ void PlastikStyle::drawKStylePrimitive(KStylePrimitive kpe,
 
         case KPE_SliderHandle: {
                 const QSlider* slider = (const QSlider*)widget;
-                bool horizontal = slider->orientation() == Horizontal;
 
                 const bool pressed = (flags&Style_Active);
                 const WidgetState s = enabled?(pressed?IsPressed:IsEnabled):IsDisabled;
                 const QColor contour = getColor(cg,DragButtonContour,s),
                              surface = getColor(cg,DragButtonSurface,s);
 
-                int xcenter = (r.left()+r.right()) / 2;
-                int ycenter = (r.top()+r.bottom()) / 2;
+                uint surfaceFlags = Draw_Left|Draw_Right|Draw_Top|Draw_Bottom|
+                                    Round_UpperLeft|Round_UpperRight|Round_BottomLeft|Round_BottomRight;
 
-                if (horizontal) {
-                    renderContour(p, QRect(xcenter-5, ycenter-6, 11, 10),
-                                cg.background(), contour,
-                                Draw_Left|Draw_Right|Draw_Top|Round_UpperLeft|Round_UpperRight);
-
-                    // manual contour: vertex
-                    p->setPen(alphaBlendColors(cg.background(), contour, 50) );
-                    p->drawPoint(xcenter-5+1, ycenter+4);
-                    p->drawPoint(xcenter+5-1, ycenter+4);
-                    p->drawPoint(xcenter-5+2, ycenter+5);
-                    p->drawPoint(xcenter+5-2, ycenter+5);
-                    p->drawPoint(xcenter-5+3, ycenter+6);
-                    p->drawPoint(xcenter+5-3, ycenter+6);
-                    p->drawPoint(xcenter-5+4, ycenter+7);
-                    p->drawPoint(xcenter+5-4, ycenter+7);
-                    // anti-aliasing of the contour... sort of. :)
-                    p->setPen(alphaBlendColors(cg.background(), contour, 80) );
-                    p->drawPoint(xcenter, ycenter+8);
-                    p->setPen(alphaBlendColors(cg.background(), contour, 150) );
-                    p->drawPoint(xcenter-5, ycenter+4);
-                    p->drawPoint(xcenter+5, ycenter+4);
-                    p->drawPoint(xcenter-5+1, ycenter+5);
-                    p->drawPoint(xcenter+5-1, ycenter+5);
-                    p->drawPoint(xcenter-5+2, ycenter+6);
-                    p->drawPoint(xcenter+5-2, ycenter+6);
-                    p->drawPoint(xcenter-5+3, ycenter+7);
-                    p->drawPoint(xcenter+5-3, ycenter+7);
-                    p->setPen(alphaBlendColors(cg.background(), contour, 190) );
-                    p->drawPoint(xcenter-5+4, ycenter+8);
-                    p->drawPoint(xcenter+5-4, ycenter+8);
-
-
-                    QRegion mask(xcenter-4, ycenter-5, 9, 13);
-                    mask -= QRegion(xcenter-4, ycenter+4, 1, 4);
-                    mask -= QRegion(xcenter-3, ycenter+5, 1, 3);
-                    mask -= QRegion(xcenter-2, ycenter+6, 1, 2);
-                    mask -= QRegion(xcenter-1, ycenter+7, 1, 1);
-                    mask -= QRegion(xcenter+1, ycenter+7, 1, 1);
-                    mask -= QRegion(xcenter+2, ycenter+6, 1, 2);
-                    mask -= QRegion(xcenter+3, ycenter+5, 1, 3);
-                    mask -= QRegion(xcenter+4, ycenter+4, 1, 4);
-                    p->setClipRegion(mask);
-                    uint surfaceFlags = Draw_Left|Draw_Right|Draw_Top|Round_UpperLeft|Round_UpperRight|Is_Horizontal;
-                    if(!enabled)
-                        surfaceFlags |= Is_Disabled;
-                    renderSurface(p, QRect(xcenter-4, ycenter-5, 9, 13),
-                                cg.background(), surface, getColor(cg,MouseOverHighlight),
-                                _contrast+3, surfaceFlags);
-                    renderDot(p, QPoint(xcenter-3, ycenter-3), surface, false, true );
-                    renderDot(p, QPoint(xcenter+2,   ycenter-3), surface, false, true );
-                    p->setClipping(false);
-                } else {
-                    renderContour(p, QRect(xcenter-6, ycenter-5, 10, 11),
-                                cg.background(), contour,
-                                Draw_Left|Draw_Top|Draw_Bottom|Round_UpperLeft|Round_BottomLeft);
-
-                    // manual contour: vertex
-                    p->setPen(alphaBlendColors(cg.background(), contour, 50) );
-                    p->drawPoint(xcenter+4, ycenter-5+1);
-                    p->drawPoint(xcenter+4, ycenter+5-1);
-                    p->drawPoint(xcenter+5, ycenter-5+2);
-                    p->drawPoint(xcenter+5, ycenter+5-2);
-                    p->drawPoint(xcenter+6, ycenter-5+3);
-                    p->drawPoint(xcenter+6, ycenter+5-3);
-                    p->drawPoint(xcenter+7, ycenter-5+4);
-                    p->drawPoint(xcenter+7, ycenter+5-4);
-                    // anti-aliasing. ...sort of :)
-                    p->setPen(alphaBlendColors(cg.background(), contour, 80) );
-                    p->drawPoint(xcenter+8, ycenter);
-                    p->setPen(alphaBlendColors(cg.background(), contour, 150) );
-                    p->drawPoint(xcenter+4, ycenter-5);
-                    p->drawPoint(xcenter+4, ycenter+5);
-                    p->drawPoint(xcenter+5, ycenter-5+1);
-                    p->drawPoint(xcenter+5, ycenter+5-1);
-                    p->drawPoint(xcenter+6, ycenter-5+2);
-                    p->drawPoint(xcenter+6, ycenter+5-2);
-                    p->drawPoint(xcenter+7, ycenter-5+3);
-                    p->drawPoint(xcenter+7, ycenter+5-3);
-                    p->setPen(alphaBlendColors(cg.background(), contour, 190) );
-                    p->drawPoint(xcenter+8, ycenter-5+4);
-                    p->drawPoint(xcenter+8, ycenter+5-4);
-
-                    QRegion mask(xcenter-5, ycenter-4, 13, 9);
-                    mask -= QRegion(xcenter+4, ycenter-4, 4, 1);
-                    mask -= QRegion(xcenter+5, ycenter-3, 3, 1);
-                    mask -= QRegion(xcenter+6, ycenter-2, 2, 1);
-                    mask -= QRegion(xcenter+7, ycenter-1, 1, 1);
-                    mask -= QRegion(xcenter+7, ycenter+1, 1, 1);
-                    mask -= QRegion(xcenter+6, ycenter+2, 2, 1);
-                    mask -= QRegion(xcenter+5, ycenter+3, 3, 1);
-                    mask -= QRegion(xcenter+4, ycenter+4, 4, 1);
-                    p->setClipRegion(mask);
-                    uint surfaceFlags = Draw_Left|Draw_Top|Draw_Bottom|Round_UpperLeft|Round_BottomLeft|
-                                    Round_UpperRight|Is_Horizontal;
-                    if(!enabled)
-                        surfaceFlags |= Is_Disabled;
-                    renderSurface(p, QRect(xcenter-5, ycenter-4, 13, 9),
-                                cg.background(), surface, getColor(cg,MouseOverHighlight),
-                                _contrast+3, surfaceFlags);
-                    renderDot(p, QPoint(xcenter-3, ycenter-3), surface, false, true );
-                    renderDot(p, QPoint(xcenter-3,   ycenter+2), surface, false, true );
-                    p->setClipping(false);
-                }
-
+                if(!enabled) surfaceFlags |= Is_Disabled;
+                renderSurface(p, r, cg.background(), surface, getColor(cg,MouseOverHighlight),
+                              _contrast+3, surfaceFlags);
+                renderContour(p, r, cg.background(), contour, surfaceFlags);
                 break;
             }
 
@@ -1456,7 +1355,7 @@ void PlastikStyle::drawPrimitive(PrimitiveElement pe,
     bool horiz  = flags & Style_Horizontal;
     const bool enabled = flags & Style_Enabled;
     const bool mouseOver = flags & Style_MouseOver;
-    
+
     bool hasFocus = flags & Style_HasFocus;
 
     int x = r.x();
@@ -1562,38 +1461,6 @@ void PlastikStyle::drawPrimitive(PrimitiveElement pe,
                 renderSurface(p, QRect(r.left()+1, r.top()+1, r.width()-2, r.height()-2),
                         cg.background(), surface, cg.background(),
                         _contrast+3, surfaceFlags);
-
-            // set contour-like color for the case _scrollBarLines is set and we paint lines instead of dots.
-            p->setPen(alphaBlendColors(cg.background(), surface.dark(enabled?140:120), 50) );
-
-            const int d = 4;
-            int n = ((horiz?r.width():r.height())-8)/d;
-            if(n>5) n=5;
-            if(!horiz) {
-                for(int j = 0; j < n; j++) {
-                    int yPos = r.center().y()-(n*d)/2+d*j+1;
-                    if(_scrollBarLines)
-                        p->drawLine(r.x()+1, yPos, r.right()-1, yPos);
-                    else
-                    {
-                        for(int k = 3; k <= 13; k+=4) {
-                            renderDot(p, QPoint(k, yPos), surface, false, true );
-                        }
-                    }
-                }
-            } else {
-                for(int j = 0; j < n; j++) {
-                    int xPos = r.center().x()-(n*d)/2+d*j+1;
-                    if(_scrollBarLines)
-                        p->drawLine(xPos, r.y()+1, xPos, r.bottom()-1);
-                    else
-                    {
-                        for(int k = 3; k <= 13; k+=4) {
-                            renderDot(p, QPoint(xPos, k), surface, false, true );
-                        }
-                    }
-                }
-            }
 
             break;
         }
@@ -1940,9 +1807,9 @@ void PlastikStyle::drawPrimitive(PrimitiveElement pe,
     // --------------------
         case PE_PanelMenuBar:
         case PE_PanelDockWindow: {
-            // fix for toolbar lag (from Mosfet Liquid) 
+            // fix for toolbar lag (from Mosfet Liquid)
             QWidget* w = dynamic_cast<QWidget*>(p->device());
-            if(w && w->backgroundMode() == PaletteButton) 
+            if(w && w->backgroundMode() == PaletteButton)
                 w->setBackgroundMode(PaletteBackground);
             p->fillRect(r, cg.brush(QColorGroup::Background));
 
@@ -2271,7 +2138,7 @@ void PlastikStyle::drawControl(ControlElement element,
                 }
                 while((counter*10) < (Rsurface.width()+20)) {
                     counter++;
-                    if (reverseLayout) {    
+                    if (reverseLayout) {
                         // from right to left, overlap 1 pixel with the previously drawn tile
                         p->drawPixmap(Rsurface.right()-counter*20-animShift+40+staticShift, r.top()+1,
                                     surfaceTile);
@@ -2787,16 +2654,16 @@ void PlastikStyle::drawComplexControl(ComplexControl control,
             uint contourFlags = 0;
             if( khtmlWidgets.contains(cb) )
                 contourFlags |= Draw_AlphaBlend;
-            
+
             if (_inputFocusHighlight && hasFocus && editable && enabled)
             {
                 QRect editField = querySubControlMetrics(control, widget, SC_ComboBoxEditField);
                 QRect editFrame = r;
                 QRect buttonFrame = r;
-                
+
                 uint editFlags = contourFlags;
                 uint buttonFlags = contourFlags;
-                
+
                 // Hightlight only the part of the contour next to the control button
                 if (reverseLayout)
                 {
@@ -2811,13 +2678,13 @@ void PlastikStyle::drawComplexControl(ComplexControl control,
                 {
                     editFrame.setRight(editField.right());
                     buttonFrame.setLeft(editField.right() + 1);
-                    
+
                     editFlags |= Draw_Left|Draw_Top|Draw_Bottom|Round_UpperLeft|Round_BottomLeft;
                     buttonFlags |= Draw_Right|Draw_Top|Draw_Bottom|Round_UpperRight|Round_BottomRight;
                 }
                 renderContour(p, editFrame, cg.background(),  getColor(cg,FocusHighlight,enabled), editFlags);
-                renderContour(p, buttonFrame, cg.background(), 
-                              getColor(cg, ButtonContour, enabled), buttonFlags); 
+                renderContour(p, buttonFrame, cg.background(),
+                              getColor(cg, ButtonContour, enabled), buttonFlags);
             }
             else
             {
@@ -3002,10 +2869,10 @@ void PlastikStyle::drawComplexControl(ComplexControl control,
                 QRect editField = querySubControlMetrics(control, widget, SC_SpinWidgetEditField);
                 QRect editFrame = r;
                 QRect buttonFrame = r;
-                
+
                 uint editFlags = 0;
                 uint buttonFlags = 0;
-                
+
                 // Hightlight only the part of the contour next to the control buttons
                 if (reverseLayout)
                 {
@@ -3020,12 +2887,12 @@ void PlastikStyle::drawComplexControl(ComplexControl control,
                 {
                     editFrame.setRight(editField.right());
                     buttonFrame.setLeft(editField.right() + 1);
-                    
+
                     editFlags |= Draw_Left|Draw_Top|Draw_Bottom|Round_UpperLeft|Round_BottomLeft;
                     buttonFlags |= Draw_Right|Draw_Top|Draw_Bottom|Round_UpperRight|Round_BottomRight;
                 }
                 renderContour(p, editFrame, cg.background(), cg.highlight(), editFlags);
-                renderContour(p, buttonFrame, cg.background(), 
+                renderContour(p, buttonFrame, cg.background(),
                               getColor(cg, ButtonContour, enabled), buttonFlags);
             }
             else
@@ -3265,7 +3132,7 @@ int PlastikStyle::pixelMetric(PixelMetric m, const QWidget *widget) const
 
     // extra space between menubar items
         case PM_MenuBarItemSpacing: {
-            return 6;
+            return 4;
         }
 
 //     // extra space between toolbar items
@@ -3275,10 +3142,10 @@ int PlastikStyle::pixelMetric(PixelMetric m, const QWidget *widget) const
 
     // SCROLL BAR
         case PM_ScrollBarSliderMin: {
-            return 21;
+            return 14;
         }
         case PM_ScrollBarExtent: {
-            return 16;
+            return 10;
         }
 
         case PM_DockWindowSeparatorExtent:
@@ -3287,18 +3154,18 @@ int PlastikStyle::pixelMetric(PixelMetric m, const QWidget *widget) const
     // SPLITTERS
     // ---------
         case PM_SplitterWidth: {
-            return 6;
+            return 4;
         }
 
     // PROGRESSBARS
     // ------------
         case PM_ProgressBarChunkWidth:
-            return 10;
+            return 20;
 
     // SLIDER
     // ------
         case PM_SliderLength:
-            return 11;
+            return 10;
 
     // MENU INDICATOR
     // --------------
@@ -3333,7 +3200,7 @@ int PlastikStyle::pixelMetric(PixelMetric m, const QWidget *widget) const
         }
 
         case PM_ButtonMargin: {
-            return 2;
+            return 1;
         }
 
         case PM_ButtonShiftVertical:
@@ -3453,7 +3320,7 @@ bool PlastikStyle::eventFilter(QObject *obj, QEvent *ev)
         return true;
 
     if (!obj->isWidgetType() ) return false;
- 
+
     // focus highlight
     if ( ::qt_cast<QLineEdit*>(obj) ) {
         QWidget* widget = static_cast<QWidget*>(obj);
@@ -3474,7 +3341,7 @@ bool PlastikStyle::eventFilter(QObject *obj, QEvent *ev)
         }
         return false;
     }
-    
+
     //Hover highlight... use qt_cast to check if the widget inheits one of the classes.
     if ( ::qt_cast<QPushButton*>(obj) || ::qt_cast<QComboBox*>(obj) ||
             ::qt_cast<QSpinWidget*>(obj) || ::qt_cast<QCheckBox*>(obj) ||
