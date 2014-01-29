@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="13" >
+ <DocsAndViews NumberOfDocuments="14" >
   <Doc0 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/misc/Makefile.am" >
    <View0 Encoding="" Type="Source" />
   </Doc0>
@@ -26,21 +26,24 @@
   <Doc7 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.cpp" >
    <View0 Encoding="" Type="Source" />
   </Doc7>
-  <Doc8 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/xzip/Makefile.am" >
+  <Doc8 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/kgzipfilter.cpp" >
    <View0 Encoding="" Type="Source" />
   </Doc8>
-  <Doc9 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/kgzipfilter.cpp" >
+  <Doc9 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/Makefile.am" >
    <View0 Encoding="" Type="Source" />
   </Doc9>
-  <Doc10 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/Makefile.am" >
-   <View0 Encoding="" Type="Source" />
+  <Doc10 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc10>
-  <Doc11 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/xzip/kxzipfilter.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc11 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v2.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc11>
-  <Doc12 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/xzip/kxzipfilter.h" >
-   <View0 Encoding="" line="43" Type="Source" />
+  <Doc12 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc12>
+  <Doc13 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/light.cpp" >
+   <View0 Encoding="" line="58" Type="Source" />
+  </Doc13>
  </DocsAndViews>
  <pluginList>
   <kdevdebugger>

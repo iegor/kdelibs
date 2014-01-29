@@ -448,8 +448,7 @@ void LightStyleV2::drawPrimitive(PrimitiveElement pe,
       break;
     }
 
-    case PE_ScrollBarAddLine:
-    {
+    case PE_ScrollBarAddLine: {
       QRect fr = r, ar = r;
       PrimitiveElement pe;
 
@@ -474,8 +473,7 @@ void LightStyleV2::drawPrimitive(PrimitiveElement pe,
     }
 
     case PE_ScrollBarSubPage:
-    case PE_ScrollBarAddPage:
-    {
+    case PE_ScrollBarAddPage: {
       QRect fr = r;
 
       p->setPen(cg.dark());
@@ -491,9 +489,7 @@ void LightStyleV2::drawPrimitive(PrimitiveElement pe,
         fr.addCoords(2, 0, 0, 0);
       }
 
-      p->fillRect(fr, cg.brush((flags & Style_Down) ?
-                                QColorGroup::Midlight :
-                                QColorGroup::Mid));
+      p->fillRect(fr, cg.brush((flags & Style_Down) ? QColorGroup::Midlight : QColorGroup::Mid));
       break;
     }
 

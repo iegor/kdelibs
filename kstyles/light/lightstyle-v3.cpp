@@ -42,28 +42,23 @@
 #include "qslider.h"
 #include "qstylefactory.h"
 
-
 // The Light Style, 3rd revision
 
 LightStyleV3::LightStyleV3()
-        : KStyle(AllowMenuTransparency)
+: KStyle(AllowMenuTransparency)
 {
-    basestyle = QStyleFactory::create("Windows");
-    if (! basestyle)
-        basestyle = QStyleFactory::create(QStyleFactory::keys().first());
-    if (! basestyle)
-        qFatal("LightStyle: couldn't find a basestyle!");
+  basestyle = QStyleFactory::create("Windows");
+  if (! basestyle) basestyle = QStyleFactory::create(QStyleFactory::keys().first());
+  if (! basestyle) qFatal("LightStyle: couldn't find a basestyle!");
 }
 
-LightStyleV3::~LightStyleV3()
-{
-    delete basestyle;
+LightStyleV3::~LightStyleV3() {
+  delete basestyle;
 }
 
-void LightStyleV3::polishPopupMenu(QPopupMenu * menu)
-{
-    KStyle::polishPopupMenu(menu);
-    // empty to satisy pure virtual requirements
+void LightStyleV3::polishPopupMenu(QPopupMenu * menu) {
+  KStyle::polishPopupMenu(menu);
+  // empty to satisy pure virtual requirements
 }
 
 /*
@@ -96,32 +91,28 @@ void LightStyleV3::polishPopupMenu(QPopupMenu * menu)
   EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
   where:
-      E is the sunken etching ( optional, not drawn by default )
-      S is the border (optional, drawn by default )
-      B is the bevel (draw with the line width, minus the width of
-                      the etching and border )
-      F is the fill ( optional, not drawn by default )
+    E is the sunken etching ( optional, not drawn by default )
+    S is the border (optional, drawn by default )
+    B is the bevel (draw with the line width, minus the width of
+                    the etching and border )
+    F is the fill ( optional, not drawn by default )
 */
-static void drawLightEtch(QPainter *p,
-                          const QRect &rect,
-                          const QColor &color,
-                          bool sunken)
-{
-    QPointArray pts(4);
+static void drawLightEtch(QPainter *p, const QRect &r, const QColor &c, bool s) {
+  QPointArray pts(4);
 
-    pts.setPoint(0, rect.left(),     rect.bottom() - 1);
-    pts.setPoint(1, rect.left(),     rect.top());
-    pts.setPoint(2, rect.left() + 1, rect.top());
-    pts.setPoint(3, rect.right(),    rect.top());
-    p->setPen(sunken ? color.dark(115) : color.light(115));
-    p->drawLineSegments(pts);
+  pts.setPoint(0, r.left(),     r.bottom() - 1);
+  pts.setPoint(1, r.left(),     r.top());
+  pts.setPoint(2, r.left() + 1, r.top());
+  pts.setPoint(3, r.right(),    r.top());
+  p->setPen(s ? c.dark(115) : c.light(115));
+  p->drawLineSegments(pts);
 
-    pts.setPoint(0, rect.left(),     rect.bottom());
-    pts.setPoint(1, rect.right(),    rect.bottom());
-    pts.setPoint(2, rect.right(),    rect.bottom() - 1);
-    pts.setPoint(3, rect.right(),    rect.top() + 1);
-    p->setPen(sunken ? color.light(115) : color.dark(115));
-    p->drawLineSegments(pts);
+  pts.setPoint(0, r.left(),     r.bottom());
+  pts.setPoint(1, r.right(),    r.bottom());
+  pts.setPoint(2, r.right(),    r.bottom() - 1);
+  pts.setPoint(3, r.right(),    r.top() + 1);
+  p->setPen(s ? c.light(115) : c.dark(115));
+  p->drawLineSegments(pts);
 }
 
 static void drawLightBevel(QPainter *p,
@@ -131,86 +122,87 @@ static void drawLightBevel(QPainter *p,
                            int linewidth,
                            bool etch = false,       // light sunken bevel around border
                            bool border = true,      // rectangle around bevel
-                           const QBrush *fill = 0)  // contents fill
-{
-    QRect br = rect;
-    bool bevel = (flags & (QStyle::Style_Down | QStyle::Style_On |
-                           QStyle::Style_Sunken | QStyle::Style_Raised));
-    bool sunken = (flags & (QStyle::Style_Down | QStyle::Style_On |
-                            QStyle::Style_Sunken));
+                           const QBrush *fill = 0) { // contents fill
+  QRect br = rect;
+  bool bevel = (flags & (QStyle::Style_Down|QStyle::Style_On|
+                         QStyle::Style_Sunken|QStyle::Style_Raised));
+  bool sunken = (flags & (QStyle::Style_Down|QStyle::Style_On|
+                          QStyle::Style_Sunken));
 
-    if (etch && linewidth > 0) {
-        drawLightEtch(p, br, cg.background(), true);
-        linewidth--;
-        br.addCoords(1, 1, -1, -1);
+  if (etch && linewidth > 0) {
+    drawLightEtch(p, br, cg.background(), true);
+    linewidth--;
+    br.addCoords(1, 1, -1, -1);
+  }
+
+  if (! br.isValid()) return;
+
+  if (border && linewidth > 0) {
+    p->setPen(cg.dark());
+    p->drawRect(br);
+    linewidth--;
+    br.addCoords(1, 1, -1, -1);
+  }
+
+  if (! br.isValid()) return;
+
+  if (bevel && linewidth > 0) {
+    // draw a bevel
+    int x, y, w, h;
+    br.rect(&x, &y, &w, &h);
+
+    // copied form qDrawShadePanel - just changed the highlight colors...
+    QPointArray a(4*linewidth);
+    if (sunken) { p->setPen(border ? cg.mid() : cg.dark()); }
+    else { p->setPen(cg.light()); }
+
+    int x1, y1, x2, y2;
+    int i;
+    int n = 0;
+    // top shadow
+    x1 = x;
+    y1 = y2 = y;
+    x2 = x+w-2;
+    for (i=0; i<linewidth; i++) {
+      a.setPoint(n++, x1, y1++);
+      a.setPoint(n++, x2--, y2++);
     }
-
-    if (! br.isValid())
-        return;
-    if (border && linewidth > 0) {
-        p->setPen(cg.dark());
-        p->drawRect(br);
-        linewidth--;
-        br.addCoords(1, 1, -1, -1);
+    // left shadow
+    x2 = x1;
+    y1 = y+h-2;
+    for (i=0; i<linewidth; i++) {
+      a.setPoint(n++, x1++, y1);
+      a.setPoint(n++, x2++, y2--);
     }
+    p->drawLineSegments(a);
 
-    if (! br.isValid())
-        return;
-    if (bevel && linewidth > 0) {
-        // draw a bevel
-        int x, y, w, h;
-        br.rect(&x, &y, &w, &h);
+    n = 0;
 
-        // copied form qDrawShadePanel - just changed the highlight colors...
-        QPointArray a(4*linewidth);
-        if (sunken)
-            p->setPen(border ? cg.mid() : cg.dark());
-        else
-            p->setPen(cg.light());
-        int x1, y1, x2, y2;
-        int i;
-        int n = 0;
-        x1 = x;
-        y1 = y2 = y;
-        x2 = x+w-2;
-        for (i=0; i<linewidth; i++) {		// top shadow
-            a.setPoint(n++, x1, y1++);
-            a.setPoint(n++, x2--, y2++);
-        }
-        x2 = x1;
-        y1 = y+h-2;
-        for (i=0; i<linewidth; i++) {		// left shadow
-            a.setPoint(n++, x1++, y1);
-            a.setPoint(n++, x2++, y2--);
-        }
-        p->drawLineSegments(a);
-        n = 0;
-        if (sunken)
-            p->setPen(cg.light());
-        else
-            p->setPen(border ? cg.mid() : cg.dark());
-        x1 = x;
-        y1 = y2 = y+h-1;
-        x2 = x+w-1;
-        for (i=0; i<linewidth; i++) {		// bottom shadow
-            a.setPoint(n++, x1++, y1--);
-            a.setPoint(n++, x2, y2--);
-        }
-        x1 = x2;
-        y1 = y;
-        y2 = y+h-linewidth-1;
-        for (i=0; i<linewidth; i++) {		// right shadow
-            a.setPoint(n++, x1--, y1++);
-            a.setPoint(n++, x2--, y2);
-        }
-        p->drawLineSegments(a);
+    if (sunken) { p->setPen(cg.light()); }
+    else { p->setPen(border ? cg.mid() : cg.dark()); }
 
-        br.addCoords(linewidth, linewidth, -linewidth, -linewidth);
+    // bottom shadow
+    x1 = x;
+    y1 = y2 = y+h-1;
+    x2 = x+w-1;
+    for (i=0; i<linewidth; i++) {
+        a.setPoint(n++, x1++, y1--);
+        a.setPoint(n++, x2, y2--);
     }
+    // right shadow
+    x1 = x2;
+    y1 = y;
+    y2 = y+h-linewidth-1;
+    for (i=0; i<linewidth; i++) {
+        a.setPoint(n++, x1--, y1++);
+        a.setPoint(n++, x2--, y2);
+    }
+    p->drawLineSegments(a);
 
-    // fill
-    if (fill)
-        p->fillRect(br, *fill);
+    br.addCoords(linewidth, linewidth, -linewidth, -linewidth);
+  }
+
+  if (fill) p->fillRect(br, *fill); // fill
 }
 
 void LightStyleV3::drawPrimitive(PrimitiveElement pe,
@@ -218,590 +210,518 @@ void LightStyleV3::drawPrimitive(PrimitiveElement pe,
                                  const QRect &r,
                                  const QColorGroup &cg,
                                  SFlags flags,
-                                 const QStyleOption &data) const
-{
-    QRect br = r;
-    const QBrush *fill = 0;
+                                 const QStyleOption &data) const {
+  QRect br = r;
+  const QBrush *fill = 0;
 
-    switch (pe) {
-        case PE_HeaderSection:
-            // don't draw any headers sunken
-            flags = ((flags | Style_Sunken) ^ Style_Sunken) | Style_Raised;
+  switch (pe) {
+    case PE_HeaderSection:
+      // don't draw any headers sunken
+      flags = ((flags | Style_Sunken) ^ Style_Sunken) | Style_Raised;
 
+      p->setPen(cg.background());
+      // hard border at the bottom/right of the header
+      if (flags & Style_Horizontal) {
+          p->drawLine(br.bottomLeft(), br.bottomRight());
+          br.addCoords(0, 0, 0, -1);
+      } else {
+          p->drawLine(br.topRight(), br.bottomRight());
+          br.addCoords(0, 0, -1, 0);
+      }
+
+      // draw the header ( just an etching )
+      if (! br.isValid())
+          break;
+      drawLightEtch(p, br, ((flags & Style_Down) ?
+                            cg.midlight() : cg.button()),
+                    (flags & Style_Down));
+      br.addCoords(1, 1, -1, -1);
+
+      // fill the header
+      if (! br.isValid())
+          break;
+      p->fillRect(br, cg.brush((flags & Style_Down) ?
+                                QColorGroup::Midlight : QColorGroup::Button));
+
+      // the taskbuttons in kicker seem to allow the style to set the pencolor
+      // here, which will be used to draw the text for focused window buttons...
+      // how utterly silly
+      p->setPen(cg.buttonText());
+      break;
+
+    case PE_ButtonCommand: {
+      QRect br = r;
+
+      if (flags & QStyle::Style_Enabled) {
+          if (flags & (QStyle::Style_Down |
+                        QStyle::Style_On |
+                        QStyle::Style_Sunken))
+              fill = &cg.brush(QColorGroup::Midlight);
+          else
+              fill = &cg.brush(QColorGroup::Button);
+      } else
+          fill = &cg.brush(QColorGroup::Background);
+
+      bool etch = true;
+      if (flags & Style_ButtonDefault) {
+          etch = false;
+          br.addCoords(1, 1, -1, -1);
+      }
+      drawLightBevel(p, br, cg, flags,
+                      pixelMetric(PM_DefaultFrameWidth) + (etch ? 1 : 0),
+                      etch, true, fill);
+      break; }
+
+    case PE_ButtonBevel:
+    case PE_ButtonTool:
+      if (flags & QStyle::Style_Enabled) {
+        if (flags & (QStyle::Style_Down|QStyle::Style_On|QStyle::Style_Sunken)) {
+          fill = &cg.brush(QColorGroup::Midlight);
+        } else {
+          fill = &cg.brush(QColorGroup::Button);
+        }
+      } else {
+        fill = &cg.brush(QColorGroup::Background);
+      }
+      drawLightBevel(p, r, cg, flags, pixelMetric(PM_DefaultFrameWidth), false, true, fill);
+      break;
+
+    case PE_ButtonDropDown: {
+      QBrush thefill;
+      bool sunken = (flags & (QStyle::Style_Down|QStyle::Style_On|QStyle::Style_Sunken));
+
+      if (flags & QStyle::Style_Enabled) {
+        if (sunken) { thefill = cg.brush(QColorGroup::Midlight); }
+        else { thefill = cg.brush(QColorGroup::Button); }
+      } else {
+        thefill = cg.brush(QColorGroup::Background);
+      }
+
+      p->setPen(cg.dark());
+      p->drawLine(r.topLeft(),     r.topRight());
+      p->drawLine(r.topRight(),    r.bottomRight());
+      p->drawLine(r.bottomRight(), r.bottomLeft());
+
+      if (flags & (QStyle::Style_Down|QStyle::Style_On|QStyle::Style_Sunken|QStyle::Style_Raised)) {
+        // button bevel
+        if (sunken) p->setPen(cg.mid());
+        else p->setPen(cg.light());
+
+        p->drawLine(r.x(), r.y()+2, r.x(), r.y()+r.height()-3); // left
+        p->drawLine(r.x(), r.y()+1, r.x()+r.width()-2, r.y()+1); // top
+
+        if (sunken) p->setPen(cg.light());
+        else p->setPen(cg.mid());
+
+        p->drawLine(r.x()+r.width()-2, r.y()+2, r.x()+r.width()-2, r.y()+r.height()-3); // right
+        p->drawLine(r.x()+1, r.y()+r.height()-2, r.x()+r.width()-2, r.y()+r.height()-2); // bottom
+      }
+
+      p->fillRect(r.x() + 1, r.y() + 2, r.width() - 3, r.height() - 4, thefill);
+      break; }
+
+    case PE_ButtonDefault:
+      p->setPen(cg.shadow());
+      p->drawRect(r);
+      break;
+
+    case PE_Indicator:
+      const QBrush *fill;
+
+      if (!(flags & Style_Enabled)) { fill = &cg.brush(QColorGroup::Background); }
+      else if (flags & Style_Down) { fill = &cg.brush(QColorGroup::Mid); }
+      else { fill = &cg.brush(QColorGroup::Base); }
+
+      drawLightBevel(p, r, cg, flags|Style_Sunken, 2, true, true, fill);
+
+      p->setPen(cg.text());
+      if (flags & Style_NoChange) {
+        p->drawLine(r.x()+3, r.y()+r.height()/2, r.x()+r.width()-4, r.y()+r.height()/2);
+        p->drawLine(r.x()+3, r.y()+1+r.height()/2, r.x()+r.width()-4, r.y()+1+r.height()/2);
+        p->drawLine(r.x()+3, r.y()-1+r.height()/2, r.x()+r.width()-4, r.y()-1+r.height()/2);
+      } else if (flags & Style_On) {
+        p->drawLine(r.x()+4, r.y()+3, r.x()+r.width()-4, r.y()+r.height()-5);
+        p->drawLine(r.x()+3, r.y()+3, r.x()+r.width()-4, r.y()+r.height()-4);
+        p->drawLine(r.x()+3, r.y()+4, r.x()+r.width()-5, r.y()+r.height()-4);
+        p->drawLine(r.x()+3, r.y()+r.height()-5, r.x()+r.width()-5, r.y()+3);
+        p->drawLine(r.x()+3, r.y()+r.height()-4, r.x()+r.width()-4, r.y()+3);
+        p->drawLine(r.x()+4, r.y()+r.height()-4, r.x()+r.width()-4, r.y()+4);
+      }
+      break;
+
+    case PE_ExclusiveIndicator: {
+      QRect br = r; // bevel rect
+      QRect lr = r; // outline rect
+      QRect cr = r; // contents rect
+      QRect ir = r; // indicator rect
+      lr.addCoords(1, 1, -1, -1);
+      cr.addCoords(2, 2, -2, -2);
+      ir.addCoords(3, 3, -3, -3);
+
+      p->fillRect(r, cg.brush(QColorGroup::Background));
+
+      p->setPen(flags & Style_Down ? cg.mid() : (flags & Style_Enabled ? cg.base() : cg.background()));
+      p->setBrush(flags & Style_Down ? cg.mid() : (flags & Style_Enabled ? cg.base() : cg.background()));
+      p->drawEllipse(lr);
+
+      p->setPen(cg.background().dark(115));
+      p->drawArc(br, 45*16, 180*16);
+      p->setPen(cg.background().light(115));
+      p->drawArc(br, 235*16, 180*16);
+
+      p->setPen(cg.dark());
+      p->drawArc(lr, 0, 16*360);
+
+      if (flags & Style_On) {
+        p->setPen(flags & Style_Down ? cg.mid() : (flags & Style_Enabled ? cg.base() : cg.background()));
+        p->setBrush(cg.text());
+        p->drawEllipse(ir);
+      }
+      break; }
+
+    case PE_DockWindowHandle: {
+      QString title;
+      bool drawTitle = false;
+      if (p && p->device()->devType() == QInternal::Widget) {
+        QWidget *w = (QWidget *) p->device();
+        QWidget *p = w->parentWidget();
+        if (p->inherits("QDockWindow") && ! p->inherits("QToolBar")) {
+          drawTitle = true;
+          title = p->caption();
+        }
+      }
+
+      flags |= Style_Raised;
+      if (flags & Style_Horizontal) {
+        if (drawTitle) {
+          QPixmap pm(r.height(), r.width());
+          QPainter p2(&pm);
+          p2.fillRect(0, 0, pm.width(), pm.height(), cg.brush(QColorGroup::Highlight));
+          p2.setPen(cg.highlightedText());
+          p2.drawText(0, 0, pm.width(), pm.height(), AlignCenter, title);
+          p2.end();
+
+          QWMatrix m;
+          m.rotate(270.0);
+          pm = pm.xForm(m);
+          p->drawPixmap(r.x(), r.y(), pm);
+        } else {
+          for (int i=r.left()-1; i<r.right(); i+=3) {
+            p->setPen(cg.midlight());
+            p->drawLine(i, r.top(), i, r.bottom());
             p->setPen(cg.background());
-            // hard border at the bottom/right of the header
-            if (flags & Style_Horizontal) {
-                p->drawLine(br.bottomLeft(), br.bottomRight());
-                br.addCoords(0, 0, 0, -1);
-            } else {
-                p->drawLine(br.topRight(), br.bottomRight());
-                br.addCoords(0, 0, -1, 0);
-            }
-
-            // draw the header ( just an etching )
-            if (! br.isValid())
-                break;
-            drawLightEtch(p, br, ((flags & Style_Down) ?
-                                  cg.midlight() : cg.button()),
-                          (flags & Style_Down));
-            br.addCoords(1, 1, -1, -1);
-
-            // fill the header
-            if (! br.isValid())
-                break;
-            p->fillRect(br, cg.brush((flags & Style_Down) ?
-                                     QColorGroup::Midlight : QColorGroup::Button));
-
-            // the taskbuttons in kicker seem to allow the style to set the pencolor
-            // here, which will be used to draw the text for focused window buttons...
-            // how utterly silly
-            p->setPen(cg.buttonText());
-            break;
-
-        case PE_ButtonCommand:
-        {
-            QRect br = r;
-
-            if (flags & QStyle::Style_Enabled) {
-                if (flags & (QStyle::Style_Down |
-                             QStyle::Style_On |
-                             QStyle::Style_Sunken))
-                    fill = &cg.brush(QColorGroup::Midlight);
-                else
-                    fill = &cg.brush(QColorGroup::Button);
-            } else
-                fill = &cg.brush(QColorGroup::Background);
-
-            bool etch = true;
-            if (flags & Style_ButtonDefault) {
-                etch = false;
-                br.addCoords(1, 1, -1, -1);
-            }
-            drawLightBevel(p, br, cg, flags,
-                           pixelMetric(PM_DefaultFrameWidth) + (etch ? 1 : 0),
-                           etch, true, fill);
-            break;
-        }
-
-        case PE_ButtonBevel:
-        case PE_ButtonTool:
-            if (flags & QStyle::Style_Enabled) {
-                if (flags & (QStyle::Style_Down |
-                             QStyle::Style_On |
-                             QStyle::Style_Sunken))
-                    fill = &cg.brush(QColorGroup::Midlight);
-                else
-                    fill = &cg.brush(QColorGroup::Button);
-            } else
-                fill = &cg.brush(QColorGroup::Background);
-            drawLightBevel(p, r, cg, flags, pixelMetric(PM_DefaultFrameWidth),
-                           false, true, fill);
-            break;
-
-        case PE_ButtonDropDown:
-        {
-            QBrush thefill;
-            bool sunken =
-                (flags & (QStyle::Style_Down | QStyle::Style_On | QStyle::Style_Sunken));
-
-            if (flags & QStyle::Style_Enabled) {
-                if (sunken)
-                    thefill = cg.brush(QColorGroup::Midlight);
-                else
-                    thefill = cg.brush(QColorGroup::Button);
-            } else
-                thefill = cg.brush(QColorGroup::Background);
-
-            p->setPen(cg.dark());
-            p->drawLine(r.topLeft(),     r.topRight());
-            p->drawLine(r.topRight(),    r.bottomRight());
-            p->drawLine(r.bottomRight(), r.bottomLeft());
-
-            if (flags & (QStyle::Style_Down | QStyle::Style_On |
-                         QStyle::Style_Sunken | QStyle::Style_Raised)) {
-                // button bevel
-                if (sunken)
-                    p->setPen(cg.mid());
-                else
-                    p->setPen(cg.light());
-
-                p->drawLine(r.x(), r.y() + 2,
-                            r.x(), r.y() + r.height() - 3); // left
-                p->drawLine(r.x(), r.y() + 1,
-                            r.x() + r.width() - 2, r.y() + 1); // top
-
-                if (sunken)
-                    p->setPen(cg.light());
-                else
-                    p->setPen(cg.mid());
-
-                p->drawLine(r.x() + r.width() - 2, r.y() + 2,
-                            r.x() + r.width() - 2, r.y() + r.height() - 3); // right
-                p->drawLine(r.x() + 1, r.y() + r.height() - 2,
-                            r.x() + r.width() - 2, r.y() + r.height() - 2); // bottom
-            }
-
-            p->fillRect(r.x() + 1, r.y() + 2, r.width() - 3, r.height() - 4, thefill);
-            break;
-        }
-
-        case PE_ButtonDefault:
-            p->setPen(cg.shadow());
-            p->drawRect(r);
-            break;
-
-        case PE_Indicator:
-            const QBrush *fill;
-            if (!(flags & Style_Enabled))
-                fill = &cg.brush(QColorGroup::Background);
-            else if (flags & Style_Down)
-                fill = &cg.brush(QColorGroup::Mid);
-            else
-                fill = &cg.brush(QColorGroup::Base);
-            drawLightBevel(p, r, cg, flags | Style_Sunken, 2, true, true, fill);
-
-            p->setPen(cg.text());
-            if (flags & Style_NoChange) {
-                p->drawLine(r.x() + 3, r.y() + r.height() / 2,
-                            r.x() + r.width() - 4, r.y() + r.height() / 2);
-                p->drawLine(r.x() + 3, r.y() + 1 + r.height() / 2,
-                            r.x() + r.width() - 4, r.y() + 1 + r.height() / 2);
-                p->drawLine(r.x() + 3, r.y() - 1 + r.height() / 2,
-                            r.x() + r.width() - 4, r.y() - 1 + r.height() / 2);
-            } else if (flags & Style_On) {
-                p->drawLine(r.x() + 4, r.y() + 3,
-                            r.x() + r.width() - 4, r.y() + r.height() - 5);
-                p->drawLine(r.x() + 3, r.y() + 3,
-                            r.x() + r.width() - 4, r.y() + r.height() - 4);
-                p->drawLine(r.x() + 3, r.y() + 4,
-                            r.x() + r.width() - 5, r.y() + r.height() - 4);
-                p->drawLine(r.x() + 3, r.y() + r.height() - 5,
-                            r.x() + r.width() - 5, r.y() + 3);
-                p->drawLine(r.x() + 3, r.y() + r.height() - 4,
-                            r.x() + r.width() - 4, r.y() + 3);
-                p->drawLine(r.x() + 4, r.y() + r.height() - 4,
-                            r.x() + r.width() - 4, r.y() + 4);
-            }
-
-            break;
-
-        case PE_ExclusiveIndicator:
-        {
-            QRect br = r, // bevel rect
-                       lr = r, // outline rect
-                            cr = r, // contents rect
-                                 ir = r; // indicator rect
-            lr.addCoords(1, 1, -1, -1);
-            cr.addCoords(2, 2, -2, -2);
-            ir.addCoords(3, 3, -3, -3);
-
-            p->fillRect(r, cg.brush(QColorGroup::Background));
-
-            p->setPen(flags & Style_Down ? cg.mid() :
-                      (flags & Style_Enabled ? cg.base() : cg.background()));
-            p->setBrush(flags & Style_Down ? cg.mid() :
-                        (flags & Style_Enabled ? cg.base() : cg.background()));
-            p->drawEllipse(lr);
-
-            p->setPen(cg.background().dark(115));
-            p->drawArc(br, 45*16, 180*16);
-            p->setPen(cg.background().light(115));
-            p->drawArc(br, 235*16, 180*16);
-
-            p->setPen(cg.dark());
-            p->drawArc(lr, 0, 16*360);
-
-            if (flags & Style_On) {
-                p->setPen(flags & Style_Down ? cg.mid() :
-                          (flags & Style_Enabled ? cg.base() : cg.background()));
-                p->setBrush(cg.text());
-                p->drawEllipse(ir);
-            }
-
-            break;
-        }
-
-        case PE_DockWindowHandle:
-        {
-            QString title;
-            bool drawTitle = false;
-            if (p && p->device()->devType() == QInternal::Widget) {
-                QWidget *w = (QWidget *) p->device();
-                QWidget *p = w->parentWidget();
-                if (p->inherits("QDockWindow") && ! p->inherits("QToolBar")) {
-                    drawTitle = true;
-                    title = p->caption();
-                }
-            }
-
-            flags |= Style_Raised;
-            if (flags & Style_Horizontal) {
-                if (drawTitle) {
-                    QPixmap pm(r.height(), r.width());
-                    QPainter p2(&pm);
-                    p2.fillRect(0, 0, pm.width(), pm.height(),
-                                cg.brush(QColorGroup::Highlight));
-                    p2.setPen(cg.highlightedText());
-                    p2.drawText(0, 0, pm.width(), pm.height(), AlignCenter, title);
-                    p2.end();
-
-                    QWMatrix m;
-                    m.rotate(270.0);
-                    pm = pm.xForm(m);
-                    p->drawPixmap(r.x(), r.y(), pm);
-                } else {
-                    for (int i = r.left() - 1; i < r.right(); i += 3) {
-                        p->setPen(cg.midlight());
-                        p->drawLine(i, r.top(), i, r.bottom());
-                        p->setPen(cg.background());
-                        p->drawLine(i + 1, r.top(), i + 1, r.bottom());
-                        p->setPen(cg.mid());
-                        p->drawLine(i + 2, r.top(), i + 2, r.bottom());
-                    }
-                }
-            } else {
-                if (drawTitle) {
-                    p->fillRect(r, cg.brush(QColorGroup::Highlight));
-                    p->setPen(cg.highlightedText());
-                    p->drawText(r, AlignCenter, title);
-                } else {
-                    for (int i = r.top() - 1; i < r.bottom(); i += 3) {
-                        p->setPen(cg.midlight());
-                        p->drawLine(r.left(), i, r.right(), i);
-                        p->setPen(cg.background());
-                        p->drawLine(r.left(), i + 1, r.right(), i + 1);
-                        p->setPen(cg.mid());
-                        p->drawLine(r.left(), i + 2, r.right(), i + 2);
-                    }
-
-                }
-            }
-            break;
-        }
-
-        case PE_DockWindowSeparator:
-        {
-            if (flags & Style_Horizontal) {
-                int hw = r.width() / 2;
-                p->setPen(cg.mid());
-                p->drawLine(hw,     r.top() + 6, hw,     r.bottom() - 6);
-                p->setPen(cg.light());
-                p->drawLine(hw + 1, r.top() + 6, hw + 1, r.bottom() - 6);
-            } else {
-                int hh = r.height() / 2;
-                p->setPen(cg.mid());
-                p->drawLine(r.left() + 6, hh,     r.right() - 6, hh);
-                p->setPen(cg.light());
-                p->drawLine(r.left() + 6, hh + 1, r.right() - 6, hh + 1);
-            }
-            break;
-        }
-
-        case PE_Splitter:
-            if (flags & Style_Horizontal)
-                flags &= ~Style_Horizontal;
-            else
-                flags |= Style_Horizontal;
-            // fall through intended
-
-        case PE_DockWindowResizeHandle:
-        {
-            QRect br = r;
-
-            p->setPen(cg.shadow());
-            p->drawRect(br);
-
-            br.addCoords(1, 1, -1, -1);
-
-            if (! br.isValid())
-                break;
-            p->setPen(cg.light());
-            p->drawLine(br.left(), br.top(), br.right() - 1, br.top());
-            p->drawLine(br.left(), br.top() + 1, br.left(), br.bottom());
+            p->drawLine(i+1, r.top(), i+1, r.bottom());
             p->setPen(cg.mid());
-            p->drawLine(br.bottomLeft(), br.bottomRight());
-            p->drawLine(br.right(), br.top(), br.right(), br.bottom() - 1);
-
-            br.addCoords(1, 1, -1, -1);
-
-            if (! br.isValid())
-                break;
-            p->fillRect(br, cg.brush(QColorGroup::Button));
-            break;
+            p->drawLine(i+2, r.top(), i+2, r.bottom());
+          }
         }
-
-        case PE_PanelPopup:
-            drawLightBevel(p, r, cg, flags,
-                           (data.isDefault() ? pixelMetric(PM_DefaultFrameWidth) :
-                            data.lineWidth()), false, true);
-            break;
-
-        case PE_Panel:
-        case PE_PanelLineEdit:
-        case PE_PanelTabWidget:
-        case PE_WindowFrame:
-        {
-            QRect br = r;
-
-            int cover = 0;
-            int reallw = (data.isDefault() ?
-                          pixelMetric(PM_DefaultFrameWidth) : data.lineWidth());
-            cover = reallw - 1;
-
-            if (!(flags & Style_Sunken))
-                flags |= Style_Raised;
-            drawLightBevel(p, br, cg, flags, 1, false, false);
-            br.addCoords(1, 1, -1, -1);
-
-            while (cover-- > 0) {
-                QPointArray pts(8);
-                pts.setPoint(0, br.left(),     br.bottom() - 1);
-                pts.setPoint(1, br.left(),     br.top());
-                pts.setPoint(2, br.left() + 1, br.top());
-                pts.setPoint(3, br.right(),    br.top());
-                pts.setPoint(4, br.left(),     br.bottom());
-                pts.setPoint(5, br.right(),    br.bottom());
-                pts.setPoint(6, br.right(),    br.bottom() - 1);
-                pts.setPoint(7, br.right(),    br.top() + 1);
-                p->setPen(cg.background());
-                p->drawLineSegments(pts);
-
-                br.addCoords(1, 1, -1, -1);
-            }
-            break;
-        }
-
-        case PE_PanelDockWindow:
-            drawLightBevel(p, r, cg, flags, (data.isDefault() ?
-                                             pixelMetric(PM_DefaultFrameWidth) :
-                                             data.lineWidth()), false, false,
-                           &cg.brush(QColorGroup::Button));
-            break;
-
-        case PE_PanelMenuBar:
-            drawLightBevel(p, r, cg, flags, (data.isDefault() ?
-                                             pixelMetric(PM_MenuBarFrameWidth) :
-                                             data.lineWidth()), false, false,
-                           &cg.brush(QColorGroup::Button));
-            break;
-
-        case PE_ScrollBarSubLine:
-        {
-            QRect br = r;
-            PrimitiveElement pe;
-
+      } else {
+        if (drawTitle) {
+          p->fillRect(r, cg.brush(QColorGroup::Highlight));
+          p->setPen(cg.highlightedText());
+          p->drawText(r, AlignCenter, title);
+        } else {
+          for (int i=r.top()-1; i<r.bottom(); i+=3) {
+            p->setPen(cg.midlight());
+            p->drawLine(r.left(), i, r.right(), i);
             p->setPen(cg.background());
-            if (flags & Style_Horizontal) {
-                pe = PE_ArrowLeft;
-                p->drawLine(br.topLeft(), br.topRight());
-                br.addCoords(0, 1, 0, 0);
-            } else {
-                pe = PE_ArrowUp;
-                p->drawLine(br.topLeft(), br.bottomLeft());
-                br.addCoords(1, 0, 0, 0);
-            }
-
-            if (! br.isValid())
-                break;
-            drawLightEtch(p, br, cg.button(), false);
-            br.addCoords(1, 1, -1, -1);
-
-            if (! br.isValid())
-                break;
-            p->fillRect(br, cg.brush((flags & Style_Down) ?
-                                     QColorGroup::Midlight :
-                                     QColorGroup::Button));
-            br.addCoords(2, 2, -2, -2);
-
-            if (! br.isValid())
-                break;
-            drawPrimitive(pe, p, br, cg, flags);
-            break;
+            p->drawLine(r.left(), i+1, r.right(), i+1);
+            p->setPen(cg.mid());
+            p->drawLine(r.left(), i+2, r.right(), i+2);
+          }
         }
+      }
+      break; }
 
-        case PE_ScrollBarAddLine:
-        {
-            QRect br = r;
-            PrimitiveElement pe;
+    case PE_DockWindowSeparator: {
+      if (flags & Style_Horizontal) {
+        int hw = r.width()/2;
+        p->setPen(cg.mid());
+        p->drawLine(hw,     r.top()+6, hw,     r.bottom()-6);
+        p->setPen(cg.light());
+        p->drawLine(hw+1, r.top()+6, hw+1, r.bottom()-6);
+      } else {
+        int hh = r.height()/2;
+        p->setPen(cg.mid());
+        p->drawLine(r.left()+6, hh,     r.right()-6, hh);
+        p->setPen(cg.light());
+        p->drawLine(r.left()+6, hh+1, r.right()-6, hh+1);
+      }
+      break; }
 
-            p->setPen(cg.background());
-            if (flags & Style_Horizontal) {
-                pe = PE_ArrowRight;
-                p->drawLine(br.topLeft(), br.topRight());
-                br.addCoords(0, 1, 0, 0);
-            } else {
-                pe = PE_ArrowDown;
-                p->drawLine(br.topLeft(), br.bottomLeft());
-                br.addCoords(1, 0, 0, 0);
-            }
+    //NOTE: fall through intended
+    case PE_Splitter:
+      if (flags & Style_Horizontal) flags &= ~Style_Horizontal;
+      else flags |= Style_Horizontal;
 
-            if (! br.isValid())
-                break;
-            drawLightEtch(p, br, cg.button(), false);
-            br.addCoords(1, 1, -1, -1);
+    case PE_DockWindowResizeHandle: {
+      QRect br = r;
 
-            if (! br.isValid())
-                break;
-            p->fillRect(br, cg.brush((flags & Style_Down) ?
-                                     QColorGroup::Midlight :
-                                     QColorGroup::Button));
-            br.addCoords(2, 2, -2, -2);
+      p->setPen(cg.shadow());
+      p->drawRect(br);
 
-            if (! br.isValid())
-                break;
-            drawPrimitive(pe, p, br, cg, flags);
-            break;
-        }
+      br.addCoords(1, 1, -1, -1);
 
-        case PE_ScrollBarSubPage:
-        {
-            QRect br = r;
+      if (! br.isValid()) break;
 
-            p->setPen(cg.background());
-            if (flags & Style_Horizontal) {
-                p->drawLine(br.topLeft(), br.topRight());
-                br.addCoords(0, 1, 0, 0);
-            } else {
-                p->drawLine(br.topLeft(), br.bottomLeft());
-                br.addCoords(1, 0, 0, 0);
-            }
+      p->setPen(cg.light());
+      p->drawLine(br.left(), br.top(), br.right()-1, br.top());
+      p->drawLine(br.left(), br.top()+1, br.left(), br.bottom());
+      p->setPen(cg.mid());
+      p->drawLine(br.bottomLeft(), br.bottomRight());
+      p->drawLine(br.right(), br.top(), br.right(), br.bottom()-1);
 
-            if (! br.isValid())
-                break;
-            drawLightEtch(p, br, cg.button(), false);
-            br.addCoords(1, 1, -1, -1);
+      br.addCoords(1, 1, -1, -1);
 
-            if (! br.isValid())
-                break;
-            p->fillRect(br, cg.brush((flags & Style_Down) ?
-                                     QColorGroup::Midlight :
-                                     QColorGroup::Button));
-            break;
-        }
+      if (! br.isValid()) break;
 
-        case PE_ScrollBarAddPage:
-        {
-            QRect br = r;
+      p->fillRect(br, cg.brush(QColorGroup::Button));
+      break; }
 
-            p->setPen(cg.background());
-            if (flags & Style_Horizontal) {
-                p->drawLine(br.topLeft(), br.topRight());
-                br.addCoords(0, 1, 0, 0);
-            } else {
-                p->drawLine(br.topLeft(), br.bottomLeft());
-                br.addCoords(1, 0, 0, 0);
-            }
+    case PE_PanelPopup:
+      drawLightBevel(p, r, cg, flags,
+        (data.isDefault() ? pixelMetric(PM_DefaultFrameWidth) :
+        data.lineWidth()), false, true);
+      break;
 
-            if (! br.isValid())
-                break;
-            drawLightEtch(p, br, cg.button(), false);
-            br.addCoords(1, 1, -1, -1);
+    case PE_Panel:
+    case PE_PanelLineEdit:
+    case PE_PanelTabWidget:
+    case PE_WindowFrame: {
+      QRect br = r;
 
-            if (! br.isValid())
-                break;
-            p->fillRect(br, cg.brush((flags & Style_Down) ?
-                                     QColorGroup::Midlight :
-                                     QColorGroup::Button));
-            break;
-        }
+      int cover = 0;
+      int reallw = (data.isDefault() ? pixelMetric(PM_DefaultFrameWidth) : data.lineWidth());
+      cover = reallw-1;
 
-        case PE_ScrollBarSlider:
-        {
-            QRect br = r;
+      if (!(flags & Style_Sunken)) flags |= Style_Raised;
+      drawLightBevel(p, br, cg, flags, 1, false, false);
+      br.addCoords(1, 1, -1, -1);
 
-            p->setPen(cg.background());
-            if (flags & Style_Horizontal) {
-                p->drawLine(br.topLeft(), br.topRight());
-                br.addCoords(0, 1, 0, 0);
-            } else {
-                p->drawLine(br.topLeft(), br.bottomLeft());
-                br.addCoords(1, 0, 0, 0);
-            }
+      while (cover-- > 0) {
+        QPointArray pts(8);
+        pts.setPoint(0, br.left(),     br.bottom() - 1);
+        pts.setPoint(1, br.left(),     br.top());
+        pts.setPoint(2, br.left() + 1, br.top());
+        pts.setPoint(3, br.right(),    br.top());
+        pts.setPoint(4, br.left(),     br.bottom());
+        pts.setPoint(5, br.right(),    br.bottom());
+        pts.setPoint(6, br.right(),    br.bottom() - 1);
+        pts.setPoint(7, br.right(),    br.top() + 1);
+        p->setPen(cg.background());
+        p->drawLineSegments(pts);
 
-            if (! br.isValid())
-                break;
-            p->setPen(cg.highlight().light());
-            p->drawLine(br.topLeft(), br.topRight());
-            p->drawLine(br.left(), br.top() + 1, br.left(), br.bottom() - 1);
+        br.addCoords(1, 1, -1, -1);
+      }
+      break; }
 
-            p->setPen(cg.highlight().dark());
-            p->drawLine(br.left(), br.bottom(), br.right() - 1, br.bottom());
-            p->drawLine(br.topRight(), br.bottomRight());
-            br.addCoords(1, 1, -1, -1);
+    case PE_PanelDockWindow:
+      drawLightBevel(p, r, cg, flags,
+        (data.isDefault() ? pixelMetric(PM_DefaultFrameWidth) : data.lineWidth()),
+        false, false, &cg.brush(QColorGroup::Button));
+      break;
 
-            p->fillRect(br, cg.brush(QColorGroup::Highlight));
-            break;
-        }
+    case PE_PanelMenuBar:
+      drawLightBevel(p, r, cg, flags,
+        (data.isDefault() ? pixelMetric(PM_MenuBarFrameWidth) : data.lineWidth()),
+        false, false, &cg.brush(QColorGroup::Button));
+      break;
 
-        case PE_FocusRect:
-            p->setBrush(NoBrush);
-            if (flags & Style_FocusAtBorder)
-                p->setPen(cg.shadow());
-            else
-                p->setPen(cg.dark());
-            p->drawRect(r);
-            break;
+    case PE_ScrollBarSubLine: {
+      QRect br = r;
+      PrimitiveElement pe;
 
-        case PE_ProgressBarChunk:
-            p->fillRect(r.x(), r.y() + 2, r.width(), r.height() - 4, cg.highlight());
-            break;
+      p->setPen(cg.background());
+      if (flags & Style_Horizontal) {
+        pe = PE_ArrowLeft;
+        p->drawLine(br.topLeft(), br.topRight());
+        br.addCoords(0, 1, 0, 0);
+      } else {
+        pe = PE_ArrowUp;
+        p->drawLine(br.topLeft(), br.bottomLeft());
+        br.addCoords(1, 0, 0, 0);
+      }
 
-        default:
-            if (pe == PE_HeaderArrow) {
-                if (flags & Style_Down)
-                    pe = PE_ArrowDown;
-                else
-                    pe = PE_ArrowUp;
-            }
+      if (!br.isValid()) break;
 
-            if (pe >= PE_ArrowUp && pe <= PE_ArrowLeft) {
-                QPointArray a;
+      drawLightEtch(p, br, cg.button(), false);
+      br.addCoords(1, 1, -1, -1);
 
-                switch (pe) {
-                    case PE_ArrowUp:
-                        a.setPoints(7, -4,1, 2,1, -3,0, 1,0, -2,-1, 0,-1, -1,-2);
-                        break;
+      if (!br.isValid()) break;
 
-                    case PE_ArrowDown:
-                        a.setPoints(7, -4,-2, 2,-2, -3,-1, 1,-1, -2,0, 0,0, -1,1);
-                        break;
+      p->fillRect(br, cg.brush((flags & Style_Down) ? QColorGroup::Midlight : QColorGroup::Button));
+      br.addCoords(2, 2, -2, -2);
 
-                    case PE_ArrowRight:
-                        a.setPoints(7, -2,-3, -2,3, -1,-2, -1,2, 0,-1, 0,1, 1,0);
-                        break;
+      if (!br.isValid()) break;
 
-                    case PE_ArrowLeft:
-                        a.setPoints(7, 0,-3, 0,3, -1,-2, -1,2, -2,-1, -2,1, -3,0);
-                        break;
+      drawPrimitive(pe, p, br, cg, flags);
+      break; }
 
-                    default:
-                        break;
-                }
+    case PE_ScrollBarAddLine: {
+      QRect br = r;
+      PrimitiveElement pe;
 
-                if (a.isNull())
-                    return;
+      p->setPen(cg.background());
+      if (flags & Style_Horizontal) {
+        pe = PE_ArrowRight;
+        p->drawLine(br.topLeft(), br.topRight());
+        br.addCoords(0, 1, 0, 0);
+      } else {
+        pe = PE_ArrowDown;
+        p->drawLine(br.topLeft(), br.bottomLeft());
+        br.addCoords(1, 0, 0, 0);
+      }
 
-                p->save();
-                if (flags & Style_Enabled) {
-                    a.translate(r.x() + r.width() / 2, r.y() + r.height() / 2);
-                    p->setPen(cg.buttonText());
-                    p->drawLineSegments(a, 0, 3);           // draw arrow
-                    p->drawPoint(a[6]);
-                } else {
-                    a.translate(r.x() + r.width() / 2 + 1, r.y() + r.height() / 2 + 1);
-                    p->setPen(cg.light());
-                    p->drawLineSegments(a, 0, 3);           // draw arrow
-                    p->drawPoint(a[6]);
-                    a.translate(-1, -1);
-                    p->setPen(cg.mid());
-                    p->drawLineSegments(a, 0, 3);           // draw arrow
-                    p->drawPoint(a[6]);
-                }
-                p->restore();
-            } else
-                QCommonStyle::drawPrimitive(pe, p, r, cg, flags, data);
-            break;
+      if (! br.isValid()) break;
+
+      drawLightEtch(p, br, cg.button(), false);
+      br.addCoords(1, 1, -1, -1);
+
+      if (! br.isValid()) break;
+
+      p->fillRect(br, cg.brush((flags & Style_Down) ? QColorGroup::Midlight : QColorGroup::Button));
+      br.addCoords(2, 2, -2, -2);
+
+      if (! br.isValid()) break;
+
+      drawPrimitive(pe, p, br, cg, flags);
+      break; }
+
+    case PE_ScrollBarSubPage: {
+      QRect br = r;
+
+      p->setPen(cg.background());
+      if (flags & Style_Horizontal) {
+        p->drawLine(br.topLeft(), br.topRight());
+        br.addCoords(0, 1, 0, 0);
+      } else {
+        p->drawLine(br.topLeft(), br.bottomLeft());
+        br.addCoords(1, 0, 0, 0);
+      }
+
+      if (! br.isValid()) break;
+
+      drawLightEtch(p, br, cg.button(), false);
+      br.addCoords(1, 1, -1, -1);
+
+      if (! br.isValid()) break;
+
+      p->fillRect(br, cg.brush((flags & Style_Down) ? QColorGroup::Midlight : QColorGroup::Button));
+      break;
     }
+
+    case PE_ScrollBarAddPage: {
+      QRect br = r;
+
+      p->setPen(cg.background());
+      if (flags & Style_Horizontal) {
+        p->drawLine(br.topLeft(), br.topRight());
+        br.addCoords(0, 1, 0, 0);
+      } else {
+        p->drawLine(br.topLeft(), br.bottomLeft());
+        br.addCoords(1, 0, 0, 0);
+      }
+
+      if (! br.isValid()) break;
+
+      drawLightEtch(p, br, cg.button(), false);
+      br.addCoords(1, 1, -1, -1);
+
+      if (! br.isValid()) break;
+
+      p->fillRect(br, cg.brush((flags & Style_Down) ? QColorGroup::Midlight : QColorGroup::Button));
+      break; }
+
+    case PE_ScrollBarSlider: {
+      QRect br = r;
+
+      p->setPen(cg.background());
+      if (flags & Style_Horizontal) {
+        p->drawLine(br.topLeft(), br.topRight());
+        br.addCoords(0, 1, 0, 0);
+      } else {
+        p->drawLine(br.topLeft(), br.bottomLeft());
+        br.addCoords(1, 0, 0, 0);
+      }
+
+      if (!br.isValid()) break;
+
+      p->setPen(cg.highlight().light());
+      p->drawLine(br.topLeft(), br.topRight());
+      p->drawLine(br.left(), br.top()+1, br.left(), br.bottom()-1);
+
+      p->setPen(cg.highlight().dark());
+      p->drawLine(br.left(), br.bottom(), br.right()-1, br.bottom());
+      p->drawLine(br.topRight(), br.bottomRight());
+      br.addCoords(1, 1, -1, -1);
+
+      p->fillRect(br, cg.brush(QColorGroup::Highlight));
+      break; }
+
+    case PE_FocusRect:
+    p->setBrush(NoBrush);
+    if (flags & Style_FocusAtBorder) p->setPen(cg.shadow());
+    else p->setPen(cg.dark());
+    p->drawRect(r);
+    break;
+
+    case PE_ProgressBarChunk:
+      p->fillRect(r.x(), r.y()+2, r.width(), r.height()-4, cg.highlight());
+      break;
+
+    default:
+      if (pe == PE_HeaderArrow) {
+        if (flags & Style_Down) pe = PE_ArrowDown;
+        else pe = PE_ArrowUp;
+      }
+
+      if (pe >= PE_ArrowUp && pe <= PE_ArrowLeft) {
+        QPointArray a;
+
+        switch (pe) {
+          case PE_ArrowUp:
+            a.setPoints(7, -4,1, 2,1, -3,0, 1,0, -2,-1, 0,-1, -1,-2);
+            break;
+
+          case PE_ArrowDown:
+            a.setPoints(7, -4,-2, 2,-2, -3,-1, 1,-1, -2,0, 0,0, -1,1);
+            break;
+
+          case PE_ArrowRight:
+            a.setPoints(7, -2,-3, -2,3, -1,-2, -1,2, 0,-1, 0,1, 1,0);
+            break;
+
+          case PE_ArrowLeft:
+            a.setPoints(7, 0,-3, 0,3, -1,-2, -1,2, -2,-1, -2,1, -3,0);
+            break;
+
+          default:
+            break;
+        }
+
+        if (a.isNull()) return;
+
+        p->save();
+        if (flags & Style_Enabled) {
+          a.translate(r.x()+r.width()/2, r.y()+r.height()/2);
+          p->setPen(cg.buttonText());
+          p->drawLineSegments(a, 0, 3);           // draw arrow
+          p->drawPoint(a[6]);
+        } else {
+          a.translate(r.x()+r.width()/2+1, r.y()+r.height()/2+1);
+          p->setPen(cg.light());
+          p->drawLineSegments(a, 0, 3);           // draw arrow
+          p->drawPoint(a[6]);
+          a.translate(-1, -1);
+          p->setPen(cg.mid());
+          p->drawLineSegments(a, 0, 3);           // draw arrow
+          p->drawPoint(a[6]);
+        }
+        p->restore();
+      } else
+        QCommonStyle::drawPrimitive(pe, p, r, cg, flags, data);
+      break;
+  }
 }
 
 void LightStyleV3::drawControl(ControlElement control,
@@ -810,8 +730,7 @@ void LightStyleV3::drawControl(ControlElement control,
                                const QRect &r,
                                const QColorGroup &cg,
                                SFlags flags,
-                               const QStyleOption &data) const
-{
+                               const QStyleOption &data) const {
   switch (control) {
     case CE_TabBarTab:
     {
@@ -819,49 +738,48 @@ void LightStyleV3::drawControl(ControlElement control,
       QRect br = r;
 
       if (tb->shape() == QTabBar::RoundedAbove) {
-          if (!(flags & Style_Selected)) {
-              p->setPen(cg.background());
-              p->drawLine(br.left(),  br.bottom(), br.right(), br.bottom());
-              p->setPen(cg.light());
-              p->drawLine(br.left(),  br.bottom() - 1, br.right(), br.bottom() - 1);
-//               br.addCoords(0, 1, -1, -1);
-              if (br.left() == 0)
-                  p->drawPoint(br.left(), br.bottom() + 2);
-          } else {
-              p->setPen(cg.background());
-              p->drawLine(br.bottomLeft(), br.bottomRight());
-              if (br.left() == 0) {
-                  p->setPen(cg.light());
-                  p->drawPoint(br.bottomLeft());
-              }
-              br.addCoords(0, 0, 0, -1);
-          }
-
+        if (!(flags & Style_Selected)) {
+          p->setPen(cg.background());
+          p->drawLine(br.left(),  br.bottom(), br.right(), br.bottom());
           p->setPen(cg.light());
-          p->drawLine(br.bottomLeft(), br.topLeft());
-          p->drawLine(br.topLeft(), br.topRight());
-          p->setPen(cg.dark());
-          p->drawLine(br.right(), br.top() + 1, br.right(), br.bottom());
-
-          if (flags & Style_Selected)
-          {
-              p->fillRect(br.right() - 3, br.top() + 1, 3, br.height() - 1, cg.brush(QColorGroup::Highlight));
-              br.addCoords(1, 1, -3, 0);
+          p->drawLine(br.left(),  br.bottom()-1, br.right(), br.bottom()-1);
+          // br.addCoords(0, 1, -1, -1);
+          if (br.left() == 0) p->drawPoint(br.left(), br.bottom()+2);
+        } else {
+          p->setPen(cg.background());
+          p->drawLine(br.bottomLeft(), br.bottomRight());
+          if (br.left() == 0) {
+            p->setPen(cg.light());
+            p->drawPoint(br.bottomLeft());
           }
-          else
-              br.addCoords(1, 1, -1, 0);
+          br.addCoords(0, 0, 0, -1);
+        }
 
-          p->fillRect(br, cg.background());
+        p->setPen(cg.light());
+        p->drawLine(br.bottomLeft(), br.topLeft());
+        p->drawLine(br.topLeft(), br.topRight());
+        p->setPen(cg.dark());
+        p->drawLine(br.right(), br.top()+1, br.right(), br.bottom());
+
+        if(flags & Style_Selected)
+        {
+          p->fillRect(br.right()-3, br.top()+1, 3, br.height()-1, cg.brush(QColorGroup::Highlight));
+          br.addCoords(1, 1, -3, 0);
+        }
+        else
+          br.addCoords(1, 1, -1, 0);
+
+        p->fillRect(br, cg.background());
       } else if (tb->shape() == QTabBar::RoundedBelow) {
         if (!(flags & Style_Selected)) {
           p->setPen(cg.background());
           p->drawLine(br.left(),  br.top(), br.right(), br.top());
           p->setPen(cg.dark());
-          p->drawLine(br.left(),  br.top() + 1, br.right(), br.top() + 1);
+          p->drawLine(br.left(),  br.top()+1, br.right(), br.top()+1);
 //           br.addCoords(0, 2, -1, -2);
           if (br.left() == 0) {
             p->setPen(cg.light());
-            p->drawPoint(br.left(), br.top() - 2);
+            p->drawPoint(br.left(), br.top()-2);
           }
         } else {
           p->setPen(cg.background());
@@ -877,16 +795,15 @@ void LightStyleV3::drawControl(ControlElement control,
         p->drawLine(br.topLeft(), br.bottomLeft());
         p->setPen(cg.dark());
         p->drawLine(br.bottomLeft(), br.bottomRight());
-        p->drawLine(br.right(), br.top(), br.right(), br.bottom() - 1);
+        p->drawLine(br.right(), br.top(), br.right(), br.bottom()-1);
         br.addCoords(1, 0, -1, -1);
 
-        if (flags & Style_Selected)
-        {
-          p->fillRect(br.right() - 2, br.top(), 3, br.height(), cg.brush(QColorGroup::Highlight));
+        if (flags & Style_Selected) {
+          p->fillRect(br.right()-2, br.top(), 3, br.height(), cg.brush(QColorGroup::Highlight));
           br.addCoords(1, 0, -3, -1);
         }
         else
-            br.addCoords(1, 0, -1, -1);
+          br.addCoords(1, 0, -1, -1);
 
         p->fillRect(br, cg.background());
       } else
@@ -894,162 +811,151 @@ void LightStyleV3::drawControl(ControlElement control,
       break;
     }
 
-    case CE_PopupMenuItem:
-    {
-        if (! widget || data.isDefault())
-            break;
+    case CE_PopupMenuItem: {
+      if (! widget || data.isDefault()) break;
 
-        const QPopupMenu *popupmenu = (const QPopupMenu *) widget;
-        QMenuItem *mi = data.menuItem();
-        int tab = data.tabWidth();
-        int maxpmw = data.maxIconWidth();
+      const QPopupMenu *popupmenu = (const QPopupMenu *) widget;
+      QMenuItem *mi = data.menuItem();
+      int tab = data.tabWidth();
+      int maxpmw = data.maxIconWidth();
 
-        if (mi && mi->isSeparator()) {
-            if (widget->erasePixmap() && !widget->erasePixmap()->isNull())
-                p->drawPixmap(r.topLeft(), *widget->erasePixmap(), r);
-            else
-                p->fillRect(r, cg.brush(QColorGroup::Button));
-            p->setPen(cg.mid());
-            p->drawLine(r.left() + 12,  r.top() + 1,
-                        r.right() - 12, r.top() + 1);
-            p->setPen(cg.light());
-            p->drawLine(r.left() + 12,  r.top() + 2,
-                        r.right() - 12, r.top() + 2);
-            break;
-        }
-
-        if (flags & Style_Active)
-            qDrawShadePanel(p, r, cg, true, 1,
-                            &cg.brush(QColorGroup::Midlight));
-        else if (widget->erasePixmap() && !widget->erasePixmap()->isNull())
-            p->drawPixmap(r.topLeft(), *widget->erasePixmap(), r);
+      if (mi && mi->isSeparator()) {
+        if (widget->erasePixmap() && !widget->erasePixmap()->isNull())
+          p->drawPixmap(r.topLeft(), *widget->erasePixmap(), r);
         else
-            p->fillRect(r, cg.brush(QColorGroup::Button));
-
-        if (!mi)
-            break;
-
-        maxpmw = QMAX(maxpmw, 16);
-
-        QRect cr, ir, tr, sr;
-        // check column
-        cr.setRect(r.left(), r.top(), maxpmw, r.height());
-        // submenu indicator column
-        sr.setCoords(r.right() - maxpmw, r.top(), r.right(), r.bottom());
-        // tab/accelerator column
-        tr.setCoords(sr.left() - tab - 4, r.top(), sr.left(), r.bottom());
-        // item column
-        ir.setCoords(cr.right() + 4, r.top(), tr.right() - 4, r.bottom());
-
-        bool reverse = QApplication::reverseLayout();
-        if (reverse) {
-            cr = visualRect(cr, r);
-            sr = visualRect(sr, r);
-            tr = visualRect(tr, r);
-            ir = visualRect(ir, r);
-        }
-
-        if (mi->isChecked() &&
-            !(flags & Style_Active) &
-            (flags & Style_Enabled))
-            qDrawShadePanel(p, cr, cg, true, 1, &cg.brush(QColorGroup::Midlight));
-
-        if (mi->iconSet()) {
-            QIconSet::Mode mode =
-                (flags & Style_Enabled) ? QIconSet::Normal : QIconSet::Disabled;
-            if ((flags & Style_Active) && (flags & Style_Enabled))
-                mode = QIconSet::Active;
-            QPixmap pixmap;
-            if (popupmenu->isCheckable() && mi->isChecked())
-                pixmap =
-                    mi->iconSet()->pixmap(QIconSet::Small, mode, QIconSet::On);
-            else
-                pixmap =
-                    mi->iconSet()->pixmap(QIconSet::Small, mode);
-            QRect pmr(QPoint(0, 0), pixmap.size());
-            pmr.moveCenter(cr.center());
-            p->setPen(cg.text());
-            p->drawPixmap(pmr.topLeft(), pixmap);
-        } else if (popupmenu->isCheckable() && mi->isChecked())
-            drawPrimitive(PE_CheckMark, p, cr, cg,
-                          (flags & Style_Enabled) | Style_On);
-
-        QColor textcolor;
-        QColor embosscolor;
-        if (flags & Style_Active) {
-            if (!(flags & Style_Enabled))
-                textcolor = cg.midlight().dark();
-            else
-                textcolor = cg.buttonText();
-            embosscolor = cg.midlight().light();
-        } else if (!(flags & Style_Enabled)) {
-            textcolor = cg.text();
-            embosscolor = cg.light();
-        } else
-            textcolor = embosscolor = cg.buttonText();
-        p->setPen(textcolor);
-
-        if (mi->custom()) {
-            p->save();
-            if (!(flags & Style_Enabled)) {
-                p->setPen(cg.light());
-                mi->custom()->paint(p, cg, flags & Style_Active,
-                                    flags & Style_Enabled,
-                                    ir.x() + 1, ir.y() + 1,
-                                    ir.width() - 1, ir.height() - 1);
-                p->setPen(textcolor);
-            }
-            mi->custom()->paint(p, cg, flags & Style_Active,
-                                flags & Style_Enabled,
-                                ir.x(), ir.y(),
-                                ir.width(), ir.height());
-            p->restore();
-        }
-
-        QString text = mi->text();
-        if (! text.isNull()) {
-            int t = text.find('\t');
-
-            // draw accelerator/tab-text
-            if (t >= 0) {
-                int alignFlag = AlignVCenter | ShowPrefix | DontClip | SingleLine;
-                alignFlag |= (reverse ? AlignLeft : AlignRight);
-                if (!(flags & Style_Enabled)) {
-                    p->setPen(embosscolor);
-                    tr.moveBy(1, 1);
-                    p->drawText(tr, alignFlag, text.mid(t + 1));
-                    tr.moveBy(-1, -1);
-                    p->setPen(textcolor);
-                }
-
-                p->drawText(tr, alignFlag, text.mid(t + 1));
-            }
-
-            int alignFlag = AlignVCenter | ShowPrefix | DontClip | SingleLine;
-            alignFlag |= (reverse ? AlignRight : AlignLeft);
-
-            if (!(flags & Style_Enabled)) {
-                p->setPen(embosscolor);
-                ir.moveBy(1, 1);
-                p->drawText(ir, alignFlag, text, t);
-                ir.moveBy(-1, -1);
-                p->setPen(textcolor);
-            }
-
-            p->drawText(ir, alignFlag, text, t);
-        } else if (mi->pixmap()) {
-            QPixmap pixmap = *mi->pixmap();
-            if (pixmap.depth() == 1)
-                p->setBackgroundMode(OpaqueMode);
-            p->drawPixmap(ir.x(), ir.y() + (ir.height() - pixmap.height()) / 2, pixmap);
-            if (pixmap.depth() == 1)
-                p->setBackgroundMode(TransparentMode);
-        }
-
-        if (mi->popup())
-            drawPrimitive((QApplication::reverseLayout() ? PE_ArrowLeft : PE_ArrowRight),
-                          p, sr, cg, flags);
+          p->fillRect(r, cg.brush(QColorGroup::Button));
+        p->setPen(cg.mid());
+        p->drawLine(r.left()+12,  r.top()+1, r.right()-12, r.top()+1);
+        p->setPen(cg.light());
+        p->drawLine(r.left()+12,  r.top()+2, r.right()-12, r.top()+2);
         break;
+      }
+
+      if (flags & Style_Active) {
+        qDrawShadePanel(p, r, cg, true, 1, &cg.brush(QColorGroup::Midlight));
+      } else if (widget->erasePixmap() && !widget->erasePixmap()->isNull())  {
+        p->drawPixmap(r.topLeft(), *widget->erasePixmap(), r);
+      } else {
+        p->fillRect(r, cg.brush(QColorGroup::Button));
+      }
+
+      if (!mi) break;
+
+      maxpmw = QMAX(maxpmw, 16);
+
+      QRect cr, ir, tr, sr;
+      // check column
+      cr.setRect(r.left(), r.top(), maxpmw, r.height());
+      // submenu indicator column
+      sr.setCoords(r.right()-maxpmw, r.top(), r.right(), r.bottom());
+      // tab/accelerator column
+      tr.setCoords(sr.left()-tab-4, r.top(), sr.left(), r.bottom());
+      // item column
+      ir.setCoords(cr.right()+4, r.top(), tr.right()-4, r.bottom());
+
+      bool reverse = QApplication::reverseLayout();
+      if (reverse) {
+        cr = visualRect(cr, r);
+        sr = visualRect(sr, r);
+        tr = visualRect(tr, r);
+        ir = visualRect(ir, r);
+      }
+
+      if (mi->isChecked() &&
+          !(flags & Style_Active) &
+          (flags & Style_Enabled)) {
+        qDrawShadePanel(p, cr, cg, true, 1, &cg.brush(QColorGroup::Midlight));
+      }
+
+      if (mi->iconSet()) {
+        QIconSet::Mode mode = (flags & Style_Enabled) ? QIconSet::Normal : QIconSet::Disabled;
+        if ((flags & Style_Active) && (flags & Style_Enabled)) mode = QIconSet::Active;
+        QPixmap pixmap;
+        if (popupmenu->isCheckable() && mi->isChecked())
+          pixmap = mi->iconSet()->pixmap(QIconSet::Small, mode, QIconSet::On);
+        else
+          pixmap = mi->iconSet()->pixmap(QIconSet::Small, mode);
+        QRect pmr(QPoint(0, 0), pixmap.size());
+        pmr.moveCenter(cr.center());
+        p->setPen(cg.text());
+        p->drawPixmap(pmr.topLeft(), pixmap);
+      } else if (popupmenu->isCheckable() && mi->isChecked()) {
+        drawPrimitive(PE_CheckMark, p, cr, cg, (flags & Style_Enabled) | Style_On);
+      }
+
+      QColor textcolor;
+      QColor embosscolor;
+      if (flags & Style_Active) {
+        if (!(flags & Style_Enabled)) textcolor = cg.midlight().dark();
+        else textcolor = cg.buttonText();
+        embosscolor = cg.midlight().light();
+      } else if (!(flags & Style_Enabled)) {
+        textcolor = cg.text();
+        embosscolor = cg.light();
+      } else {
+        textcolor = embosscolor = cg.buttonText();
+      }
+
+      p->setPen(textcolor);
+
+      if (mi->custom()) {
+        p->save();
+        if (!(flags & Style_Enabled)) {
+          p->setPen(cg.light());
+          mi->custom()->paint(p, cg, flags & Style_Active,
+                              flags & Style_Enabled,
+                              ir.x()+1, ir.y()+1, ir.width()-1, ir.height()-1);
+          p->setPen(textcolor);
+        }
+        mi->custom()->paint(p, cg, flags & Style_Active,
+                            flags & Style_Enabled,
+                            ir.x(), ir.y(),
+                            ir.width(), ir.height());
+        p->restore();
+      }
+
+      QString text = mi->text();
+      if (! text.isNull()) {
+        int t = text.find('\t');
+
+        // draw accelerator/tab-text
+        if (t >= 0) {
+          int alignFlag = AlignVCenter|ShowPrefix|DontClip|SingleLine;
+          alignFlag |= (reverse ? AlignLeft : AlignRight);
+          if (!(flags & Style_Enabled)) {
+            p->setPen(embosscolor);
+            tr.moveBy(1, 1);
+            p->drawText(tr, alignFlag, text.mid(t + 1));
+            tr.moveBy(-1, -1);
+            p->setPen(textcolor);
+          }
+
+          p->drawText(tr, alignFlag, text.mid(t + 1));
+        }
+
+        int alignFlag = AlignVCenter | ShowPrefix | DontClip | SingleLine;
+        alignFlag |= (reverse ? AlignRight : AlignLeft);
+
+        if (!(flags & Style_Enabled)) {
+          p->setPen(embosscolor);
+          ir.moveBy(1, 1);
+          p->drawText(ir, alignFlag, text, t);
+          ir.moveBy(-1, -1);
+          p->setPen(textcolor);
+        }
+
+        p->drawText(ir, alignFlag, text, t);
+      } else if (mi->pixmap()) {
+        QPixmap pixmap = *mi->pixmap();
+        if (pixmap.depth() == 1) p->setBackgroundMode(OpaqueMode);
+        p->drawPixmap(ir.x(), ir.y()+(ir.height()-pixmap.height())/2, pixmap);
+        if (pixmap.depth() == 1) p->setBackgroundMode(TransparentMode);
+      }
+
+      if (mi->popup())
+        drawPrimitive((QApplication::reverseLayout() ? PE_ArrowLeft : PE_ArrowRight),
+                      p, sr, cg, flags);
+      break;
     }
 
     case CE_MenuBarEmptyArea:
