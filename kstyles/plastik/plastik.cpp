@@ -164,7 +164,7 @@ PlastikStyle::PlastikStyle() : KStyle( AllowMenuTransparency, ThreeButtonScrollB
     verticalLine = 0;
 
     QSettings settings;
-    _contrast = settings.readNumEntry("/Qt/KDE/contrast", 6);
+    _contrast = settings.readNumEntry("/Qt/KDE/contrast", 8);
     settings.beginGroup("/plastikstyle/Settings");
     _scrollBarLines = settings.readBoolEntry("/scrollBarLines", false);
     _animateProgressBar = settings.readBoolEntry("/animateProgressBar", false);
@@ -3121,7 +3121,7 @@ int PlastikStyle::pixelMetric(PixelMetric m, const QWidget *widget) const
             const QTabBar * tb = (const QTabBar *) widget;
             if (tb->shape() == QTabBar::RoundedAbove ||
                 tb->shape() == QTabBar::RoundedBelow)
-                return 12;
+                return 10;
             else
                 return 4;
         }
@@ -3282,7 +3282,7 @@ QSize PlastikStyle::sizeFromContents(ContentsType t,
             int h = s.height() + 2 * pixelMetric(PM_ButtonMargin, widget);
             if ( btn->text().isEmpty() && s.width() < 32 ) return QSize(w, h);
 
-            return QSize( w+25, h+5 );
+            return QSize( w+10, h+4 );
         }
 
         case CT_ToolButton:
