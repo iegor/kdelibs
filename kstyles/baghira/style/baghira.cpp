@@ -2878,25 +2878,25 @@ int LiquidStyle::pixelMetric( PixelMetric m, const QWidget *widget ) const
 	switch ( m )
 	{
 		case PM_ButtonMargin:
-			return ( 5 );
+			return (5);
 		case PM_ButtonDefaultIndicator:
-			return ( 0 );
+			return (0);
 		case PM_ExclusiveIndicatorWidth:
 		case PM_ExclusiveIndicatorHeight:
-			return ( 16 );
+			return (16);
 		case PM_IndicatorWidth:
 		case PM_IndicatorHeight:
-			return ( 16 );
+			return (16);
 		case PM_ScrollBarExtent:
-			return ( 15 );
+			return (15);
 		case PM_ScrollBarSliderMin:
-			if (isOOO) return 10; return ( 40 );
+			if (isOOO) return 10; return (40);
 		case PM_SplitterWidth:
 			return 6;
 		case PM_SliderControlThickness:
 			return(15);
 		case PM_SliderThickness:
-			return ( 22 );
+			return (22);
 			/*          if (widget && (widget->width() < widget->height() && widget->width() < 17) || (widget->width() > widget->height() && widget->height() < 17))
 				    return (16);*/
 		case PM_SliderLength:
