@@ -1,5 +1,20 @@
 #MIN_CONFIG
 
+# Define a symbol, to know that we're compiling WITH kde. (for apps that
+#  can compile without KDE, optionally)
+AM_CONDITIONAL(KDE_INSTALLED, test "$have_kde" = "yes")
+
+AC_CHECK_HEADERS(fcntl.h stdint.h)
+AC_CHECK_HEADERS(sys/cdefs.h fnmatch.h utmp.h linux/tcp.h sys/proc.h)
+
+AC_C_LONG_DOUBLE
+
+dnl Checks for library functions.
+KDE_CHECK_DLOPEN
+AC_CHECK_FUNCS(fabsl strdup vsnprintf re_comp flock)
+AC_CHECK_GETDOMAINNAME
+AC_CHECK_GETHOSTNAME
+
 # Check for pkg-config manually first, as if its not installed the
 # PKG_PROG_PKG_CONFIG macro won't be defined.
 m4_pattern_allow(PKG_CONFIG_MIN_VERSION)
@@ -15,3 +30,7 @@ PKG_CHECK_MODULES( AVAHI, [ avahi-qt3 >= 0.4 , avahi-client >= 0.4 ])
 AC_SUBST(AVAHI_CFLAGS)
 AC_SUBST(AVAHI_LIBS)
 PKG_CHECK_EXISTS( [ avahi-client >= 0.6], AC_DEFINE(AVAHI_API_0_6,1,[Avahi API 0.6] ) )
+
+AM_PROG_LEX
+LFLAGS="-o${LEX_OUTPUT_ROOT}.c"
+AC_SUBST(LFLAGS)
