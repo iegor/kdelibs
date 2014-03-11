@@ -3145,7 +3145,7 @@ int PlastikStyle::pixelMetric(PixelMetric m, const QWidget *widget) const
             return 14;
         }
         case PM_ScrollBarExtent: {
-            return 10;
+            return 12;
         }
 
         case PM_DockWindowSeparatorExtent:
