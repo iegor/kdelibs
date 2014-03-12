@@ -1,86 +1,78 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="25" >
-  <Doc0 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/misc/Makefile.am" >
-   <View0 Encoding="" line="0" Type="Source" />
+ <DocsAndViews NumberOfDocuments="21" >
+  <Doc0 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kprocess.h" >
+   <View0 Encoding="" Type="Source" />
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/misc/kntlm/Makefile.am" >
+  <Doc1 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kpty.h" >
    <View0 Encoding="" Type="Source" />
   </Doc1>
-  <Doc2 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/Makefile.am" >
+  <Doc2 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kfile/kfileiconview.cpp" >
    <View0 Encoding="" Type="Source" />
   </Doc2>
-  <Doc3 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kprocess.h" >
+  <Doc3 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.h" >
    <View0 Encoding="" Type="Source" />
   </Doc3>
-  <Doc4 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kpty.h" >
+  <Doc4 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.cpp" >
    <View0 Encoding="" Type="Source" />
   </Doc4>
-  <Doc5 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kfile/kfileiconview.cpp" >
+  <Doc5 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/kgzipfilter.cpp" >
    <View0 Encoding="" Type="Source" />
   </Doc5>
-  <Doc6 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc6 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc6>
-  <Doc7 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc7 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v2.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc7>
-  <Doc8 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/kgzipfilter.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc8 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc8>
-  <Doc9 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/Makefile.am" >
+  <Doc9 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/light.cpp" >
    <View0 Encoding="" Type="Source" />
   </Doc9>
-  <Doc10 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.cpp" >
-   <View0 Encoding="UTF-8" Type="Source" />
+  <Doc10 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/plastik.cpp" >
+   <View0 Encoding="" line="3167" Type="Source" />
   </Doc10>
-  <Doc11 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v2.cpp" >
-   <View0 Encoding="UTF-8" Type="Source" />
+  <Doc11 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/plastik.h" >
+   <View0 Encoding="" Type="Source" />
   </Doc11>
-  <Doc12 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.h" >
+  <Doc12 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_draw.c" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc12>
-  <Doc13 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/light.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc13 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_rc_style.c" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc13>
-  <Doc14 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/plastik.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc14 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_style.c" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc14>
-  <Doc15 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/plastik.h" >
+  <Doc15 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/misc.h" >
    <View0 Encoding="" Type="Source" />
   </Doc15>
-  <Doc16 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_draw.c" >
-   <View0 Encoding="UTF-8" Type="Source" />
+  <Doc16 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/aurora/aurora.h" >
+   <View0 Encoding="" Type="Source" />
   </Doc16>
-  <Doc17 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_rc_style.c" >
+  <Doc17 NumberOfViews="1" URL="file:///usr/qt/3/include/qslider.h" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc17>
-  <Doc18 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_style.c" >
-   <View0 Encoding="UTF-8" Type="Source" />
+  <Doc18 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/baghira/starter/starter.cpp" >
+   <View0 Encoding="" Type="Source" />
   </Doc18>
-  <Doc19 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/misc.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc19 NumberOfViews="1" URL="file:///usr/qt/3/include/qstring.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc19>
-  <Doc20 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/aurora/aurora.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc20 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/baghira/style/baghira.cpp" >
+   <View0 Encoding="UTF-8" line="2891" Type="Source" />
   </Doc20>
-  <Doc21 NumberOfViews="1" URL="file:///usr/qt/3/include/qslider.h" >
-   <View0 Encoding="UTF-8" line="17" Type="Source" />
-  </Doc21>
-  <Doc22 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/baghira/starter/starter.cpp" >
-   <View0 Encoding="" line="256" Type="Source" />
-  </Doc22>
-  <Doc23 NumberOfViews="1" URL="file:///usr/qt/3/include/qstring.h" >
-   <View0 Encoding="UTF-8" line="427" Type="Source" />
-  </Doc23>
-  <Doc24 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/baghira/style/baghira.cpp" >
-   <View0 Encoding="UTF-8" line="2857" Type="Source" />
-  </Doc24>
  </DocsAndViews>
  <pluginList>
   <kdevdebugger>
-   <breakpointList/>
+   <breakpointList>
+    <breakpoint0 location="/home/rainman/projects/kde/kdelibs/kstyles/plastik/plastik.cpp:952" type="1" tracingFormatString="" traceFormatStringEnabled="0" condition="" tracingEnabled="0" enabled="1" >
+     <tracedExpressions/>
+    </breakpoint0>
+   </breakpointList>
    <showInternalCommands value="0" />
   </kdevdebugger>
   <kdevastyle>
