@@ -50,7 +50,9 @@ dnl Checks for header files.
 KDE_CHECK_STL
 AC_HEADER_DIRENT
 AC_HEADER_STDC
-AC_CHECK_HEADERS(sys/param.h sys/mman.h sys/time.h sysent.h strings.h sys/stat.h sys/select.h paths.h malloc.h limits.h sys/soundcard.h dlfcn.h termios.h sys/prctl.h)
+AC_CHECK_HEADERS(sys/param.h sys/mman.h sys/time.h sys/stat.h sys/select.h)
+AC_CHECK_HEADERS(sys/prctl.h sys/soundcard.h)
+AC_CHECK_HEADERS(sysent.h strings.h paths.h malloc.h limits.h dlfcn.h termios.h)
 
 AC_ARG_WITH(acl,
   [AC_HELP_STRING(--with-acl,
