@@ -1,2 +1,0 @@
-AM_CONDITIONAL( HAVE_3_4, test $(kde-config --version | grep "KDE:" | cut -d" " -f2 | cut -d"." -f2) -gt 3 )
-
