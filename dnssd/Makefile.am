@@ -5,7 +5,8 @@ INCLUDES = -I$(top_srcdir) $(all_includes) $(AVAHI_CFLAGS)
 
 lib_LTLIBRARIES = libkdnssd.la
 
-noinst_HEADERS = domainbrowser.h query.h remoteservice.h \
+include_HEADERS = remoteservice.h
+noinst_HEADERS = domainbrowser.h query.h \
 				 publicservice.h servicebase.h servicebrowser.h settings.h sdevent.h
 libkdnssd_la_SOURCES = remoteservice.cpp responder.cpp \
 					   servicebase.cpp settings.kcfgc publicservice.cpp \
