@@ -5,13 +5,13 @@ INCLUDES = -I$(top_srcdir) $(all_includes) $(AVAHI_CFLAGS)
 
 lib_LTLIBRARIES = libkdnssd.la
 
-noinst_HEADERS = domainbrowser.h query.h \
-				 publicservice.h settings.h sdevent.h
+noinst_HEADERS = domainbrowser.h query.h publicservice.h sdevent.h
 libkdnssd_la_SOURCES = remoteservice.cpp responder.cpp \
 					   servicebase.cpp settings.kcfgc publicservice.cpp \
 					   query.cpp domainbrowser.cpp servicebrowser.cpp
 dnssdincludedir = $(includedir)/dnssd
-dnssdinclude_HEADERS = remoteservice.h servicebase.h servicebrowser.h
+dnssdinclude_HEADERS = remoteservice.h servicebase.h servicebrowser.h \
+					   settings.h
 libkdnssd_la_CXXFLAGS = $(INCLUDES)
 libkdnssd_la_LIBADD = $(LIB_KDECORE) $(AVAHI_LIBS) $(LIB_QT)
 libkdnssd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) -version-info 1:0
