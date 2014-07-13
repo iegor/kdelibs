@@ -342,7 +342,7 @@ public:
    * @param _rel_url A relative or absolute URL.
    *        If this is an absolute URL then @p _baseurl will be ignored.
    *        If this is a relative URL it will be combined with @p _baseurl.
-   *        Note that @p _rel_url should be encoded too, in any case.
+   *        NOTE: @p _rel_url should be encoded too, in any case.
    *        So do NOT pass a path here (use setPath() or addPath() or
    *        fromPathOrURL() instead)
    * @param encoding_hint MIB of original encoding of URL.
@@ -481,7 +481,7 @@ public:
    *
    * Special characters in the hostname will appear encoded in the URL.
    *
-   * @param _txt the new name of the host or QString::null to remove the host
+   * @param _txt the new name of the host or @c QString::null to remove the host
    *
    * @see host()
    * @see hasHost()
@@ -1696,8 +1696,7 @@ public:
   static QString relativePath(const QString &base_dir, const QString &path, bool *isParent=0);
 
   /**
-   * @brief Determines which URI mode is suitable for processing URIs of a
-   *        given protocol
+   * @brief Determines which URI mode is suitable for processing URIs of a given protocol
    *
    * @param protocol the protocol name. See protocol()
    *
@@ -1737,7 +1736,7 @@ protected:
    * @see isEmpty()
    */
   void reset();
-  
+
   /**
    * @brief Parses the given string and fills the URL's values on success
    *
