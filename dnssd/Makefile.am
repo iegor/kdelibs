@@ -10,7 +10,7 @@ libkdnssd_la_SOURCES = remoteservice.cpp responder.cpp \
 					   servicebase.cpp settings.kcfgc publicservice.cpp \
 					   query.cpp domainbrowser.cpp servicebrowser.cpp
 dnssdincludedir = $(includedir)/dnssd
-dnssdinclude_HEADERS = remoteservice.h servicebase.h servicebrowser.h \
+dnssdinclude_HEADERS = domainbrowser.h remoteservice.h servicebase.h servicebrowser.h \
 					   settings.h
 libkdnssd_la_CXXFLAGS = $(INCLUDES)
 libkdnssd_la_LIBADD = $(LIB_KDECORE) $(AVAHI_LIBS) $(LIB_QT)
