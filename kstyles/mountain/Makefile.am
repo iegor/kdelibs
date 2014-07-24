@@ -86,3 +86,5 @@ pixmaps.mountain mountain.h: genembed
 	./genembed $$pics > pixmaps.mountain
 
 pixmaploader.lo: pixmaps.mountain
+
+CLEANFILES = pixmaps.mountain
