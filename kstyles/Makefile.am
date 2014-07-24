@@ -1,4 +1,4 @@
-SUBDIRS = aurora highcolor highcontrast keramik kthemestyle light plastik \
+SUBDIRS = aurora highcolor highcontrast keramik mountain kthemestyle light plastik \
 	riscos themes utils
 
 #kstyles should not be included in the apidocs
