@@ -3,13 +3,13 @@ AM_CPPFLAGS = -DQT_PLUGIN
 INCLUDES = -I$(top_srcdir)/kdefx $(all_includes)
 # qembed's output needs that...
 KDE_CXXFLAGS = -UQT_NO_ASCII_CAST
-noinst_HEADERS = keramik.h pixmaploader.h keramikimage.h bitmaps.h gradients.h colorutil.h
-kde_style_LTLIBRARIES = keramik.la
-keramik_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
-keramik_la_LIBADD = ../../kdefx/libkdefx.la $(LIB_QT) $(LIB_XEXT)
-keramik_la_SOURCES = keramik.cpp pixmaploader.cpp gradients.cpp colorutil.cpp
-keramik_la_COMPILE_FIRST = keramikrc.h
-keramik_la_METASOURCES = AUTO
+noinst_HEADERS = mountain.h pixmaploader.h mountainimage.h bitmaps.h gradients.h colorutil.h
+kde_style_LTLIBRARIES = mountain.la
+mountain_la_LDFLAGS = $(all_libraries) $(KDE_PLUGIN) -module
+mountain_la_LIBADD = ../../kdefx/libkdefx.la $(LIB_QT) $(LIB_XEXT)
+mountain_la_SOURCES = mountain.cpp pixmaploader.cpp gradients.cpp colorutil.cpp
+mountain_la_COMPILE_FIRST = mountainrc.h
+mountain_la_METASOURCES = AUTO
 
 noinst_PROGRAMS = genembed
 
@@ -17,7 +17,7 @@ genembed_SOURCES = genembed.cpp
 genembed_LDADD = ../../kdefx/libkdefx.la
 genembed_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-pixmaps.keramik: pics/checkbox-off.png pics/checkbox-on.png pics/combobox-list-bc.png\
+pixmaps.mountain: pics/checkbox-off.png pics/checkbox-on.png pics/combobox-list-bc.png\
 	 pics/combobox-list-bl.png pics/combobox-list-br.png pics/combobox-list-cl.png pics/combobox-list-cr.png\
 	 pics/combobox-list-tc.png pics/combobox-list-tl.png pics/combobox-list-tr.png pics/frame-shadow-cl.png\
 	 pics/frame-shadow-tc.png pics/frame-shadow-tl.png pics/listview-bc.png pics/listview-bl.png pics/listview-br.png\
@@ -81,10 +81,8 @@ pixmaps.keramik: pics/checkbox-off.png pics/checkbox-on.png pics/combobox-list-b
 	 pics/title-maximize.png pics/title-restore.png pics/titlebutton-pressed.png\
 	 pics/titlebutton.png
 
-
-pixmaps.keramik keramikrc.h: genembed
+pixmaps.mountain mountain.h: genembed
 	pics=`ls $(srcdir)/pics/*.png 2>/dev/null` ;\
-	./genembed $$pics > pixmaps.keramik
+	./genembed $$pics > pixmaps.mountain
 
-pixmaploader.lo: pixmaps.keramik
-
+pixmaploader.lo: pixmaps.mountain

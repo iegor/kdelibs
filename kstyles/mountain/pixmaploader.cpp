@@ -1,25 +1,6 @@
-/*
-   Copyright (c) 2002 Malte Starostik <malte@kde.org>
-             (c) 2002,2003 Maksim Orlovich <maksim@kde.org>
+/* Mountain Style for KDE3 */
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
-
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
-*/
-
-// $Id: pixmaploader.cpp 559665 2006-07-07 23:56:40Z orlovich $
-
+/* Qt */
 #include <qapplication.h>
 #include <qbitmap.h>
 #include <qglobal.h>
@@ -28,12 +9,11 @@
 #include <qpixmap.h>
 #include <qpixmapcache.h>
 
+/* Mountain */
 #include "pixmaploader.h"
+#include "pixmaps.mountain"
 
-
-#include "pixmaps.keramik"
-
-using namespace Keramik;
+using namespace Mountain;
 
 PixmapLoader* PixmapLoader::s_instance = 0;
 
@@ -57,7 +37,7 @@ void PixmapLoader::clear()
 
 QImage* PixmapLoader::getDisabled(int name, const QColor& color, const QColor& back, bool blend)
 {
-	KeramikEmbedImage* edata = KeramikGetDbImage(name);
+	MountainEmbedImage* edata = MountainGetDbImage(name);
 	if (!edata)
 		return 0;
 
@@ -150,7 +130,7 @@ QImage* PixmapLoader::getDisabled(int name, const QColor& color, const QColor& b
 
 QImage* PixmapLoader::getColored(int name, const QColor& color, const QColor& back, bool blend)
 {
-	KeramikEmbedImage* edata = KeramikGetDbImage(name);
+	MountainEmbedImage* edata = MountainGetDbImage(name);
 	if (!edata)
 		return 0;
 
@@ -255,8 +235,8 @@ QPixmap PixmapLoader::pixmap( int name, const QColor& color, const QColor& bg, b
 
 QPixmap PixmapLoader::scale( int name, int width, int height, const QColor& color,  const QColor& bg, bool disabled, bool blend )
 {
-	KeramikCacheEntry entry(name, color, bg, disabled, blend, width, height);
-	KeramikCacheEntry* cacheEntry;
+	MountainCacheEntry entry(name, color, bg, disabled, blend, width, height);
+	MountainCacheEntry* cacheEntry;
 
 	int key = entry.key();
 
@@ -279,7 +259,7 @@ QPixmap PixmapLoader::scale( int name, int width, int height, const QColor& colo
 
 	if (!img)
 	{
-		KeramikCacheEntry* toAdd = new KeramikCacheEntry(entry);
+		MountainCacheEntry* toAdd = new MountainCacheEntry(entry);
 		toAdd->m_pixmap = new QPixmap();
 		m_pixmapCache.insert(key, toAdd, 16);
 		return QPixmap();
@@ -292,7 +272,7 @@ QPixmap PixmapLoader::scale( int name, int width, int height, const QColor& colo
 											   height ? height: img->height()));
 	delete img;
 
-	KeramikCacheEntry* toAdd = new KeramikCacheEntry(entry);
+	MountainCacheEntry* toAdd = new MountainCacheEntry(entry);
 	toAdd->m_pixmap = result;
 
 	if (!m_pixmapCache.insert(key, toAdd, result->width()*result->height()*result->depth()/8)) {
@@ -300,13 +280,13 @@ QPixmap PixmapLoader::scale( int name, int width, int height, const QColor& colo
 		delete toAdd;
 		return toRet;
 	}
-	
+
 	return *result;
 }
 
 QSize PixmapLoader::size( int id )
 {
-	KeramikEmbedImage* edata = KeramikGetDbImage(id);
+	MountainEmbedImage* edata = MountainGetDbImage(id);
 	if (!edata)
 		return QSize(0,0);
 	return QSize(edata->width, edata->height);
@@ -501,7 +481,7 @@ int RectTilePainter::tileName( unsigned int column, unsigned int row ) const
 }
 
 ActiveTabPainter::ActiveTabPainter( bool bottom )
-	: RectTilePainter( bottom? keramik_tab_bottom_active: keramik_tab_top_active, false),
+	: RectTilePainter( bottom? mountain_tab_bottom_active: mountain_tab_top_active, false),
 	  m_bottom( bottom )
 {
 	m_rows = 2;
@@ -525,7 +505,7 @@ int ActiveTabPainter::tileName( unsigned int column, unsigned int row ) const
 }
 
 InactiveTabPainter::InactiveTabPainter( Mode mode, bool bottom )
-	: RectTilePainter( bottom? keramik_tab_bottom_inactive: keramik_tab_top_inactive, false),
+	: RectTilePainter( bottom? mountain_tab_bottom_inactive: mountain_tab_top_inactive, false),
 	  m_mode( mode ), m_bottom( bottom )
 {
 	m_rows = 2;
@@ -578,7 +558,7 @@ int InactiveTabPainter::tileName( unsigned int column, unsigned int row ) const
 {
 	Mode leftMost = QApplication::reverseLayout() ? Last : First;
 	if ( column == 0 && m_mode != leftMost )
-		return KeramikTileSeparator;
+		return MountainTileSeparator;
 	if ( m_bottom )
 		return RectTilePainter::tileName( column, row + 1 );
 	return RectTilePainter::tileName( column, row );
@@ -606,7 +586,7 @@ ScrollBarPainter::ScrollBarPainter( int type, int count, bool horizontal )
 
 int ScrollBarPainter::name( bool horizontal )
 {
-	return horizontal? keramik_scrollbar_hbar: keramik_scrollbar_vbar;
+	return horizontal? mountain_scrollbar_hbar: mountain_scrollbar_vbar;
 }
 
 int ScrollBarPainter::tileName( unsigned int column, unsigned int row ) const
@@ -624,6 +604,3 @@ int SpinBoxPainter::tileName( unsigned int column, unsigned int ) const
 {
 	return column + 1;
 }
-
-// vim: ts=4 sw=4 noet
-// kate: indent-width 4; replace-tabs off; tab-width 4; space-indent off;
