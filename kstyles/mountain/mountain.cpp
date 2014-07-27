@@ -115,7 +115,7 @@ namespace Mountain {
     }
     else {
       a.translate(r.x() + r.width() / 2, r.y() + r.height() / 2 + 1);
-      p->setPen(cg.light());
+      p->setPen(cg.highlight());
       p->drawLineSegments(a);
       a.translate(-1, -1);
       p->setPen(cg.mid());
@@ -625,14 +625,15 @@ namespace Mountain {
           count = 5;
         }
 
-        QColor col = cg.highlight();
+        QColor col = Mountain::ColorUtil::lighten(cg.highlight(), 120);
 
         if(customScrollMode || !highlightScrollBar) { col = cg.button(); }
 
-        if(!active)
-        { Mountain::ScrollBarPainter(name, count, horizontal).draw(p, r, col, cg.background(), false, pmode()); }
+        if(!active) {
+          Mountain::ScrollBarPainter(name, count, horizontal).draw(p, r, col, cg.background(), false, pmode());
+        }
         else {
-          Mountain::ScrollBarPainter(name, count, horizontal).draw(p, r, Mountain::ColorUtil::lighten(col , 110),
+          Mountain::ScrollBarPainter(name, count, horizontal).draw(p, r, Mountain::ColorUtil::lighten(col , 120),
               cg.background(), false, pmode());
         }
         break; }
@@ -1492,7 +1493,7 @@ namespace Mountain {
         break; }
 
       case CE_ProgressBarContents: {
-        const QProgressBar* pb = (const QProgressBar*)widget;
+        const QProgressBar* pb = static_cast<const QProgressBar*>(widget);
         QRect cr = subRect(SR_ProgressBarContents, widget);
         double progress = pb->progress();
         bool reverse = QApplication::reverseLayout();
@@ -1632,8 +1633,8 @@ namespace Mountain {
 
         if(controls == SC_All) {
         //Double-buffer only when we are in the slower full-blend mode
-          if(widget->parent() &&
-              (widget->parent()->inherits("QToolBar") || !qstrcmp(widget->parent()->name(), kdeToolbarWidget))) {
+          if(widget->parent() && (widget->parent()->inherits("QToolBar") ||
+             !qstrcmp(widget->parent()->name(), kdeToolbarWidget))) {
             buf = new QPixmap(r.width(), r.height());
             br.setX(0);
             br.setY(0);
@@ -1646,12 +1647,10 @@ namespace Mountain {
           }
         }
 
-        if(br.width() >= 28 && br.height() > 20 && !compact) { br.addCoords(0, -2, 0, 0); }
+        //if(br.width() >= 28 && br.height() > 20 && !compact) { br.addCoords(0, -2, 0, 0); }
 
-        //When in compact mode, we force the shadow-less bevel mode,
-        //but that also alters height and not just width.
-        //readjust height to fake the other metrics (plus clear
-        //the other areas, as appropriate). The automasker
+        //When in compact mode, we force the shadow-less bevel mode, but that also alters height and not just width.
+        //readjust height to fake the other metrics (plus clear the other areas, as appropriate). The automasker
         //will take care of the overall shape.
         if(compact) {
           forceSmallMode = true;
@@ -1681,9 +1680,7 @@ namespace Mountain {
             ar = visualRect(QRect(ar.x() + loader.size(mountain_ripple).width() + 4, ar.y(), 11, ar.height()), widget);
 
             QPointArray a;
-
             a.setPoints(QCOORDARRLEN(mountain_combo_arrow), mountain_combo_arrow);
-
             a.translate(ar.x() + ar.width() / 2, ar.y() + ar.height() / 2);
             p2->setPen(cg.buttonText());
             p2->drawLineSegments(a);
@@ -1707,8 +1704,8 @@ namespace Mountain {
         if(controls & SC_ComboBoxEditField) {
           if(cb->editable()) {
             QRect er = visualRect(querySubControlMetrics(CC_ComboBox, widget, SC_ComboBoxEditField), widget);
-            er.addCoords(-2, -2, 2, 2);
-            p2->fillRect(er, cg.base());
+            er.addCoords(-1, -1, 1, 1);
+            //p2->fillRect(er, cg.base());
             drawPrimitive(PE_PanelLineEdit, p2, er, cg);
             Mountain::RectTilePainter(mountain_frame_shadow, false, false, 2, 2).
                 draw(p2, er, cg.button(), Qt::black, false, pmodeFullBlend());
@@ -1947,7 +1944,7 @@ namespace Mountain {
       case PM_ExclusiveIndicatorWidth: { return loader.size(mountain_radiobutton_on).width(); } // Radiobutton size
       case PM_ExclusiveIndicatorHeight: { return loader.size(mountain_radiobutton_on).height(); }
       case PM_IndicatorWidth: { return loader.size(mountain_checkbox_on).width(); } // Checkbox size
-      case PM_IndicatorHeight: { return loader.size(mountain_checkbox_on) .height(); }
+      case PM_IndicatorHeight: { return loader.size(mountain_checkbox_on).height(); }
       case PM_ScrollBarExtent: { return loader.size(mountain_scrollbar_vbar + MountainGroove1).width(); }
       case PM_ScrollBarSliderMin: {
         return loader.size(mountain_scrollbar_vbar + MountainSlider1).height() + loader.size(mountain_scrollbar_vbar +
@@ -2007,7 +2004,7 @@ namespace Mountain {
       case CT_ComboBox: {
         int arrow = 11 + loader.size(mountain_ripple).width();
         const QComboBox *cb = static_cast<const QComboBox*>(widget);
-        return QSize(contentSize.width() + arrow + (cb->editable() ? 26 : 22), contentSize.height() + 10); }
+        return QSize(contentSize.width() + arrow + (cb->editable() ? 26 : 22), contentSize.height()+10); }
 
       // POPUPMENU ITEM SIZE
       // -----------------------------------------------------------------
@@ -2094,17 +2091,17 @@ namespace Mountain {
               return QRect(4, 3, widget->width() - arrow - 20, widget->height() - 6);
             }
             else if(static_cast< const QComboBox* >(widget)->editable()) {
-              return QRect(8, 4, widget->width() - arrow - 26, widget->height() - 11);
+              return QRect(8, 5, widget->width() - arrow - 26, widget->height() - 10);
             }
             else { return QRect(6, 4, widget->width() - arrow - 22, widget->height() - 9); }
           }
 
           case SC_ComboBoxListBoxPopup: {
-            //Note that the widget here == the combo, not the completion
+            //NOTE: that the widget here == the combo, not the completion
             //box, so we don't get any recursion
             int suggestedWidth = widget->sizeHint().width();
             QRect def = opt.rect();
-            def.addCoords(4, -4, -6, 4);
+            def.addCoords(0, -2, -4, 0);
 
             if((def.width() - suggestedWidth < -12) && (def.width() < 80)) {
               def.setWidth(QMIN(80, suggestedWidth - 10));
@@ -2282,7 +2279,7 @@ namespace Mountain {
     else if(::qt_cast<QListBox*>(object)) {
       //Handle combobox drop downs
       switch(event->type()) {
-  #ifdef HAVE_X11_EXTENSIONS_SHAPE_H
+  /*#ifdef HAVE_X11_EXTENSIONS_SHAPE_H
         //Combo dropdowns are shaped
         case QEvent::Resize: {
           QListBox* listbox = static_cast<QListBox*>(object);
@@ -2301,7 +2298,7 @@ namespace Mountain {
           ::XShapeCombineRectangles(qt_xdisplay(), listbox->handle(), ShapeBounding, 0, 0, rects, 5, ShapeSet,
                                     YXSorted);
           break; }
-  #endif
+  #endif*/
         //Combo dropdowns get fancy borders
         case QEvent::Paint: {
           static bool recursion = false;
@@ -2311,8 +2308,8 @@ namespace Mountain {
 
           if(!listbox->contentsRect().contains(paint->rect())) {
             QPainter p(listbox);
-            Mountain::RectTilePainter(mountain_combobox_list, false, false).
-                draw(&p, 0, 0, listbox->width(), listbox->height(), listbox->palette().color(QPalette::Normal,
+            Mountain::RectTilePainter(mountain_combobox_list, true, true, 3, 3).
+                draw(&p, 2, -2, listbox->width()-4, listbox->height(), listbox->palette().color(QPalette::Normal,
                       QColorGroup::Button), listbox->palette().color(QPalette::Normal, QColorGroup::Background));
 
             QPaintEvent newpaint(paint->region().intersect(listbox->contentsRect()), paint->erased());

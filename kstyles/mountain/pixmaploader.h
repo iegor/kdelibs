@@ -194,9 +194,7 @@ namespace Mountain {
 
   class RectTilePainter : public TilePainter {
     public:
-      RectTilePainter(int name,
-                      bool scaleH = true, bool scaleV = true,
-                      unsigned int columns = 3, unsigned int rows = 3);
+      RectTilePainter(int name, bool scaleH=true, bool scaleV=true, unsigned int columns=3, unsigned int rows=3);
 
       virtual ~RectTilePainter() {};
 
@@ -226,28 +224,15 @@ namespace Mountain {
   class ProgressBarPainter: public TilePainter {
     public:
       ProgressBarPainter(int name, bool reverse): TilePainter(name), m_reverse(reverse) {
-        //We use only of the tip bitmaps..
-        if(reverse) {
-          colMde[0] = Fixed;
-          colMde[1] = Tiled;
-        } else {
-          colMde[0] = Tiled;
-          colMde[1] = Fixed;
-        }
+        colMde[0] = colMde[2] = Fixed;
+        colMde[1] = Scaled;
         rowMde[0] = Scaled;
-
-        m_columns = 2;
+        m_columns = 3;
       }
 
       virtual ~ProgressBarPainter() {};
     protected:
-      virtual int tileName(unsigned int column, unsigned int /*row*/) const {
-        if(m_reverse) {
-          return column + 3; //So can use cl, cc, cr
-        } else
-        { return column + 4; } //So can use cl, cc, cr + we start from cc.
-
-      }
+      virtual int tileName(unsigned int column, unsigned int /*row*/) const { return column + 3; }
 
       bool m_reverse;
   };
