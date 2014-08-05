@@ -186,12 +186,12 @@ public:
 
 
 protected:
-    virtual QObject *createObject( QObject *parent, const char *name,
-                                  const char *className, const QStringList &args )
+    virtual QObject *createObject( QObject *pnt, const char *nm,
+                                  const char *clsName, const QStringList &args )
     {
         KGenericFactoryBase<Product>::initializeMessageCatalogue();
         return KDEPrivate::ConcreteFactory<Product, ParentType>
-            ::create( 0, 0, parent, name, className, args );
+            ::create( 0, 0, pnt, nm, clsName, args );
     }
 };
 
