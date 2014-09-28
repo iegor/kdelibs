@@ -235,7 +235,7 @@ class KateCmdLnWhatsThis : public QWhatsThis
         if ( name == "list" )
         {
           return beg + i18n("Available Commands") + mid
-              + KateCmd::self()->cmds().join(" ")
+              + KateCmd::self()->cmds().join("\n")
               + i18n("<p>For help on individual commands, do <code>'help &lt;command&gt;'</code></p>")
               + end;
         }
@@ -247,7 +247,7 @@ class KateCmdLnWhatsThis : public QWhatsThis
             if ( cmd->help( (Kate::View*)m_parent->parentWidget(), name, s ) )
               return beg + name + mid + s + end;
             else
-              return beg + name + mid + i18n("No help for '%1'").arg( name ) + end;
+              return beg + name + mid + i18n("There is no help for '%1' yet.").arg( name ) + end;
           }
           else
             return beg + mid + i18n("No such command <b>%1</b>").arg(name) + end;
