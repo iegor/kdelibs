@@ -1,70 +1,82 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="21" >
-  <Doc0 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kprocess.h" >
-   <View0 Encoding="" Type="Source" />
+ <DocsAndViews NumberOfDocuments="25" >
+  <Doc0 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/genembed.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kpty.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc1 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/gradients.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc1>
-  <Doc2 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kfile/kfileiconview.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc2 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/gradients.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc2>
-  <Doc3 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc3 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/mountain.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc3>
-  <Doc4 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc4 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/mountain.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc4>
-  <Doc5 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kioslave/gzip/kgzipfilter.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc5 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/highcolor/highcolor.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc5>
-  <Doc6 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.cpp" >
+  <Doc6 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/highcolor/highcolor.h" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc6>
-  <Doc7 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v2.cpp" >
+  <Doc7 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/colorutil.h" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc7>
-  <Doc8 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/lightstyle-v3.h" >
+  <Doc8 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/bitmaps.h" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc8>
-  <Doc9 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/light/light.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc9 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/mountainimage.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc9>
-  <Doc10 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/plastik.cpp" >
-   <View0 Encoding="" line="3167" Type="Source" />
+  <Doc10 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/mountainrc.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc10>
-  <Doc11 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/plastik.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc11 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/pixmaploader.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc11>
-  <Doc12 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_draw.c" >
+  <Doc12 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/mountain/pixmaploader.cpp" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc12>
-  <Doc13 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_rc_style.c" >
+  <Doc13 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kfile/kfileiconview.cpp" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc13>
-  <Doc14 NumberOfViews="1" URL="file:///home/rainman/projects/x11-themes/aurora/aurora-engine/src/aurora_style.c" >
+  <Doc14 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kfile/kfileiconview.h" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc14>
-  <Doc15 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/plastik/misc.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc15 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc15>
-  <Doc16 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/aurora/aurora.h" >
-   <View0 Encoding="" Type="Source" />
+  <Doc16 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kio/kio/previewjob.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc16>
-  <Doc17 NumberOfViews="1" URL="file:///usr/qt/3/include/qslider.h" >
+  <Doc17 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kstandarddirs.h" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc17>
-  <Doc18 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/baghira/starter/starter.cpp" >
-   <View0 Encoding="" Type="Source" />
+  <Doc18 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kstandarddirs.cpp" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc18>
-  <Doc19 NumberOfViews="1" URL="file:///usr/qt/3/include/qstring.h" >
+  <Doc19 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdecore/kiconeffect.cpp" >
    <View0 Encoding="UTF-8" Type="Source" />
   </Doc19>
-  <Doc20 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kstyles/baghira/style/baghira.cpp" >
-   <View0 Encoding="UTF-8" line="2891" Type="Source" />
+  <Doc20 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdeui/kiconview.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
   </Doc20>
+  <Doc21 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/khtml/xml/dom_docimpl.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
+  </Doc21>
+  <Doc22 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kdeui/kaction.h" >
+   <View0 Encoding="UTF-8" Type="Source" />
+  </Doc22>
+  <Doc23 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kate/part/katedocument.h" >
+   <View0 Encoding="" Type="Source" />
+  </Doc23>
+  <Doc24 NumberOfViews="1" URL="file:///home/rainman/projects/kde/kdelibs/kate/part/katedocument.cpp" >
+   <View0 Encoding="" line="3869" Type="Source" />
+  </Doc24>
  </DocsAndViews>
  <pluginList>
   <kdevdebugger>
@@ -76,10 +88,14 @@
    <showInternalCommands value="0" />
   </kdevdebugger>
   <kdevastyle>
-   <AStyle FStyle="GLOBAL" />
+   <AStyle UseGlobal="1" />
   </kdevastyle>
   <kdevbookmarks>
-   <bookmarks/>
+   <bookmarks>
+    <bookmark url="/home/rainman/projects/kde/kdelibs/kstyles/mountain/mountain.cpp" >
+     <mark line="1494" />
+    </bookmark>
+   </bookmarks>
   </kdevbookmarks>
   <kdevvalgrind>
    <executable path="" params="" />
